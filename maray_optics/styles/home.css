@@ -1,0 +1,94 @@
+.mainHome{
+    background: #D2D6DE;
+    height: 100vh;
+}
+.navbar{
+  background: black;
+  min-height: 7vh;   
+}
+.navbar h2{
+  text-align: center;
+  color: white;
+}
+.navbar a {
+    text-align: center;
+    color: white;
+}
+
+.navbarIzquierda{
+    width: 80px;
+    height: 100vh;
+    background-color: white;
+    transition: width 0.3s ease-in;
+   box-shadow: 10px 0px 20px 0px black;
+   position: absolute;
+    
+}
+.navbarIzquierda .containerIconosNav{
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 13px;
+    transition: width 1.3x ease-in;
+}
+.navbarIzquierda .containerIconosNav:hover{
+    align-items: baseline;
+    
+    
+}
+.navbarIzquierda:hover{
+    width: 200px; 
+}
+
+.containerLogo{
+    width: 100%;
+    height: 10vh;
+    background-color: antiquewhite;
+}
+.iconosLink{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.texto {
+  display: none;
+  white-space: nowrap;
+}
+
+.navbarIzquierda:hover .texto {
+  display: inline;
+  margin-left: 15px;
+}
+/* .containerIconosNav{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 13px;
+} */
+ .btnAlertConfirm {
+  background-color: green;
+ }
+ .btnAlertCancel{
+  background-color: red;
+ }
+
+ .modalMostrar{
+  position: fixed;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  top: 0px;
+  align-items: center;
+  justify-content: center;
+ 
+  background-color: rgba(0,0,0,0.5);
+   backdrop-filter: blur(10px);
+   z-index: 1000;
+ }
+ .containerModal{
+  background-color: white;
+   min-height: 100px;
+   width: 60%;
+ }

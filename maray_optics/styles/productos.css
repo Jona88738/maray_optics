@@ -1,0 +1,56 @@
+.containerProducts{
+    width: 80%;
+    height: 100vh;
+    margin-left: 17%;
+    /* background: wheat; */
+    
+
+}
+.containerProducts h1{
+    text-align: center;
+}
+.inputBusqueda{
+    width: 80%;
+    /* background-color: gray; */
+    box-shadow: 3px 3px 11px 0px black;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.input input {
+    border-radius: 10px;
+    padding: 10px;
+}
+.containerButtons{
+    width: 80%;
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-evenly;
+}
+.btnAgregar{
+    background-color: rgb(9, 94, 9);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+.btnBaja{
+    background-color: rgb(0, 34, 107);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+.btnVerCategoria{
+    background-color: rgb(91, 0, 2);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+.tabla{
+    padding: 16px 2px;
+    width: 100%;
+}
