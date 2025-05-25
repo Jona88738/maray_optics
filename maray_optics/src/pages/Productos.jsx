@@ -61,6 +61,8 @@ const Productos = () => {
             </table>
         </section>
     </main>
+
+    
     { modalOpen === true  ? <ShowModal open={btnAgregar} form={<Form />} /> : null} 
     </>)
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
-
+import Swal from 'sweetalert2';
 
 
 const Login = () => {
@@ -11,8 +11,27 @@ const Login = () => {
 
 const verificarDatosLogin = (e) =>{
     e.preventDefault();
-    console.log("XD"+ usuario);
-    navigate('/Home')
+
+    if(!usuario || !password)  return Swal.fire({title: 'Alerta', text: "* Todos los campos son requeridos",showConfirmButton: true, confirmButtonText: "cerrar", icon:"warning"})
+
+    fetch(`http://localhost:3000/usuario/login?usuario=${usuario}&&password=${password}`,{
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "include",
+    })
+        .then((res) => res.json())
+        .then((res) =>{
+            console.log("result",res.result);
+            if(res.result){
+                navigate('/Home')
+            }else{
+                Swal.fire({title:"Alerta", text:"No pudimos iniciar sesión. Verifica tus datos e inténtalo nuevamente.", icon:"warning"})
+            }
+
+        })
+    //console.log("XD"+ usuario);
+    
 
     // const usuario = document.getElementById("");
 }
