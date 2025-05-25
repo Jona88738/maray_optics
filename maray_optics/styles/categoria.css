@@ -1,0 +1,13 @@
+.containerCategoria{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 50px;
+}
+.containerCategoria h2{
+    text-align: center;
+}
+.btnRegresarCategoria{
+    margin-bottom: 30px;
+    
+}

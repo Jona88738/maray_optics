@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const Form = () => {
 
-    const [datos, setDatos] = useState({codigo: ''});
+    const [datos, setDatos] = useState({codigo: "", nombre: "", costo_compra: "", existencias: "", marca: "", descripcion: "", categoria: "default", precio_venta: ""});
+    const [datosCategoria, setDatosCategoria] = useState([]);
+
+    useEffect(() =>{
+        fetch("http://localhost:3000/categoria",{
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+        .then((res) => res.json())
+        .then((res) =>{
+            if(res.result){
+                console.log("Entro", res)
+                setDatosCategoria(res.data)
+            }
+        })
+    },[])
 
     const btnGuardar = (e) =>{
         e.preventDefault();
+        if(!datos.codigo || !datos.nombre || !datos.costo_compra || !datos.existencias  || !datos.descripcion || !datos.precio_venta  || datos.categoria === 'default') return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
+        //fetch()
         console.log("Se guardo");
     }
     const guardarDatos = (event) =>{
-console.log(datos);
+        console.log(datos);
         setDatos({
             ...datos,
             [event.target.name]: event.target.value,
@@ -19,6 +39,7 @@ console.log(datos);
     const btnLimpiar = (e) =>{
         e.preventDefault();
         console.log("Se  limpio");
+        setDatos({codigo: "", nombre: "", costo_compra: "", existencias: "", marca: "", descripcion: "", categoria: "default", precio_venta: ""})
     }
     return(<>
         
@@ -38,6 +59,7 @@ console.log(datos);
                 <label htmlFor="">* Nombre</label>
                 <input type="text"
                 name="nombre"
+                value={datos.nombre}
                 placeholder="Nombre"
                 onChange={guardarDatos} 
                 />
@@ -48,30 +70,26 @@ console.log(datos);
                 <input type="text" 
                 name="costo_compra"
                 placeholder="ingrese el costo de compra"
+                value={datos.costo_compra}
                 onChange={guardarDatos} 
                 />
             </div>
-            {/* <div className="inputLogin">
-                <label htmlFor="">* Codigo</label>
-                <input type="text" 
-                name="codigo"
-                placeholder="Codigo"
-                onChange={guardarDatos} 
-                />
-            </div> */}
+          
             <div className="inputLogin">
                 <label htmlFor="">* Existencias</label>
                 <input type="text" 
-                name="existencia"
+                name="existencias"
                 placeholder="ingrese la cantidad del producto"
+                value={datos.existencias}
                 onChange={guardarDatos} 
                 />
             </div>
             <div className="inputLogin">
-                <label htmlFor="">* Marca</label>
+                <label htmlFor="">Marca</label>
                 <input type="text" 
-                name="Marca"
+                name="marca"
                 placeholder="ingrese la marca del producto"
+                value={datos.marca}
                 onChange={guardarDatos} 
                 />
             </div>
@@ -80,18 +98,28 @@ console.log(datos);
                 <input type="text" 
                 name="descripcion"
                 placeholder="Descripcion"
+                value={datos.descripcion}
                 onChange={guardarDatos} 
                 />
             </div>
             <div className="inputLogin">
                 <label htmlFor="">* Categoria</label>
-                <input type="text" />
+                
+                <select name="categoria" id="" value={datos.categoria} onChange={guardarDatos} >
+                    <option value="default"> Selecciona una opcion</option>
+                    {datosCategoria.map(element => {
+                    return <option value={element.id}>{element.nombre}</option>
+
+                    })}
+                    
+                </select>
             </div>
             <div className="inputLogin">
                 <label htmlFor="">* Precio de venta</label>
                 <input type="text" 
                 name="precio_venta"
                 placeholder="ingrese el precio de venta"
+                value={datos.precio_venta}
                 onChange={guardarDatos} 
                 />
             </div>

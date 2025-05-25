@@ -5,4 +5,6 @@ const routes = Router();
 
 routes.get("/",productos.getProducts);
 
+
+
 export default routes;
