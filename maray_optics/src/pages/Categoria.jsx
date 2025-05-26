@@ -51,9 +51,10 @@ const Categoria = ({btnRegresar}) =>{
 
     }
     return(<>
-
-        <button onClick={btnRegresar} className="btnRegresarCategoria">Regresar</button>
-        <button onClick={btnCategoria}>Nueva categoria</button>
+        <section className='containerbtnCategoria'>
+        <button onClick={btnRegresar} className="btnRegresar">Regresar</button>
+        <button onClick={btnCategoria} className='btnAgregar'>Nueva categoria</button>
+        </section>
         <section className="inputBusqueda">
             <div className="input">
             <label htmlFor="">Buscar Producto</label>
@@ -63,7 +64,7 @@ const Categoria = ({btnRegresar}) =>{
         <h2>Categoria</h2>
 
         <section>
-            <table className="tabla">
+            <table  className="table table-bordered table-hover">
                 <thead>
                     <tr>
                     <th>#</th>
@@ -84,8 +85,8 @@ const Categoria = ({btnRegresar}) =>{
                             <td id="RegistrosCategoria"></td>
                             <td id="ExistenciasCategoria"></td>
                             <td >
-                            <button onClick={btnEditar}>Editar</button>
-                            <button onClick={btnDelete}>Eliminar</button>
+                            <button onClick={btnEditar} className='btnEdit'>Editar</button>
+                            <button onClick={btnDelete} className='btnDelete' >Eliminar</button>
                         </td>
                            </tr>
                            )

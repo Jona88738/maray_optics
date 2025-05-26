@@ -1,13 +1,29 @@
-import Navbar from "../components/navbar"
-import '../../styles/venta.css'
+import Navbar from "../components/navbar";
+import '../../styles/venta.css';
+import AutocompleteInput from "../components/AutoComplete";
+import ShowModal from "../components/showModal";
+import Form from "../components/FormCreateExpediente";
+import { useState } from "react";
+
 const venta = () =>{
+
+     const [modalOpen, setModalOpen] = useState(false);
+
+    const btnRegistrarPaciente = () =>{
+        setModalOpen(!modalOpen)
+
+    }
+
+    const btnGenerarVenta = () => {
+
+    }
     
     return(<>
     <Navbar />
         
         <section className="containerTitulo">
                 <h2 className="tituloVenta">Venta</h2>
-                <button className="btnVentaRegistrarP">Registrar Paciente</button>
+                <button className="btnVentaRegistrarP" onClick={btnRegistrarPaciente}>Registrar Paciente</button>
                 <button className="btnVentaBuscarProducto">Buscar Producto</button>
             </section>
         <main className="containerProducts"> 
@@ -22,7 +38,13 @@ const venta = () =>{
 
         <section className="containerTabla">
             <h2>Productos</h2>
-            <table className="tabla">
+
+            <div className="input">
+               
+                <AutocompleteInput />
+            </div>
+
+            <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th>Codigo</th>
@@ -54,12 +76,12 @@ const venta = () =>{
                 <input type="text"  disabled />
                  
             </section>
-            <button className="btnAgregar">Generar venta</button>
+            <button className="btnAgregar" onClick={btnGenerarVenta}>Generar venta</button>
 
         
         </section>
         
-        
+         { modalOpen === true  ? <ShowModal open={btnRegistrarPaciente} form={<Form   ModalOpen={btnRegistrarPaciente} />} /> : null} 
             
         </main>
     </>)

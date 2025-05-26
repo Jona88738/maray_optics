@@ -1,4 +1,4 @@
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import '../../styles/productos.css';
 import Navbar from "../components/navbar";
 import ShowModal from '../components/showModal';
@@ -11,6 +11,23 @@ const Productos = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [categoriaOpen, setCategoriaOpen]  = useState(false);
     const [actualizarDatos, setActualizarDatos] = useState(false);
+    const [datos, setDatos] = useState([]);
+
+    useEffect(() => {
+        if(!modalOpen){
+        fetch("http://localhost:3000/producto",{
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            credentials: "include",
+        })
+        .then((res) => res.json())
+        .then((res) =>{
+            console.log(res.data)
+            setDatos(res.data)
+        })
+    }
+    },[modalOpen])
 
     const btnAgregar = () =>{
         
@@ -41,7 +58,7 @@ const Productos = () => {
 
     return(<>
     <Navbar />
-<h1  style={{textAlign: 'center', marginBottom: '15px'}} >Products</h1>
+<h1  style={{textAlign: 'center', marginBottom: '15px'}} >Productos</h1>
     <main className="containerProducts">
        
         {categoriaOpen === false ? ( <>
@@ -61,13 +78,12 @@ const Productos = () => {
 
         </section>
         <section>
-            <table className="tabla">
+            <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
                     <th>Imagen</th>
                     <th>Codigo</th>
                     <th>Nombre</th>
-                    <th>Tipo</th>
                     <th>Categoria</th>
                     <th>Existencia</th>
                     <th>Precio</th>
@@ -75,20 +91,26 @@ const Productos = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+
+                    {datos.map((element) =>{
+                        return (
+
+                            <tr>
                         <td id="imagen"></td>
-                        <td id="codigo"></td>
-                        <td id="nombre"></td>
-                        <td id="tipo"></td>
-                        <td id="categoria"></td>
-                        <td id="existencia"></td>
-                        <td id="precio"></td>
+                        <td id="codigo">{element.codigo}</td>
+                        <td id="nombre">{element.nombre}</td>
+                        <td id="categoria">{element.categoria}</td>
+                        <td id="existencia">{element.cantidad}</td>
+                        <td id="precio">{element.precio_venta}</td>
                         
                         <td id="opciones">
-                            <button onClick={btnEditar}>Editar</button>
-                            <button onClick={btnDelete}>Eliminar</button>
+                            <button onClick={btnEditar}  className='btnEdit'>Editar</button>
+                            <button onClick={btnDelete} className='btnDelete'>Eliminar</button>
                         </td>
                     </tr>
+                        )
+                    } )}
+                    
 
                 </tbody>
             </table>
@@ -98,7 +120,7 @@ const Productos = () => {
     </main>
 
 
-    { modalOpen === true  ? <ShowModal open={btnAgregar} form={<Form />} /> : null} 
+    { modalOpen === true  ? <ShowModal open={btnAgregar} form={<Form   ModalOpen={btnAgregar} />} /> : null} 
     </>)
 }
 

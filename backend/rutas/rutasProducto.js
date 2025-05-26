@@ -5,6 +5,8 @@ const routes = Router();
 
 routes.get("/",productos.getProducts);
 
+routes.post("/", productos.insertProducto)
+
 
 
 export default routes;

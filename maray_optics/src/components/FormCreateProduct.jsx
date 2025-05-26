@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-const Form = () => {
+const Form = ({ModalOpen}) => {
 
     const [datos, setDatos] = useState({codigo: "", nombre: "", costo_compra: "", existencias: "", marca: "", descripcion: "", categoria: "default", precio_venta: ""});
     const [datosCategoria, setDatosCategoria] = useState([]);
@@ -25,7 +25,25 @@ const Form = () => {
     const btnGuardar = (e) =>{
         e.preventDefault();
         if(!datos.codigo || !datos.nombre || !datos.costo_compra || !datos.existencias  || !datos.descripcion || !datos.precio_venta  || datos.categoria === 'default') return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
-        //fetch()
+        fetch('http://localhost:3000/producto',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(datos)
+    
+        })
+        .then((res) => res.json())
+        .then((res) =>{
+            if(res.result){
+                Swal.fire({title:"Se ingreso con exito", text: "Categoria agregada", icon:"success"})
+                ModalOpen();
+                //console.log("Producto registrado");
+            }else{
+                console.log("algo fallo", res.result)
+            }
+        })
         console.log("Se guardo");
     }
     const guardarDatos = (event) =>{

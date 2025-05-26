@@ -7,7 +7,22 @@
 .containerCategoria h2{
     text-align: center;
 }
-.btnRegresarCategoria{
-    margin-bottom: 30px;
+.btnRegresar{
+   background-color: rgb(223, 10, 10);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
     
+}
+.btnDelete{
+    background-color: rgb(223, 10, 10);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+.containerbtnCategoria{
+    display: flex;
+    justify-content:space-around;
+     margin-bottom: 30px;
 }

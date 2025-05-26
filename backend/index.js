@@ -6,6 +6,8 @@ import session from 'express-session';
 import rutasUsuario from "./rutas/rutasUsuario.js";
 import rutasProducto from './rutas/rutasProducto.js';
 import categoria from "./rutas/rutaCategoria.js";
+import expedientes from "./rutas/rutaExpedientes.js";
+
 import { PORT, HOST_BD, PORT_BD, USER_BD, PASSWORD_BD, DATABASE } from './config.js'
 
 const app = express();
@@ -55,7 +57,7 @@ app.use(express.json());
 app.use("/usuario", rutasUsuario);
 app.use('/producto',rutasProducto);
 app.use("/categoria", categoria);
-
+app.use("/expedientes",expedientes)
 
 app.use((req,res) =>{
     res.status(404).json({
