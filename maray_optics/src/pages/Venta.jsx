@@ -8,6 +8,16 @@ import { useState } from "react";
 const venta = () =>{
 
      const [modalOpen, setModalOpen] = useState(false);
+     const [datosTabla, setdatosTabla] = useState([])
+
+     const agregarDatosTabla = (data) =>{
+        setdatosTabla([
+            ...datosTabla,
+            data
+             
+        ])
+        console.log("Datos: ",datosTabla, data)
+     }
 
     const btnRegistrarPaciente = () =>{
         setModalOpen(!modalOpen)
@@ -41,7 +51,7 @@ const venta = () =>{
 
             <div className="input">
                
-                <AutocompleteInput />
+                <AutocompleteInput tabla={agregarDatosTabla}/>
             </div>
 
             <table className="table table-bordered table-hover">
@@ -57,16 +67,21 @@ const venta = () =>{
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>123 </td>
-                        <td>123 </td>
-                        <td>123 </td>
-                        <td>123 </td>
-                        <td>123 </td>
-                        <td>123 </td>
-                        <td>123 </td>
+                    {datosTabla.map((element) =>{
+                        return (
+                            <tr>
+                                <td>{element.nombre} </td>
+                                <td>123 </td>
+                                <td>123 </td>
+                                <td>123 </td>
+                                <td>123 </td>
+                                <td>123 </td>
+                                <td>123 </td>
                         
                     </tr>
+                        )
+                    })}
+                    
                 </tbody>
             </table>
 

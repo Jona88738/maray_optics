@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 
-const FormCreateExpediente = () => {
+const FormCreateExpediente = ({ModalOpen}) => {
 
     const [datos, setDatos] = useState({nombre: "", apellido: "", edad: "", telefono: "", correo: "", fechaNacimiento: "" })
-
+    
     const guardarDatos = (event) => {
       setDatos({
         ...datos,
@@ -17,6 +17,21 @@ const FormCreateExpediente = () => {
         e.preventDefault();
         if(!datos.nombre || !datos.apellido || !datos.edad || !datos.telefono || !datos.correo || !datos.fechaNacimiento) Swal.fire({title: "Alerta", text: "Todos los campos con * son obligatorios", icon: "warning"})
         
+        fetch("http://localhost:3000/expedientes",{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+             credentials: 'include',
+             body: JSON.stringify(datos)
+        })
+        .then((res) => res.json())
+        .then((res) =>{
+            if(res.result){
+                Swal.fire({title:"Se ingreso con exito", text: "Expediente agregado", icon:"success"})
+                 ModalOpen();
+            }
+        })
         
         console.log(datos);
     }

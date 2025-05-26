@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-const AutocompleteInput = () => {
+const AutocompleteInput = ({tabla}) => {
   const [sugerencias, setSugerencias] = useState([]);
   const [valor, setValor] = useState('');
 
-  const todasLasOpciones = ['Bogotá', 'Medellín', 'Cali', 'Barranquilla'];
+  const todasLasOpciones = [{id: 1,nombre: 'Bogotá'}, {id: 2,nombre: 'Medellín'}, {id: 3,nombre: 'Barranquilla'}, {id: 4,nombre: 'Cali'}];
 
   const manejarCambio = (e) => {
     const texto = e.target.value;
@@ -12,8 +12,10 @@ const AutocompleteInput = () => {
 
     if (texto.length > 0) {
       const filtradas = todasLasOpciones.filter(op =>
-        op.toLowerCase().includes(texto.toLowerCase())
+        op.nombre.toLowerCase().includes(texto.toLowerCase())
+
       );
+      console.log(filtradas)
       setSugerencias(filtradas);
     } else {
       setSugerencias([]);
@@ -21,7 +23,8 @@ const AutocompleteInput = () => {
   };
 
   const seleccionarOpcion = (opcion) => {
-    setValor(opcion);
+    tabla(opcion)
+    setValor(opcion.nombre);
     setSugerencias([]);
   };
 
@@ -49,7 +52,7 @@ const AutocompleteInput = () => {
         }}>
           {sugerencias.map((op, i) => (
             <li key={i} onClick={() => seleccionarOpcion(op)} style={{ cursor: 'pointer', padding: '5px' }}>
-              {op}
+              {op.nombre}
             </li>
           ))}
         </ul>
