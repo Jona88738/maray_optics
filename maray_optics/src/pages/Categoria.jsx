@@ -3,14 +3,18 @@ import '../../styles/categoria.css';
 import ShowModal from '../components/showModal';
 import FormCreateCategoria from '../components/FormCreateCategoria';
 import Swal from 'sweetalert2';
+import FormEditarCategoria from '../components/FormEditarCategoria';
 
 const Categoria = ({btnRegresar}) =>{
 
     const [modalOpen, setModalOpen] = useState(false);
     const [datosTabla, setDatosTable] = useState([]);
+    const [actualizarDatos, setActualizarDatos] = useState(false);
+
+    const  [modalOpenEdit, setmodalOpenEdit] = useState({action: 0, datos:""});
 
     useEffect(() =>{
-        if(!modalOpen){
+       // if(!modalOpen){
 
         
         fetch("http://localhost:3000/categoria",{
@@ -24,13 +28,19 @@ const Categoria = ({btnRegresar}) =>{
             console.log("Trajo datos");
             setDatosTable(res.data)
         })
-    }
-    },[modalOpen])
+    //}
+    },[actualizarDatos])
 
     const btnCategoria = () =>{
         setModalOpen(!modalOpen);
+        setActualizarDatos(!actualizarDatos);
     }
-    const btnDelete = () =>{
+     const btnCategoriaModal = () =>{
+        //setModalOpen(!modalOpen);
+        setmodalOpenEdit({action: 0, datos:""});
+        setActualizarDatos(!actualizarDatos);
+    }
+    const btnDelete = (id) =>{
         Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar esta categoria?", icon: "question",
             showConfirmButton: true,
             showCancelButton: true,
@@ -38,7 +48,24 @@ const Categoria = ({btnRegresar}) =>{
             cancelButtonText: "No, quiero elimnar"
         }).then((res) =>{
             if(res.isConfirmed){
-                Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+
+                fetch(`http://localhost:3000/categoria?id=${id}`, {
+                                            method: 'DELETE',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            credentials: 'include'
+                                        })
+                                        .then((res) => res.json())
+                                        .then((res) => {
+                                            if(res.result){
+                                                setActualizarDatos(!actualizarDatos)
+                                                Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                                                
+                                            }
+                
+                                        })
+               // Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
             }else{
                 
             }
@@ -47,8 +74,8 @@ const Categoria = ({btnRegresar}) =>{
         
 
     }
-    const btnEditar = () => {
-
+    const btnEditar = (data) => {
+        setmodalOpenEdit({action: 1, datos:data});
     }
     return(<>
         <section className='containerbtnCategoria'>
@@ -85,8 +112,8 @@ const Categoria = ({btnRegresar}) =>{
                             <td id="RegistrosCategoria"></td>
                             <td id="ExistenciasCategoria"></td>
                             <td >
-                            <button onClick={btnEditar} className='btnEdit'>Editar</button>
-                            <button onClick={btnDelete} className='btnDelete' >Eliminar</button>
+                            <button onClick={() => btnEditar(element)} className='btnEdit'>Editar</button>
+                            <button onClick={() => btnDelete(element.id)} className='btnDelete' >Eliminar</button>
                         </td>
                            </tr>
                            )
@@ -102,6 +129,8 @@ const Categoria = ({btnRegresar}) =>{
         </section>
 
 { modalOpen === true  ? <ShowModal open={btnCategoria} form={<FormCreateCategoria ModalOpen={btnCategoria}/>} /> : null} 
+{ modalOpenEdit.action === 1  ? <ShowModal open={btnCategoriaModal} form={<FormEditarCategoria ModalOpen={btnCategoriaModal} dato={modalOpenEdit.datos}/>} /> : null}    
+    
     </>)
 }
 export default Categoria;

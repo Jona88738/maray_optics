@@ -7,5 +7,6 @@ routes.get("/",categoria.getCategoria);
 
 routes.post("/", categoria.insertCategoria);
 
+routes.delete("/",categoria.deleteCategoria);
 
 export default routes;

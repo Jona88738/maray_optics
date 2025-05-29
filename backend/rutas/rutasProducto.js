@@ -7,6 +7,7 @@ routes.get("/",productos.getProducts);
 
 routes.post("/", productos.insertProducto)
 
+routes.delete("/", productos.deleteProducts);
 
 
 export default routes;

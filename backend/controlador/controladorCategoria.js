@@ -3,10 +3,10 @@ import { conn } from "../db/connectionMysql.js";
 const getCategoria = async (req, res) =>{
     let datos;
     try {
-        [datos] = await conn.query("SELECT * FROM categoria");
-
+        [datos] = await conn.query("SELECT * FROM categoria WHERE estado = 1");
+        //console.log(datos)
     } catch (error) {
-        console.error("Error: ", error.message)
+        console.error("Error: ", error.sql)
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     }
     res.json({result: true, data: datos, message: "exito"})
@@ -43,9 +43,9 @@ const updateCategoria = async (req, res) =>{
 const deleteCategoria = async (req, res) =>{
 
     try {
-        const {idCategoria} = req.query;
+        const {id} = req.query;
 
-        const [datos] = conn.query("UPDATE categoria set ")
+        const [datos] = conn.query("UPDATE categoria set estado = 0 WHERE id = ?",[id]);
         
     } catch (error) {
         console.error("Error: ", error.message);

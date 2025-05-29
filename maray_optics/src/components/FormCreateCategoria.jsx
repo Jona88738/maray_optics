@@ -2,11 +2,13 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 
 const FormCreateCategoria = ({ModalOpen}) =>{
-    const [nombre, setNombre] = useState("");
+    const [nombre, setNombre] = useState("")
     const btnGuardar = (event) =>{
         event.preventDefault();
-        if(!nombre) return  Swal.fire({title:"Alerta", text:"*El campo nombre es obligatorio", icon: "warning"} )
-        fetch("http://localhost:3000/categoria",{
+        
+        if(!nombre ) return  Swal.fire({title:"Alerta", text:"*El campo nombre es obligatorio", icon: "warning"} )
+        
+            fetch("http://localhost:3000/categoria",{
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -32,7 +34,7 @@ const FormCreateCategoria = ({ModalOpen}) =>{
         <form className="containerCategoria" >
             <h2>Nueva Categoria</h2>
             <div className="input">
-                <label htmlFor="">*Nombre</label>
+                <label htmlFor="">*Nombre </label>
                 <input type="text" 
                 
                 onChange={(e) => setNombre(e.target.value)}

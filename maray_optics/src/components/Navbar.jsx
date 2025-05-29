@@ -37,8 +37,8 @@ const Navbar = () =>{
 
         <div className="navbarIzquierda">
 
-                    <section className="containerLogo">
-                        <img src="asdfsf" alt="Logo" />
+                    <section className="logo_login">
+                        <img src="logo_maray.jpeg" alt="Logo" width="70%" height="auto" />
                     </section>
                     <section className="containerIconosNav">
                         <Link to='/Home' className="iconosLink">

@@ -70,4 +70,8 @@
   color: white;
   border:none;
 }
-
+.logo_login{
+  display: flex;
+  justify-content: center;
+  
+}

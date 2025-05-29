@@ -43,6 +43,10 @@ const verificarDatosLogin = (e) =>{
 
                 
                 <form onSubmit={verificarDatosLogin}  className='formLogin'>
+                    
+                    <div className='logo_login'>
+                        <img src="./logo_maray.jpeg" alt="logo" width="65%" height="auto" />
+                    </div>
 
                     <div className='inputLogin'>
                     <label htmlFor="">Usuario</label>

@@ -3,7 +3,7 @@ import { conn } from "../db/connectionMysql.js";
 const getProducts =  async (req, res) => {
     let datos;
     try {
-        [datos] = await conn.query('SELECT * FROM producto');
+        [datos] = await conn.query('SELECT * FROM producto WHERE estado = 1');
 
         //const [datos] = await conn.query("SELECT ")
     } catch (error) {
@@ -40,9 +40,17 @@ const insertProducto = async (req, res) => {
     res.json({result: true, message: "exito"})
 }
 
-const deleteProducts = (req, res) => {
+const deleteProducts = async (req, res) => {
 
-    res.json({ mensaje: "Productos obtenidos" })
+    try {
+        const { id } = req.query;
+        console.log("mi id: ",id);
+        const [datos] = await conn.query('UPDATE producto set estado = 0 WHERE id = ?',[id])
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+    res.json({ result: true,  mensaje: "Productos eliminado" })
 }
 
 export default {

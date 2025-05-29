@@ -14,7 +14,7 @@ const Productos = () => {
     const [datos, setDatos] = useState([]);
 
     useEffect(() => {
-        if(!modalOpen){
+       // if(!modalOpen){
         fetch("http://localhost:3000/producto",{
             headers:{
                 'Content-Type': 'application/json'
@@ -26,17 +26,17 @@ const Productos = () => {
             console.log(res.data)
             setDatos(res.data)
         })
-    }
-    },[modalOpen])
+   // }
+    },[actualizarDatos])
 
     const btnAgregar = () =>{
-        
-        setModalOpen(!modalOpen);
+        setModalOpen(!modalOpen)
+        setActualizarDatos(!actualizarDatos);
     }   
-    const btnEditar = () => {
-
+    const btnEditar = (id) => {
+        console.log("mi id: ",id)
     }
-    const btnDelete = () => {
+    const btnDelete = (id) => {
         Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar esta categoria?", icon: "question",
                     showConfirmButton: true,
                     showCancelButton: true,
@@ -44,7 +44,22 @@ const Productos = () => {
                     cancelButtonText: "No, quiero elimnar"
                 }).then((res) =>{
                     if(res.isConfirmed){
-                        Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                        fetch(`http://localhost:3000/producto?id=${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include'
+                        })
+                        .then((res) => res.json())
+                        .then((res) => {
+                            if(res.result){
+                                Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                                setActualizarDatos(!actualizarDatos)
+                            }
+
+                        })
+                        
                     }else{
                         
                     }
@@ -104,8 +119,8 @@ const Productos = () => {
                         <td id="precio">{element.precio_venta}</td>
                         
                         <td id="opciones">
-                            <button onClick={btnEditar}  className='btnEdit'>Editar</button>
-                            <button onClick={btnDelete} className='btnDelete'>Eliminar</button>
+                            <button onClick={() => btnEditar(element.id)}  className='btnEdit'>Editar</button>
+                            <button onClick={() => btnDelete(element.id)} className='btnDelete'>Eliminar</button>
                         </td>
                     </tr>
                         )
