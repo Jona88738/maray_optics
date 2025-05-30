@@ -3,6 +3,7 @@ import '../../styles/productos.css';
 import Navbar from "../components/navbar";
 import ShowModal from '../components/showModal';
 import Form from '../components/FormCreateProduct';
+import FormEditarProducto from '../components/FormEditarProducto';
 import Categoria from './Categoria';
 import Swal from 'sweetalert2';
 
@@ -11,6 +12,8 @@ const Productos = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [categoriaOpen, setCategoriaOpen]  = useState(false);
     const [actualizarDatos, setActualizarDatos] = useState(false);
+
+    const  [modalOpenEdit, setmodalOpenEdit] = useState({action: 0, datos:""});
     const [datos, setDatos] = useState([]);
 
     useEffect(() => {
@@ -32,9 +35,15 @@ const Productos = () => {
     const btnAgregar = () =>{
         setModalOpen(!modalOpen)
         setActualizarDatos(!actualizarDatos);
-    }   
-    const btnEditar = (id) => {
-        console.log("mi id: ",id)
+    } 
+    const btnCategoriaModal = () =>{
+        //setModalOpen(!modalOpen);
+        setmodalOpenEdit({action: 0, datos:""});
+        setActualizarDatos(!actualizarDatos);
+    }
+    const btnEditar = (data) => {
+        //console.log("mi id: ",id)
+        setmodalOpenEdit({action: 1, datos:data});
     }
     const btnDelete = (id) => {
         Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar esta categoria?", icon: "question",
@@ -119,7 +128,7 @@ const Productos = () => {
                         <td id="precio">{element.precio_venta}</td>
                         
                         <td id="opciones">
-                            <button onClick={() => btnEditar(element.id)}  className='btnEdit'>Editar</button>
+                            <button onClick={() => btnEditar(element)}  className='btnEdit'>Editar</button>
                             <button onClick={() => btnDelete(element.id)} className='btnDelete'>Eliminar</button>
                         </td>
                     </tr>
@@ -136,6 +145,7 @@ const Productos = () => {
 
 
     { modalOpen === true  ? <ShowModal open={btnAgregar} form={<Form   ModalOpen={btnAgregar} />} /> : null} 
+    { modalOpenEdit.action === 1  ? <ShowModal open={btnCategoriaModal} form={<FormEditarProducto ModalOpen={btnCategoriaModal} dato={modalOpenEdit.datos}/>} /> : null}  
     </>)
 }
 
