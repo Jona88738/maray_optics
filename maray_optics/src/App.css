@@ -70,6 +70,13 @@
   color: white;
   border:none;
 }
+.btnCancelar{
+   border-radius: 10px;
+  padding: 15px;
+  background: rgb(194, 72, 88);
+  color: white;
+  border:none;
+}
 .logo_login{
   display: flex;
   justify-content: center;

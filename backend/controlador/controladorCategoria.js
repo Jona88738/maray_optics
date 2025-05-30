@@ -29,30 +29,34 @@ const insertCategoria = async (req, res) => {
 }
 const updateCategoria = async (req, res) =>{
     try {
+        const {nombreCategoria, id} = req.query;
+        //console.log(nombreCategoria, " ", id)
+        const [result] = await conn.query("UPDATE  categoria set nombre = ? WHERE id = ?",[nombreCategoria, id]);
+        //console.log("resultado: ", result.affectedRows);
 
-
-        
+        return result.affectedRows > 0 ? res.json({result: true, message: "exito"}) :  res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     } catch (error) {
         console.error("Error: ", error.message);
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     }
 
-    return res.json({result: true, message: "exito"})
+   
 }
 
 const deleteCategoria = async (req, res) =>{
 
     try {
         const {id} = req.query;
-
-        const [datos] = conn.query("UPDATE categoria set estado = 0 WHERE id = ?",[id]);
         
+        const [result] = await conn.query("UPDATE categoria set estado = 0 WHERE id = ?",[id]);
+
+        return result.affectedRows > 0 ? res.json({result: true, message: "exito"}) :  res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     } catch (error) {
         console.error("Error: ", error.message);
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     }
 
-    return res.json({result: true, message: "exito"})
+   
 }
 
 export default{

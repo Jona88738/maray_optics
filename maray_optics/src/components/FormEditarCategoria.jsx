@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import Swal from "sweetalert2";
 const FormEditarCategoria = ({ModalOpen, dato})=>{
     const [nombre, setNombre] = useState(dato.nombre);
 
@@ -11,8 +11,8 @@ const FormEditarCategoria = ({ModalOpen, dato})=>{
                   Swal.fire({title:"Alerta", text:"*No hubo modificacion en la categoria", icon: "success"} )
                 return ModalOpen();
             } 
-                fetch("http://localhost:3000/categoria",{
-                method: "EDIT",
+                fetch(`http://localhost:3000/categoria?nombreCategoria=${nombre}&&id=${dato.id}`,{
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -27,10 +27,15 @@ const FormEditarCategoria = ({ModalOpen, dato})=>{
                         Swal.fire({title:"Se ingreso con exito", text: "Categoria agregada", icon:"success"})
                         ModalOpen();
                     }else{
-    
+                         Swal.fire({title:"Error", text: res.message, icon:"error"})
+                         ModalOpen();
                     }
                 })
         }
+    const btnCancelar = (event) =>{
+        event.preventDefault();
+        ModalOpen();
+    }
 
     return(<>
             <form className="containerCategoria">
@@ -42,9 +47,10 @@ const FormEditarCategoria = ({ModalOpen, dato})=>{
                     onChange={(e) => setNombre(e.target.value)}
                     />
             </div>
-                
+                <div className="ContainerBtns">
                 <button  className="btnGuardar" onClick={btnGuardar}>Guardar</button>
-                <button>Cancelar</button>
+                <button  className="btnCancelar"onClick={btnCancelar} >Cancelar</button>
+                </div>
             </form>
     </>)
 }

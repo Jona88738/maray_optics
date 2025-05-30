@@ -62,6 +62,9 @@ const Categoria = ({btnRegresar}) =>{
                                                 setActualizarDatos(!actualizarDatos)
                                                 Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
                                                 
+                                            }else{
+                                                Swal.fire({title:"Error", text: res.message, icon:"error"})
+                                                setActualizarDatos(!actualizarDatos)
                                             }
                 
                                         })
