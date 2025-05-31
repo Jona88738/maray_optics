@@ -1,13 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const AutocompleteInput = ({tabla}) => {
   const [sugerencias, setSugerencias] = useState([]);
   const [valor, setValor] = useState('');
+  const [todasLasOpciones, setTodasLasOpciones] = useState([]);
 
-  const todasLasOpciones = [{id: 1,nombre: 'Bogotá'}, {id: 2,nombre: 'Medellín'}, {id: 3,nombre: 'Barranquilla'}, {id: 4,nombre: 'Cali'}];
+ // const todasLasOpciones = [{id: 1,nombre: 'Bogotá'}, {id: 2,nombre: 'Medellín'}, {id: 3,nombre: 'Barranquilla'}, {id: 4,nombre: 'Cali'}];
+
+  useEffect(() =>{
+      fetch("http://localhost:3000/producto",{
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "include"
+      })
+      .then((res) => res.json())
+      .then((res) =>{
+        if(res.result){
+             const datos = res.data.map((element) =>{
+              element.precio_venta = Math.round(parseFloat(element.precio_venta ) * 100);
+              return element;
+            })
+            setTodasLasOpciones(datos)
+            console.log(datos)
+        }else{
+          console.log("existe un error")
+        }
+      })
+  },[])
 
   const manejarCambio = (e) => {
     const texto = e.target.value;
+    //console.log(texto, "Mi texto")
     setValor(texto);
 
     if (texto.length > 0) {
@@ -15,7 +39,7 @@ const AutocompleteInput = ({tabla}) => {
         op.nombre.toLowerCase().includes(texto.toLowerCase())
 
       );
-      console.log(filtradas)
+      //console.log(filtradas)
       setSugerencias(filtradas);
     } else {
       setSugerencias([]);
@@ -23,6 +47,10 @@ const AutocompleteInput = ({tabla}) => {
   };
 
   const seleccionarOpcion = (opcion) => {
+    opcion.subtotal = opcion.precio_venta // parseFloat( opcion.precio_venta,2);
+    opcion.cantidad_compra = 1;
+    //opcion.cantidad_venta = 1;
+    //opcion.push()
     tabla(opcion)
     setValor(opcion.nombre);
     setSugerencias([]);
