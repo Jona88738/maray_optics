@@ -91,8 +91,8 @@ const Categoria = ({btnRegresar}) =>{
             <input type="text" />
             </div>
         </section>
-        <h2>Categoria</h2>
-
+        <h2 style={{textAlign:'center'}}>Categoria</h2>
+        <section className="containerTabla">
         <section className="table-responsive">
             <table  className="table table-bordered table-hover">
                 <thead>
@@ -130,7 +130,7 @@ const Categoria = ({btnRegresar}) =>{
                 </tbody>
             </table>
         </section>
-
+    </section>
 { modalOpen === true  ? <ShowModal open={btnCategoria} form={<FormCreateCategoria ModalOpen={btnCategoria}/>} /> : null} 
 { modalOpenEdit.action === 1  ? <ShowModal open={btnCategoriaModal} form={<FormEditarCategoria ModalOpen={btnCategoriaModal} dato={modalOpenEdit.datos}/>} /> : null}    
     

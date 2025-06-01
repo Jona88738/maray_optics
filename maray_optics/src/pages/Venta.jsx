@@ -5,7 +5,7 @@ import ShowModal from "../components/showModal";
 import Form from "../components/FormCreateExpediente";
 import { useState } from "react";
 import CatalogoProducto from "../components/CatalogoProductos";
-import ListadoProducto from "./ListadoProductos.jsx";
+import ListadoProducto from "./ListadoProductos";
 //
 import React, { useRef } from "react";
 import { useReactToPrint } from 'react-to-print';
@@ -14,7 +14,8 @@ import Ticket from "../components/ImprimirTicket.jsx"; // Asegúrate de que la r
 console.log('Ticket:', Ticket);
 
 const Venta = () =>{
- const [cambiarBody, setCambiarBody] = useState();
+ const [cambiarPage, setCambiarPage] = useState({action: 0});
+
 const contentRef = useRef(null);
 // size: 50mm 150mm;
   const handlePrint =  useReactToPrint({
@@ -38,13 +39,18 @@ const contentRef = useRef(null);
     console.log("Ya imprimio")
   }
 
-  const sale = {
-    items: [
-      { name: "Producto A", price: 10.0 },
-      { name: "Producto B", price: 5.5 },
-    ],
-    // total: 15.5,
-  };
+  const verPage = (opcion) =>{
+    console.log( typeof opcion, "Mi opcion")
+    setCambiarPage({action: opcion})
+  }
+
+//   const sale = {
+//     items: [
+//       { name: "Producto A", price: 10.0 },
+//       { name: "Producto B", price: 5.5 },
+//     ],
+//     // total: 15.5,
+//   };
 
      const [modalOpen, setModalOpen] = useState(false);
      const [datosTabla, setdatosTabla] = useState([])
@@ -113,11 +119,12 @@ const contentRef = useRef(null);
     
     return(<>
     <Navbar />
-        
+    {cambiarPage.action === 0 ? <> 
+        <h2 className="tituloVenta">Venta</h2>
         <section className="containerTitulo">
-                <h2 className="tituloVenta">Venta</h2>
+                
                 <button className="btnVentaRegistrarP" onClick={btnRegistrarPaciente}>Registrar Paciente</button>
-                <button style={{position:'absolute', right: '100px'}}>Listado de ventas</button>
+                <button style={{ right: '100px'}} onClick={() => verPage(1)}>Listado de ventas</button>
                 <button className="btnVentaBuscarProducto" onClick={btnBuscarProducto}>Buscar Producto</button>
             </section>
         <main className="containerProducts"> 
@@ -188,10 +195,11 @@ const contentRef = useRef(null);
 
         
         </section>
-        
+                
          { modalOpen === true  ? <ShowModal open={btnRegistrarPaciente} form={<Form   ModalOpen={btnRegistrarPaciente} />} /> : null} 
          { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarBuscarProducto} form={<CatalogoProducto ModalOpen={btnCerrarBuscarProducto} dato={modalOpenAll.datos}/>} /> : null} 
         </main>
+        </>: cambiarPage.action === 1 ? (<ListadoProducto /> ): "asdf"}
     </>)
 }
 export default Venta;
