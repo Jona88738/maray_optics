@@ -18,7 +18,7 @@ const Productos = () => {
 
     useEffect(() => {
        // if(!modalOpen){
-        fetch("http://localhost:3000/producto",{
+        fetch("/api/producto",{
             headers:{
                 'Content-Type': 'application/json'
             },
@@ -53,7 +53,7 @@ const Productos = () => {
                     cancelButtonText: "No, quiero elimnar"
                 }).then((res) =>{
                     if(res.isConfirmed){
-                        fetch(`http://localhost:3000/producto?id=${id}`, {
+                        fetch(`/api/producto?id=${id}`, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -101,7 +101,8 @@ const Productos = () => {
             <button className="btnVerCategoria" onClick={btnCategoria}>ver categoria</button>
 
         </section>
-        <section>
+         <section className="containerTabla">
+        <section className="table-responsive">
             <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -138,6 +139,7 @@ const Productos = () => {
 
                 </tbody>
             </table>
+        </section>
         </section>
  </>
         ): <Categoria btnRegresar={btnCategoria} />}

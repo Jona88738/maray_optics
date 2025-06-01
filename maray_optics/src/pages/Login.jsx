@@ -14,7 +14,7 @@ const verificarDatosLogin = (e) =>{
 
     if(!usuario || !password)  return Swal.fire({title: 'Alerta', text: "* Todos los campos son requeridos",showConfirmButton: true, confirmButtonText: "cerrar", icon:"warning"})
 
-    fetch(`http://localhost:3000/usuario/login?usuario=${usuario}&&password=${password}`,{
+    fetch(`/api/usuario/login?usuario=${usuario}&&password=${password}`,{
         headers: {
             'Content-Type': 'application/json'
         },

@@ -8,7 +8,7 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
     console.log(datos)
 
     useEffect(() =>{
-        fetch("http://localhost:3000/categoria",{
+        fetch("/api/categoria",{
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -32,7 +32,7 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
                  Swal.fire({title:"Aviso", text: "Ningun dato  fue modificado", icon: "success"})
                  return ModalOpen()
             }   
-            fetch('http://localhost:3000/producto',{
+            fetch('/api/producto',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -8,7 +8,7 @@ const AutocompleteInput = ({tabla}) => {
  // const todasLasOpciones = [{id: 1,nombre: 'Bogotá'}, {id: 2,nombre: 'Medellín'}, {id: 3,nombre: 'Barranquilla'}, {id: 4,nombre: 'Cali'}];
 
   useEffect(() =>{
-      fetch("http://localhost:3000/producto",{
+      fetch("/api/producto",{
         headers: {
             'Content-Type': 'application/json'
         },
@@ -57,7 +57,7 @@ const AutocompleteInput = ({tabla}) => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '500px' }}>
+    <div style={{ position: 'relative'}}>
       <input
         type="text"
         value={valor}

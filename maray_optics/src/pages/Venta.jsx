@@ -5,8 +5,46 @@ import ShowModal from "../components/showModal";
 import Form from "../components/FormCreateExpediente";
 import { useState } from "react";
 import CatalogoProducto from "../components/CatalogoProductos";
+import ListadoProducto from "./ListadoProductos.jsx";
+//
+import React, { useRef } from "react";
+import { useReactToPrint } from 'react-to-print';
+import Ticket from "../components/ImprimirTicket.jsx"; // Asegúrate de que la ruta coincida
+//
+console.log('Ticket:', Ticket);
 
-const venta = () =>{
+const Venta = () =>{
+ const [cambiarBody, setCambiarBody] = useState();
+const contentRef = useRef(null);
+// size: 50mm 150mm;
+  const handlePrint =  useReactToPrint({
+    contentRef,
+    pageStyle: `
+    @page {
+      size: 80mm auto;
+      margin: 0;
+    }
+
+    body {
+      -webkit-print-color-adjust: exact;
+      font-family: monospace;
+    }
+  `,
+  });
+
+  const btnxd = () =>{
+    console.log("re")
+    handlePrint()
+    console.log("Ya imprimio")
+  }
+
+  const sale = {
+    items: [
+      { name: "Producto A", price: 10.0 },
+      { name: "Producto B", price: 5.5 },
+    ],
+    // total: 15.5,
+  };
 
      const [modalOpen, setModalOpen] = useState(false);
      const [datosTabla, setdatosTabla] = useState([])
@@ -79,6 +117,7 @@ const venta = () =>{
         <section className="containerTitulo">
                 <h2 className="tituloVenta">Venta</h2>
                 <button className="btnVentaRegistrarP" onClick={btnRegistrarPaciente}>Registrar Paciente</button>
+                <button style={{position:'absolute', right: '100px'}}>Listado de ventas</button>
                 <button className="btnVentaBuscarProducto" onClick={btnBuscarProducto}>Buscar Producto</button>
             </section>
         <main className="containerProducts"> 
@@ -98,7 +137,7 @@ const venta = () =>{
                
                 <AutocompleteInput tabla={agregarDatosTabla}/>
             </div>
-
+            <div className="table-responsive">
             <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -133,7 +172,7 @@ const venta = () =>{
                     
                 </tbody>
             </table>
-
+            </div>
             <section className="containerTotal">
 
                 <label htmlFor="">Total</label>
@@ -142,7 +181,10 @@ const venta = () =>{
                 }  disabled />
                  
             </section>
-            <button className="btnAgregar" onClick={btnGenerarVenta}>Generar venta</button>
+            <button className="btnAgregar" onClick={btnxd}>Generar venta</button>
+                {/* <div > */}
+    
+      <Ticket ref={contentRef} sale={datosTabla} obtenerTotal={totall} />
 
         
         </section>
@@ -152,4 +194,4 @@ const venta = () =>{
         </main>
     </>)
 }
-export default venta
+export default Venta;

@@ -7,7 +7,7 @@ const Form = ({ModalOpen}) => {
     const [datosCategoria, setDatosCategoria] = useState([]);
 
     useEffect(() =>{
-        fetch("http://localhost:3000/categoria",{
+        fetch("/api/categoria",{
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -25,7 +25,7 @@ const Form = ({ModalOpen}) => {
     const btnGuardar = (e) =>{
         e.preventDefault();
         if(!datos.codigo || !datos.nombre || !datos.costo_compra || !datos.existencias  || !datos.descripcion || !datos.precio_venta  || datos.categoria === 'default') return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
-        fetch('http://localhost:3000/producto',{
+        fetch('/api/producto',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

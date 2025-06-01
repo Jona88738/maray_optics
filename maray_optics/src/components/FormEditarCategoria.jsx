@@ -11,7 +11,7 @@ const FormEditarCategoria = ({ModalOpen, dato})=>{
                   Swal.fire({title:"Alerta", text:"*No hubo modificacion en la categoria", icon: "success"} )
                 return ModalOpen();
             } 
-                fetch(`http://localhost:3000/categoria?nombreCategoria=${nombre}&&id=${dato.id}`,{
+                fetch(`/api/categoria?nombreCategoria=${nombre}&&id=${dato.id}`,{
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'

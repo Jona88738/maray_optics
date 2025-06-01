@@ -13,6 +13,7 @@ import { PORT, HOST_BD, PORT_BD, USER_BD, PASSWORD_BD, DATABASE } from './config
 const app = express();
 app.use(cors({
     origin: 'http://localhost:5173',  // Origen permitido
+// origin: 'http://192.168.100.6:51',
     credentials: true
 }))
 // app.use(cors({
@@ -54,10 +55,10 @@ app.use(session({
 app.use(morgan("dev"));
 app.use(express.json());
 
-app.use("/usuario", rutasUsuario);
-app.use('/producto',rutasProducto);
-app.use("/categoria", categoria);
-app.use("/expedientes",expedientes)
+app.use("/api/usuario", rutasUsuario);
+app.use('/api/producto',rutasProducto);
+app.use("/api/categoria", categoria);
+app.use("/api/expedientes",expedientes)
 
 app.use((req,res) =>{
     res.status(404).json({

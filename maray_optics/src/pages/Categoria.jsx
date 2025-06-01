@@ -17,7 +17,7 @@ const Categoria = ({btnRegresar}) =>{
        // if(!modalOpen){
 
         
-        fetch("http://localhost:3000/categoria",{
+        fetch("/api/categoria",{
             headers:{
                 'Content-Type': 'application/json'
             },
@@ -49,7 +49,7 @@ const Categoria = ({btnRegresar}) =>{
         }).then((res) =>{
             if(res.isConfirmed){
 
-                fetch(`http://localhost:3000/categoria?id=${id}`, {
+                fetch(`/api/categoria?id=${id}`, {
                                             method: 'DELETE',
                                             headers: {
                                                 'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ const Categoria = ({btnRegresar}) =>{
         </section>
         <h2>Categoria</h2>
 
-        <section>
+        <section className="table-responsive">
             <table  className="table table-bordered table-hover">
                 <thead>
                     <tr>

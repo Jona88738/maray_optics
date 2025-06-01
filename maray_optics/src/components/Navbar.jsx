@@ -26,7 +26,7 @@ const Navbar = () =>{
     return (
         <>
         <nav className="navbar">
-            <h2>Maray_Optics</h2>
+            <h2 style={{width: "100%"}}>Maray_Optics</h2>
             {/* <Link to='/'>Inicio</Link>
             <Link to='/usuarios'>Usuarios</Link>
             <Link to='/venta'>Venta</Link>

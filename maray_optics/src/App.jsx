@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Usuario from './pages/Usuarios';
 import Productos from './pages/Productos';
-import Venta from './pages/Venta';
+import Venta from './pages/Venta.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
