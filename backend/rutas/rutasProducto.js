@@ -5,7 +5,9 @@ const routes = Router();
 
 routes.get("/",productos.getProducts);
 
-routes.post("/", productos.insertProducto)
+routes.post("/", productos.insertProducto);
+
+routes.put("/", productos.updateProduct);
 
 routes.delete("/", productos.deleteProducts);
 

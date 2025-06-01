@@ -27,13 +27,14 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
             e.preventDefault();
             if(!datos.codigo || !datos.nombre || !datos.costo_compra || !datos.cantidad  || !datos.descripcion || !datos.precio_venta  || datos.categoria === 'default') return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
             if(datos.codigo === dato.codigo && datos.nombre === dato.nombre && datos.costo_compra === dato.costo_compra && datos.cantidad === dato.cantidad && datos.descripcion === dato.descripcion && datos.precio_venta === dato.precio_venta &&
-                datos.categoria === dato.categoria
+                datos.categoria === dato.categoria && dato.marca === datos.marca
             ) {
                  Swal.fire({title:"Aviso", text: "Ningun dato  fue modificado", icon: "success"})
                  return ModalOpen()
-            }   
+            }
+            
             fetch('/api/producto',{
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -54,17 +55,43 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
             console.log("Se guardo");
         }
     const guardarDatos = (event) =>{
-        console.log(datos);
-        setDatos({
-            ...datos,
-            [event.target.name]: event.target.value,
-    });
+
+        const { name, value } = event.target;
+  let nuevoValor = value;
+
+  // Si el campo requiere limitar a 2 decimales
+  const camposConDecimales = ['costo_compra', 'precio_venta']; // Ajusta según tus campos
+
+  if (camposConDecimales.includes(name)) {
+    // Validar formato numérico válido
+    if (/^\d*\.?\d*$/.test(value)) {
+      const partes = value.split('.');
+      if (partes.length === 2 && partes[1].length > 2) {
+        nuevoValor = `${partes[0]}.${partes[1].slice(0, 2)}`;
+      }
+    } else {
+      // Evitar guardar valores inválidos
+      return;
+    }
+  }
+
+  setDatos({
+    ...datos,
+    [name]: nuevoValor,
+  });
+
+    //     console.log(datos);
+    //     setDatos({
+    //         ...datos,
+    //         [event.target.name]: event.target.value,
+
+    // });
     
     }
     const btnLimpiar = (e) =>{
         e.preventDefault();
         console.log("Se  limpio");
-        setDatos({codigo: "", nombre: "", costo_compra: "", existencias: "", marca: "", descripcion: "", categoria: "default", precio_venta: ""})
+        setDatos({codigo: "", nombre: "", costo_compra: "", cantidad: "", marca: "", descripcion: "", categoria: "default", precio_venta: ""})
     }
     return(<>
         <main className="scroll">
@@ -91,7 +118,7 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
             </div>
             <div className="inputLogin">
                 <label htmlFor="">* Costo de compra</label>
-                <input type="text" 
+                <input type="number" 
                 name="costo_compra"
                 placeholder="ingrese el costo de compra"
                 value={datos.costo_compra}
@@ -101,7 +128,7 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
           
             <div className="inputLogin">
                 <label htmlFor="">* Existencias</label>
-                <input type="text" 
+                <input type="number" 
                 name="cantidad"
                 placeholder="ingrese la cantidad del producto"
                 value={datos.cantidad}
@@ -129,7 +156,7 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
             <div className="inputLogin">
                 <label htmlFor="">* Categoria</label>
                 
-                <select name="categoria" id="" value={datos.categoria} onChange={guardarDatos} >
+                <select name="categoria" class="form-select"  id="" value={datos.categoria} onChange={guardarDatos} >
                     <option value="default"> Selecciona una opcion</option>
                     {datosCategoria.map(element => {
                         console.log(element.id)
@@ -141,7 +168,7 @@ const FormEditarProducto = ({ModalOpen, dato}) =>{
             </div>
             <div className="inputLogin">
                 <label htmlFor="">* Precio de venta</label>
-                <input type="text" 
+                <input type="number" 
                 name="precio_venta"
                 placeholder="ingrese el precio de venta"
                 value={datos.precio_venta}

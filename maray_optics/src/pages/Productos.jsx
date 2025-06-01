@@ -16,6 +16,9 @@ const Productos = () => {
     const  [modalOpenEdit, setmodalOpenEdit] = useState({action: 0, datos:""});
     const [datos, setDatos] = useState([]);
 
+    //  Nuevo estado para la búsqueda
+    const [filtroNombre, setFiltroNombre] = useState('');
+
     useEffect(() => {
        // if(!modalOpen){
         fetch("/api/producto",{
@@ -80,6 +83,11 @@ const Productos = () => {
         setCategoriaOpen(!categoriaOpen);
     }
 
+     //  Aplicar filtro por nombre
+    const datosFiltrados = datos.filter(item =>
+        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
+    );
+
     return(<>
     <Navbar />
 <h1  style={{textAlign: 'center', marginBottom: '15px'}} >Productos</h1>
@@ -87,12 +95,24 @@ const Productos = () => {
        
         {categoriaOpen === false ? ( <>
        
-        <section className="inputBusqueda">
+        {/* <section className="inputBusqueda">
             <div className="input">
             <label htmlFor="">Buscar Producto</label>
             <input type="text" />
             </div>
-        </section>
+        </section> */}
+        {/*  Input de búsqueda */}
+            <section className="inputBusqueda">
+                <div className="input">
+                    <label htmlFor="">Buscar categoría</label>
+                    <input
+                        type="text"
+                        value={filtroNombre}
+                        onChange={(e) => setFiltroNombre(e.target.value)}
+                        placeholder="Escribe el nombre..."
+                    />
+                </div>
+            </section>
 
         <section className="containerButtons">
 
@@ -106,7 +126,7 @@ const Productos = () => {
             <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
-                    <th>Imagen</th>
+                    {/* <th>Imagen</th> */}
                     <th>Codigo</th>
                     <th>Nombre</th>
                     <th>Categoria</th>
@@ -116,15 +136,35 @@ const Productos = () => {
                     </tr>
                 </thead>
                 <tbody>
-
-                    {datos.map((element) =>{
+                
+                {datosFiltrados.length > 0 ? (
+                                datosFiltrados.map(element => (
+                                    <tr key={element.id}>
+                                        
+                                        <td id="codigo">{element.codigo}</td>
+                                        <td id="nombre">{element.nombre}</td>
+                                        <td id="categoria">{element.nombreCategoria}</td>
+                                        <td id="existencia">{element.cantidad}</td>
+                                        <td id="precio">{element.precio_venta}</td>
+                                        <td>
+                                            <button onClick={() => btnEditar(element)}  className='btnEdit'>Editar</button>
+                                            <button onClick={() => btnDelete(element.id)} className='btnDelete'>Eliminar</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" style={{ textAlign: 'center' }}>No hay resultados</td>
+                                </tr>
+                            )}
+                    {/* {datos.map((element) =>{
                         return (
 
                             <tr>
-                        <td id="imagen"></td>
+                         <td id="imagen"></td> 
                         <td id="codigo">{element.codigo}</td>
                         <td id="nombre">{element.nombre}</td>
-                        <td id="categoria">{element.categoria}</td>
+                        <td id="categoria">{element.nombreCategoria}</td>
                         <td id="existencia">{element.cantidad}</td>
                         <td id="precio">{element.precio_venta}</td>
                         
@@ -134,7 +174,7 @@ const Productos = () => {
                         </td>
                     </tr>
                         )
-                    } )}
+                    } )}  */}
                     
 
                 </tbody>

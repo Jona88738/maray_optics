@@ -7,6 +7,7 @@ import rutasUsuario from "./rutas/rutasUsuario.js";
 import rutasProducto from './rutas/rutasProducto.js';
 import categoria from "./rutas/rutaCategoria.js";
 import expedientes from "./rutas/rutaExpedientes.js";
+import ventas from "./rutas/rutasVentas.js";
 
 import { PORT, HOST_BD, PORT_BD, USER_BD, PASSWORD_BD, DATABASE } from './config.js'
 
@@ -58,7 +59,9 @@ app.use(express.json());
 app.use("/api/usuario", rutasUsuario);
 app.use('/api/producto',rutasProducto);
 app.use("/api/categoria", categoria);
-app.use("/api/expedientes",expedientes)
+app.use("/api/expedientes",expedientes);
+app.use("/api/ventas", ventas)
+
 
 app.use((req,res) =>{
     res.status(404).json({

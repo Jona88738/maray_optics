@@ -5,7 +5,7 @@ import ShowModal from "../components/showModal";
 import Form from "../components/FormCreateExpediente";
 import { useState } from "react";
 import CatalogoProducto from "../components/CatalogoProductos";
-import ListadoProducto from "./ListadoProductos";
+import ListadoProducto from "./ListadoVentas.jsx";
 //
 import React, { useRef } from "react";
 import { useReactToPrint } from 'react-to-print';
@@ -199,7 +199,7 @@ const contentRef = useRef(null);
          { modalOpen === true  ? <ShowModal open={btnRegistrarPaciente} form={<Form   ModalOpen={btnRegistrarPaciente} />} /> : null} 
          { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarBuscarProducto} form={<CatalogoProducto ModalOpen={btnCerrarBuscarProducto} dato={modalOpenAll.datos}/>} /> : null} 
         </main>
-        </>: cambiarPage.action === 1 ? (<ListadoProducto /> ): "asdf"}
+        </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> ): "asdf"}
     </>)
 }
 export default Venta;

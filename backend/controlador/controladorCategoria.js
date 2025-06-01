@@ -3,10 +3,15 @@ import { conn } from "../db/connectionMysql.js";
 const getCategoria = async (req, res) =>{
     let datos;
     try {
-        [datos] = await conn.query("SELECT * FROM categoria WHERE estado = 1");
+        // [datos] = await conn.query("SELECT * FROM categoria WHERE estado = 1");
+         [datos] = await conn.query(`SELECT SUM(p.cantidad) AS cantidadTotal, COUNT(p.categoria) as registroTotal, c.nombre, c.id FROM categoria c 
+                                    LEFT JOIN producto p ON p.categoria = c.id  && p.estado != 0
+                                    WHERE c.estado = 1
+                                    GROUP BY c.nombre, c.id`);
+        //console.log(datos)
         //console.log(datos)
     } catch (error) {
-        console.error("Error: ", error.sql)
+        console.error("Error: ", error.message)
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     }
     res.json({result: true, data: datos, message: "exito"})
