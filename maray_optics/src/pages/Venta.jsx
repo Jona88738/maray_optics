@@ -33,7 +33,7 @@ const contentRef = useRef(null);
   `,
   });
 
-  const btnxd = () =>{
+  const btnGenerarVenta = () =>{
     console.log("re")
     handlePrint()
     console.log("Ya imprimio")
@@ -90,9 +90,9 @@ const contentRef = useRef(null);
         })
     }
 
-    const btnGenerarVenta = () => {
-        console.log("Se genero la venta: ", datosTabla)
-    }
+    // const btnGenerarVenta = () => {
+    //     console.log("Se genero la venta: ", datosTabla)
+    // }
     const handleChangeCantidad = (element,event) =>{
         console.log(element,event.target.value)
         
@@ -140,7 +140,7 @@ const contentRef = useRef(null);
         <section className="containerTabla">
             <h2>Productos</h2>
 
-            <div className="input">
+            <div className="input inputVenta">
                
                 <AutocompleteInput tabla={agregarDatosTabla}/>
             </div>
@@ -188,7 +188,7 @@ const contentRef = useRef(null);
                 }  disabled />
                  
             </section>
-            <button className="btnAgregar" onClick={btnxd}>Generar venta</button>
+            <button className="btnAgregar" onClick={btnGenerarVenta}>Generar venta</button>
                 {/* <div > */}
     
       <Ticket ref={contentRef} sale={datosTabla} obtenerTotal={totall} />

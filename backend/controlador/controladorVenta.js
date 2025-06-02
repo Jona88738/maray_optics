@@ -3,11 +3,10 @@ import { conn } from "../db/connectionMysql.js"
 const getVentas = async (req, res) => {
 let datos;
     try {
-        [datos] = await conn.query(`SELECT pr.*, c.nombre as nombreCategoria FROM producto  pr
-            JOIN categoria c ON c.id = pr.categoria
-            WHERE pr.estado = 1`);
-        //console.log(datos)
-        //const [datos] = await conn.query("SELECT ")
+        [datos] = await conn.query(`SELECT v.*, e.nombre FROM venta v
+            LEFT JOIN expediente e ON e.id  = v.paciente_id`);
+        console.log(datos)
+       
     } catch (error) {
         console.error("Error: ", error.message)
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})

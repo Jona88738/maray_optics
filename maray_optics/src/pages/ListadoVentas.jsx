@@ -3,14 +3,33 @@ import '../../styles/ListadoProductos.css';
 
 const ListadoProducto = ({page}) => {
 
-    const [ventas, setVentas] = useState();
+    const [ventas, setVentas] = useState([]);
 
     const btnRegresar = () => {
         page(0)
     }
+    const setStatus = (status) =>{
+        if(status === 1){
+            return 'Pagado';
+        }else if(status === 2){
+            return 'Adeudo';
+        }else if(status === 3){
+            return 'Cancelado';
+        }
+    }
 
     useEffect(() =>{
-        setVentas(1)
+        fetch("/api/ventas",{
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            credentials: "include",
+        })
+        .then((res) => res.json() )
+        .then((res) =>{
+            console.log("Trajo datos ", res.data);
+            setVentas(res.data)
+        })
     },[])
 
     return (<>
@@ -44,24 +63,24 @@ const ListadoProducto = ({page}) => {
                 </thead>
                 <tbody>
 
-                    {/* {datos.map((element) =>{
+                    {ventas.map((element) =>{
                         return (
 
                             <tr>
-                        <td id="imagen"></td>
-                        <td id="codigo">{element.codigo}</td>
-                        <td id="nombre">{element.nombre}</td>
-                        <td id="categoria">{element.categoria}</td>
-                        <td id="existencia">{element.cantidad}</td>
-                        <td id="precio">{element.precio_venta}</td>
+                        
+                        <td id="Fecha">{element.fecha_inicio}</td>
+                        <td id="Venta">{element.id}</td>
+                        <td id="Paciente">{element.paciente_id === null ? "Venta al publico": element.nombre}</td>
+                        <td id="Total">{element.total}</td>
+                        <td id="Status">{setStatus(element.status)}</td>
                         
                         <td id="opciones">
-                            <button  className='btnEdit'>Editar</button>
-                            <button  className='btnDelete'>Eliminar</button>
+                            <button  className='btnEdit'>info</button>
+                            
                         </td>
                     </tr>
                         )
-                    } )} */}
+                    } )}
                     
 
                 </tbody>
