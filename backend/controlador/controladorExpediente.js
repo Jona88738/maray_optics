@@ -4,9 +4,7 @@ const getExpedientes = async (req, res) =>{
 
      let datos;
     try {
-        [datos] = await conn.query(`SELECT pr.*, c.nombre as nombreCategoria FROM producto  pr
-            JOIN categoria c ON c.id = pr.categoria
-            WHERE pr.estado = 1`);
+        [datos] = await conn.query(`SELECT id, nombre from expediente`);
         //console.log(datos)
         //const [datos] = await conn.query("SELECT ")
     } catch (error) {

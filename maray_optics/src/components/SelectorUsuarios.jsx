@@ -10,7 +10,7 @@ const SelectorUsuarios = ({ onSelect }) => {
   useEffect(() => {
     const obtenerUsuarios = async () => {
       try {
-        const res = await fetch(`/api/usuarios`, {
+        const res = await fetch(`/api/expedientes`, {
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include'
         });

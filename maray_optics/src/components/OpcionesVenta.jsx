@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../../styles/OpcionesVenta.css'
-const OpcionesVenta = ({ModalOpen, dato}) => {
+const OpcionesVenta = ({ModalOpen, dato,dataUsuario}) => {
     const [mostrar, setMostrar] = useState({select:'1',ModoPago:''});
     const [datosSelect, setDatosSelect] = useState();
     
@@ -27,15 +27,21 @@ const OpcionesVenta = ({ModalOpen, dato}) => {
     const finalizarVenta = (e) =>{
         e.preventDefault();
         if(mostrar.select === '1'){
-            dato.metodo_pago = 'Efectivo'
-            console.log("Estos son mis datos antes de enviar: ", dato);
+            
+            dataUsuario.metodo_pago = 'Efectivo'
+            const datosAEnviar = {
+                    dato: dato,               // clave: dato, valor: arreglo
+                    dataUsuario: dataUsuario  // clave: dataUsuario, valor: objeto
+                    };
+
+            console.log("Estos son mis datos antes de enviar: ", datosAEnviar);
              fetch('/api/ventas',{
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         credentials: 'include',
-                        body: JSON.stringify(dato)
+                        body: JSON.stringify(datosAEnviar)
                 
                     })
                     .then((res) => res.json())

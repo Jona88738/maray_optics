@@ -16,9 +16,14 @@ let datos;
 }
 
 const insertVenta = (req, res) =>{
-        const [dato] = req.body;
+        const datoo = req.body;
         // const {dato} = req.body;
-        console.log(dato)
+        console.log(datoo)
+
+        const la = datoo.reduce((acc, valorActual) =>{
+            
+        },['('])
+
 
         res.json({})
 }

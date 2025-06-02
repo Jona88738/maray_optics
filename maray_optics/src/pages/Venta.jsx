@@ -21,9 +21,22 @@ const Venta = () =>{
  const [modalOpen, setModalOpen] = useState(false);
  const [datosTabla, setdatosTabla] = useState([])
  const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
+ const [informacionVenta, setInformacionVenta ] = useState({select:0, id:0, nombre:''})
 
  const manejarSeleccion = (usuario) => {
     console.log('Usuario seleccionado:', usuario);
+    if(usuario.id ===  0){
+        console.log("Venta al publico")
+        setInformacionVenta({
+            select: 0,
+             id:2, nombre:"Venta al publico"
+        })
+    }else if(usuario.id !== 0){
+        setInformacionVenta({
+            select: 1,
+             id:usuario.id, nombre:usuario.nombre
+        })
+    }
   };
 
 const contentRef = useRef(null);
@@ -44,13 +57,14 @@ const contentRef = useRef(null);
   });
 
   const btnGenerarVenta = () =>{
-
+    if(informacionVenta.id === 0) return Swal.fire({title:"Alerta!", text: "Debes seleccionar ya sea venta  publica o algun usuario ya registrado", icon: "warning"})
     if(datosTabla.length === 0)  return Swal.fire({title:"Alerta!", text: "Primeros tienes que agregar articulos a la venta", icon: "warning"})
     setmodalOpenAll({
             ...modalOpenAll,
             action: 2,
             
         })
+        console.log("Se realizo la venta" )
     // console.log("re")
     // handlePrint()
     // console.log("Ya imprimio")
@@ -135,15 +149,13 @@ const contentRef = useRef(null);
                 <h2>Nueva Venta</h2>
                 <hr />
                 <SelectorUsuarios onSelect={manejarSeleccion} />
-                <select name="" id="">
-                    <option value="default">Venta al publico</option>
-                    
-                </select>
+                <hr />
+                {informacionVenta.select === 0 ? "":(<>
+                    <label htmlFor="">Nombre</label>
+                    <input type="text" value={informacionVenta.nombre} disabled />
+                </>)}
             </form>
-            {/* <div className="input">
-            <label htmlFor="">Buscar Producto</label>
-            <input type="text" />
-            </div> */}
+            
 
         </section>
 
@@ -208,7 +220,7 @@ const contentRef = useRef(null);
                 
          { modalOpen === true  ? <ShowModal open={btnRegistrarPaciente} form={<Form   ModalOpen={btnRegistrarPaciente} />} /> : null} 
          { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarBuscarProducto} form={<CatalogoProducto ModalOpen={btnCerrarBuscarProducto} dato={modalOpenAll.datos}/>} /> : null} 
-         { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla}/>} /> : null} 
+         { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla} dataUsuario={informacionVenta}/>} /> : null} 
         </main>
         </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> ): "asdf"}
     </>)
