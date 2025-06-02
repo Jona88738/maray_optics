@@ -1,0 +1,21 @@
+.titleListadoVenta{
+    text-align: center;
+}
+.containerOVenta{
+    display: flex;
+    justify-content:space-evenly;
+    padding: 15px;
+}
+.containerTotalOp{
+    width: 61%;
+}
+.containerTotalOp h2{
+    text-align: center;
+}
+.containerEfecOp{
+    width: 20%;
+}
+.containerbtnOpVenta{
+    display: flex;
+    justify-content: space-evenly;
+}

@@ -6,15 +6,25 @@ import Form from "../components/FormCreateExpediente";
 import { useState } from "react";
 import CatalogoProducto from "../components/CatalogoProductos";
 import ListadoProducto from "./ListadoVentas.jsx";
-//
 import React, { useRef } from "react";
+import OpcionesVenta from "../components/OpcionesVenta.jsx";
+import SelectorUsuarios from '../components/SelectorUsuarios.jsx';
+
 import { useReactToPrint } from 'react-to-print';
 import Ticket from "../components/ImprimirTicket.jsx"; // Asegúrate de que la ruta coincida
+import Swal from "sweetalert2";
 //
-console.log('Ticket:', Ticket);
+// console.log('Ticket:', Ticket);
 
 const Venta = () =>{
  const [cambiarPage, setCambiarPage] = useState({action: 0});
+ const [modalOpen, setModalOpen] = useState(false);
+ const [datosTabla, setdatosTabla] = useState([])
+ const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
+
+ const manejarSeleccion = (usuario) => {
+    console.log('Usuario seleccionado:', usuario);
+  };
 
 const contentRef = useRef(null);
 // size: 50mm 150mm;
@@ -34,9 +44,16 @@ const contentRef = useRef(null);
   });
 
   const btnGenerarVenta = () =>{
-    console.log("re")
-    handlePrint()
-    console.log("Ya imprimio")
+
+    if(datosTabla.length === 0)  return Swal.fire({title:"Alerta!", text: "Primeros tienes que agregar articulos a la venta", icon: "warning"})
+    setmodalOpenAll({
+            ...modalOpenAll,
+            action: 2,
+            
+        })
+    // console.log("re")
+    // handlePrint()
+    // console.log("Ya imprimio")
   }
 
   const verPage = (opcion) =>{
@@ -44,23 +61,9 @@ const contentRef = useRef(null);
     setCambiarPage({action: opcion})
   }
 
-//   const sale = {
-//     items: [
-//       { name: "Producto A", price: 10.0 },
-//       { name: "Producto B", price: 5.5 },
-//     ],
-//     // total: 15.5,
-//   };
 
-     const [modalOpen, setModalOpen] = useState(false);
-     const [datosTabla, setdatosTabla] = useState([])
-    const [total, setTotal]  = useState();
+     
 
-     const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
-
-     function decimalToCentavos(valor) {
-        return Math.round(valor * 100); // redondea a centavos
-    }
 
     const totall =datosTabla.reduce((acc, valorActual) =>{return acc += valorActual.subtotal; },0);
 
@@ -90,9 +93,7 @@ const contentRef = useRef(null);
         })
     }
 
-    // const btnGenerarVenta = () => {
-    //     console.log("Se genero la venta: ", datosTabla)
-    // }
+    
     const handleChangeCantidad = (element,event) =>{
         console.log(element,event.target.value)
         
@@ -108,7 +109,7 @@ const contentRef = useRef(null);
             }
 
             return elemento;
-            console.log("resultado de busqued", result);
+            
         })
 
         console.log("Nuevos datos: ", nuevosDatos)
@@ -130,10 +131,19 @@ const contentRef = useRef(null);
         <main className="containerProducts"> 
             
         <section className="inputBusqueda">
-            <div className="input">
+            <form >
+                <h2>Nueva Venta</h2>
+                <hr />
+                <SelectorUsuarios onSelect={manejarSeleccion} />
+                <select name="" id="">
+                    <option value="default">Venta al publico</option>
+                    
+                </select>
+            </form>
+            {/* <div className="input">
             <label htmlFor="">Buscar Producto</label>
             <input type="text" />
-            </div>
+            </div> */}
 
         </section>
 
@@ -198,6 +208,7 @@ const contentRef = useRef(null);
                 
          { modalOpen === true  ? <ShowModal open={btnRegistrarPaciente} form={<Form   ModalOpen={btnRegistrarPaciente} />} /> : null} 
          { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarBuscarProducto} form={<CatalogoProducto ModalOpen={btnCerrarBuscarProducto} dato={modalOpenAll.datos}/>} /> : null} 
+         { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla}/>} /> : null} 
         </main>
         </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> ): "asdf"}
     </>)

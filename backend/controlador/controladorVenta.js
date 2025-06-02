@@ -15,6 +15,15 @@ let datos;
     res.json({result: true, data: datos, message: "exito"})
 }
 
+const insertVenta = (req, res) =>{
+        const [dato] = req.body;
+        // const {dato} = req.body;
+        console.log(dato)
+
+        res.json({})
+}
+
 export default {
-    getVentas
+    getVentas,
+    insertVenta
 }
