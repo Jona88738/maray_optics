@@ -29,6 +29,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario}) => {
         if(mostrar.select === '1'){
             
             dataUsuario.metodo_pago = 'Efectivo'
+            dataUsuario.status = 1;
             const datosAEnviar = {
                     dato: dato,               // clave: dato, valor: arreglo
                     dataUsuario: dataUsuario  // clave: dataUsuario, valor: objeto
