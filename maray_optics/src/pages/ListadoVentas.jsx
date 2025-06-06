@@ -38,7 +38,7 @@ const ListadoProducto = ({page}) => {
 
             <button className="btnVentaRegistrarP" onClick={btnRegresar}>Regresar</button>
             <button style={{ right: '100px' }} >Listado de ventas</button>
-            <button className="btnVentaBuscarProducto">Caja y movimiento</button>
+            <button className="btnVentaBuscarProducto" onClick={() => page(3)}>Caja y movimiento</button>
         </section>
     <main className="containerProducts"> 
         <section className="inputBusqueda">
@@ -75,7 +75,7 @@ const ListadoProducto = ({page}) => {
                         <td id="Status">{setStatus(element.status)}</td>
                         
                         <td id="opciones">
-                            <button  className='btnEdit'>info</button>
+                            <button  className='btnEdit' onClick={() => page(2)}>info</button>
                             
                         </td>
                     </tr>

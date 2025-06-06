@@ -13,6 +13,8 @@ import SelectorUsuarios from '../components/SelectorUsuarios.jsx';
 import { useReactToPrint } from 'react-to-print';
 import Ticket from "../components/ImprimirTicket.jsx"; // Asegúrate de que la ruta coincida
 import Swal from "sweetalert2";
+import DetallesVenta from "./DetallesVenta.jsx";
+import MovimientoEfectivo from "./MovimientosEfectivo.jsx";
 //
 // console.log('Ticket:', Ticket);
 
@@ -222,7 +224,9 @@ const contentRef = useRef(null);
          { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarBuscarProducto} form={<CatalogoProducto ModalOpen={btnCerrarBuscarProducto} dato={modalOpenAll.datos}/>} /> : null} 
          { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla} dataUsuario={informacionVenta}/>} /> : null} 
         </main>
-        </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> ): "asdf"}
+        </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> )
+        : cambiarPage.action === 2 ? <DetallesVenta page={verPage}/>
+        : cambiarPage.action === 3 ? <MovimientoEfectivo page={verPage}/>: null }
     </>)
 }
 export default Venta;
