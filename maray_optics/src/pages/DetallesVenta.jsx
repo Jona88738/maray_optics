@@ -1,23 +1,26 @@
-// import '../../styles/';
+ import '../../styles/detallesVenta.css';
 
 const DetallesVenta = ({page}) => {
     
     return(<>
        
         <main className="containerProducts"> 
-             <button onClick={() => page(1)}>Regresar</button>
-            <button >Cancelar Venta</button>
+            <div className="containerTitulo">
+                <button onClick={() => page(1) } className="btnRegresar">Regresar</button>
+            <button className="btnRegresar" >Cancelar Venta</button>
+            </div>
+            
            
 
             <section className="containerTabla">
                  <h2>Detalles Venta</h2>
                  <hr />
-                 <form >
+                 <form  className='formDatosVenta'>
                     <div className="input">
                         <label htmlFor="">Atendido por</label>
                         <input type="text" />
                     </div>
-                    <section>
+                    <section className="datosVenta">
                         <div>
                         <label htmlFor="">Fecha de venta</label>
                         <input type="text" />
@@ -45,8 +48,9 @@ const DetallesVenta = ({page}) => {
 
                        
                     </section>
-                    <div>
+                    <div className='inputDomici'>
                             <label htmlFor="">Domicilio del paciente</label>
+                            <input type="text" />
                     </div>
                  </form>
             <hr />
@@ -123,23 +127,24 @@ const DetallesVenta = ({page}) => {
 
             </section>
             
-            <article>
-                <div>
+            <article className='containerpagoInfo'>
+                <div className='inputDomici'>
                     <label htmlFor="">Acumulado</label>
                     <input type="text" />
                 </div>
 
-                <div>
+                <div className='inputDomici'>
                     <label htmlFor="">Cantidad restante</label>
                     <input type="text" />
-                    <button>Realiza Pago</button>
+                    
                 </div>
+                <button>Realiza Pago</button>
             </article>
                 <hr />
 
-                <section>
-                    <button>Recibo</button>
-                    <button>Ticket</button>
+                <section  className='containerBtnReciTicket'>
+                    <button className='btnAgregar'>Recibo</button>
+                    <button className='btnAgregar'>Ticket</button>
                 </section>
             </section>
 

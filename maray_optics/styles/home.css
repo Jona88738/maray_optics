@@ -5,6 +5,7 @@
 .navbar{
   background: black;
   min-height: 7vh;   
+  z-index: 2;
 }
 .navbar h2{
   text-align: center;
@@ -21,7 +22,10 @@
     background-color: white;
     transition: width 0.3s ease-in;
    box-shadow: 10px 0px 20px 0px black;
-   position: absolute;
+   /* position: absolute; */
+   position: fixed;
+   top: 0;
+   padding-top: 62px;
     
 }
 .navbarIzquierda .containerIconosNav{
@@ -30,6 +34,8 @@
     align-items: center;
     gap: 13px;
     transition: width 1.3x ease-in;
+    /* height: 80%; */
+  min-height: 100vh;
 }
 .navbarIzquierda .containerIconosNav:hover{
     align-items: baseline;

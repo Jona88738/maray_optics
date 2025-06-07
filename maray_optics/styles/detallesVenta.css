@@ -1,1 +1,24 @@
 
+.formDatosVenta{
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+}
+.datosVenta{
+    display: flex;
+    flex-direction: row;
+    
+}
+.containerBtnReciTicket{
+    display: flex;
+    justify-content: space-around;
+}
+.inputDomici{
+    display: flex;
+    flex-direction: column;
+}
+.containerpagoInfo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
