@@ -225,7 +225,7 @@ const contentRef = useRef(null);
          { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla} dataUsuario={informacionVenta} page={verPage}/>} /> : null} 
         </main>
         </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> )
-        : cambiarPage.action === 2 ? <DetallesVenta page={verPage} informacion={cambiarPage} />
+        : cambiarPage.action === 2 ? <DetallesVenta page={verPage} informacion={cambiarPage.data} />
         : cambiarPage.action === 3 ? <MovimientoEfectivo page={verPage}/>: null }
     </>)
 }

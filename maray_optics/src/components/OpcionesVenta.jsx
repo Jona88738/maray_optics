@@ -66,7 +66,10 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                         if(res.success){
                             Swal.fire({title:"Se ingreso con exito", text: "Categoria agregada", icon:"success"})
                            // ModalOpen();
-                            page(2)
+                           datosAEnviar.dataUsuario.fecha = res.fecha;
+                           datosAEnviar.dataUsuario.totalVenta = res.total;
+                           datosAEnviar.dataUsuario.idVenta = res.ventaId;
+                            page(2, datosAEnviar)
                             //console.log("Producto registrado");
                         }else{
                             console.log("algo fallo", res.result)

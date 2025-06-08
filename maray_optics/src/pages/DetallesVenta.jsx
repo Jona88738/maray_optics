@@ -1,9 +1,27 @@
  import { useEffect } from 'react';
 import '../../styles/detallesVenta.css';
+import { data } from 'react-router-dom';
+
+const verificarEstatus = (estatus) =>{
+    if(estatus === 1) return 'Pagado';
+    if(estatus === 2) return 'Adeudo';
+    if(estatus === 3) return 'Cancelado';
+}
+
+const verificarTipo = (estatus) =>{
+    if(estatus === 1) return 'Venta Liquidada';
+    
+    return 'Adeudo';
+}
+
+
 
 const DetallesVenta = ({page, informacion}) => {
-    
+    const {dataUsuario, dato } = informacion; 
+    console.log("llego de venta: ",informacion);
+    console.log("llego de venta: ",dato);
     useEffect(() =>{
+        
         fetch(`/api/ventas/detallesVenta?id=${informacion.data}`,{
             method: 'GET',
             headers:{
@@ -17,6 +35,13 @@ const DetallesVenta = ({page, informacion}) => {
             })
     },[])
     
+     const calcularTotal = () =>{
+        let total =  dato.reduce((acc, actual) =>{
+        return acc + actual.subtotal;
+    },0)
+    return total;
+    }
+
     return(<>
        
         <main className="containerProducts"> 
@@ -38,34 +63,34 @@ const DetallesVenta = ({page, informacion}) => {
                     <section className="datosVenta">
                         <div>
                         <label htmlFor="">Fecha de venta</label>
-                        <input type="text" />
+                        <input type="text" value={dataUsuario.fecha}/>
                         </div>
 
                         <div>
                             <label htmlFor="">Nombre de paciente</label>
-                            <input type="text" />
+                            <input type="text" value={dataUsuario.nombre}/>
                         </div>
 
                         <div>
                             <label htmlFor="">Telefono</label>
-                            <input type="text" />
+                            <input type="text" value={dataUsuario.telefono !== undefined ? dataUsuario.telefono: "ND" }/>
                         </div>
 
                         <div>
                             <label htmlFor="">Tipo</label>
-                            <input type="text" />
+                            <input type="text" value={verificarTipo(dataUsuario.status)}/>
                         </div>
 
                         <div>
                             <label htmlFor="">Estatus</label>
-                            <input type="text" />
+                            <input type="text" value={verificarEstatus(dataUsuario.status)}/>
                         </div>
 
                        
                     </section>
                     <div className='inputDomici'>
                             <label htmlFor="">Domicilio del paciente</label>
-                            <input type="text" />
+                            <input type="text" value={'ND'}/>
                     </div>
                  </form>
             <hr />
@@ -84,16 +109,22 @@ const DetallesVenta = ({page, informacion}) => {
                     </tr>
                 </thead>
                 <tbody>    
-                            <tr>
-                                <td></td>
-                                <td> </td>
-                                <td> <input type="number" placeholder="Cantidad" min={1} /> </td>
+                        {dato.map((element)=>{
+                            return(
+
+                    <tr key={element.id}>
+                                <td>{element.codigo}</td>
+                                <td>{element.descripcion} </td>
+                                <td> {element.cantidad_compra} </td>
                                 
-                                <td> </td>
-                                <td> <input type="number" placeholder="Descuento" min={0} value={0} /> </td>
-                                <td></td>
+                                <td>{ (element.precio_venta / 100).toFixed(2)} </td>
+                                <td> {} </td>
+                                <td> { (element.subtotal / 100).toFixed(2)}</td>
                         
                     </tr>
+                            )
+                        })}
+                            
                         
                 </tbody>
             </table>
@@ -103,7 +134,7 @@ const DetallesVenta = ({page, informacion}) => {
 
                 <label htmlFor="">Total</label>
                 {/* Usa useMemo() */}
-                <input type="text" value="322" disabled />
+                <input type="text" value={(calcularTotal() / 100).toFixed(2)} disabled />
                  
             </section>
 

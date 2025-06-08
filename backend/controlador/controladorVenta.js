@@ -77,7 +77,9 @@ const insertVenta = async (req, res) =>{
      );
 
      await connection.commit();
-    
+     const hoy = new Date().toISOString().split('T')[0];
+    console.log(hoy);
+     res.status(200).json({ success: true, idVenta: ventaId, totalVenta: total, fecha: hoy });
    } catch (error) {
      await connection.rollback();
      console.error('Error en transacción:', error);
@@ -86,7 +88,7 @@ const insertVenta = async (req, res) =>{
      connection.release();
    }
 
-    res.status(200).json({ success: true });
+   
         
 }
 
