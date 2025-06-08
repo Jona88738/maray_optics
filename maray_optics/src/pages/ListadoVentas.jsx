@@ -75,7 +75,7 @@ const ListadoProducto = ({page}) => {
                         <td id="Status">{setStatus(element.status)}</td>
                         
                         <td id="opciones">
-                            <button  className='btnEdit' onClick={() => page(2)}>info</button>
+                            <button  className='btnEdit' onClick={() => page(2,element.id)}>info</button>
                             
                         </td>
                     </tr>

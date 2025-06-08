@@ -19,7 +19,7 @@ import MovimientoEfectivo from "./MovimientosEfectivo.jsx";
 // console.log('Ticket:', Ticket);
 
 const Venta = () =>{
- const [cambiarPage, setCambiarPage] = useState({action: 0});
+ const [cambiarPage, setCambiarPage] = useState({action: 0, data: {}});
  const [modalOpen, setModalOpen] = useState(false);
  const [datosTabla, setdatosTabla] = useState([])
  const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
@@ -31,7 +31,7 @@ const Venta = () =>{
         console.log("Venta al publico")
         setInformacionVenta({
             select: 0,
-             id:2, nombre:"Venta al publico"
+             id:-2, nombre:"Venta al publico"
         })
     }else if(usuario.id !== 0){
         setInformacionVenta({
@@ -72,9 +72,9 @@ const contentRef = useRef(null);
     // console.log("Ya imprimio")
   }
 
-  const verPage = (opcion) =>{
+  const verPage = (opcion, datos) =>{
     console.log( typeof opcion, "Mi opcion")
-    setCambiarPage({action: opcion})
+    setCambiarPage({action: opcion,data: datos})
   }
 
 
@@ -222,10 +222,10 @@ const contentRef = useRef(null);
                 
          { modalOpen === true  ? <ShowModal open={btnRegistrarPaciente} form={<Form   ModalOpen={btnRegistrarPaciente} />} /> : null} 
          { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarBuscarProducto} form={<CatalogoProducto ModalOpen={btnCerrarBuscarProducto} dato={modalOpenAll.datos}/>} /> : null} 
-         { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla} dataUsuario={informacionVenta}/>} /> : null} 
+         { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla} dataUsuario={informacionVenta} page={verPage}/>} /> : null} 
         </main>
         </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> )
-        : cambiarPage.action === 2 ? <DetallesVenta page={verPage}/>
+        : cambiarPage.action === 2 ? <DetallesVenta page={verPage} informacion={cambiarPage} />
         : cambiarPage.action === 3 ? <MovimientoEfectivo page={verPage}/>: null }
     </>)
 }

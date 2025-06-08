@@ -27,12 +27,34 @@ const insertVenta = async (req, res) =>{
   const connection = await conn.getConnection();
    try {
      await connection.beginTransaction();
+    const ValuesVenta = [total, dataUsuario.metodo_pago, dataUsuario.status];
+    const camposventa = ['total','metodo_pago', 'status']
 
+    if(dataUsuario.id !== -2){
+      ValuesVenta.push(dataUsuario.id)
+      camposventa.push('paciente_id')
+    }
+    if(dataUsuario.tipo !== undefined){
+      ValuesVenta.push(dataUsuario.tipo)
+      camposventa.push('tipo')
+    }
+    if(dataUsuario.pago_venta !== undefined){
+      ValuesVenta.push(dataUsuario.pago_venta)
+      camposventa.push('pago_venta')
+    }
+
+     const valuesVentasql = camposventa.map(() => '?').join(', ')
+
+     const sql = `INSERT INTO venta(${camposventa.join(', ')}) VALUES(${valuesVentasql}) `
+
+    console.log(camposventa)
+    console.log(ValuesVenta)
     //  Inserta la venta general
-     const [result] = await connection.query(
-       'INSERT INTO venta (paciente_id, total, metodo_pago, status) VALUES (?, ?, ?, ?)',
-       [dataUsuario.id, total, dataUsuario.metodo_pago, dataUsuario.status ]
-     );
+    const [result] = await connection.query(sql, ValuesVenta)
+    //  const [result] = await connection.query(
+    //    'INSERT INTO venta (paciente_id, total, metodo_pago, status) VALUES (?, ?, ?, ?)',
+    //    [dataUsuario.id, total, dataUsuario.metodo_pago, dataUsuario.status ]
+    //  );
 
      const ventaId = result.insertId;
 
@@ -55,7 +77,7 @@ const insertVenta = async (req, res) =>{
      );
 
      await connection.commit();
-     res.status(200).json({ success: true });
+    
    } catch (error) {
      await connection.rollback();
      console.error('Error en transacción:', error);
@@ -64,11 +86,33 @@ const insertVenta = async (req, res) =>{
      connection.release();
    }
 
-
+    res.status(200).json({ success: true });
         
+}
+
+const detallesVenta = async (req, res) =>{
+
+   try {
+        const { id } = req.query;
+        console.log("mi id: ",id);
+        const [datos] = await conn.query(`SELECT v.fecha_inicio, e.nombre, e.telefono FROM venta v
+          LEFT JOIN expediente e ON e.id  = v.paciente_id 
+          WHERE v.id = ?`
+          
+          ,[id])
+          console.log(datos);
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+    res.json({ result: true,  mensaje: "Productos eliminado" })
+
+  console.log("DetallesVenta")
+  // res.json({})
 }
 
 export default {
     getVentas,
-    insertVenta
+    insertVenta,
+    detallesVenta
 }

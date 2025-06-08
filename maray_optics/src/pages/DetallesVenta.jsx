@@ -1,6 +1,21 @@
- import '../../styles/detallesVenta.css';
+ import { useEffect } from 'react';
+import '../../styles/detallesVenta.css';
 
-const DetallesVenta = ({page}) => {
+const DetallesVenta = ({page, informacion}) => {
+    
+    useEffect(() =>{
+        fetch(`/api/ventas/detallesVenta?id=${informacion.data}`,{
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+            .then((res) => res.json())
+            .then((res) =>{
+
+            })
+    },[])
     
     return(<>
        
@@ -17,7 +32,7 @@ const DetallesVenta = ({page}) => {
                  <hr />
                  <form  className='formDatosVenta'>
                     <div className="input">
-                        <label htmlFor="">Atendido por</label>
+                        <label htmlFor="">Atendido por {informacion.data}</label>
                         <input type="text" />
                     </div>
                     <section className="datosVenta">

@@ -7,4 +7,6 @@ routes.get("/",controladorVenta.getVentas);
 
 routes.post("/",controladorVenta.insertVenta);
 
+routes.get("/detallesVenta", controladorVenta.detallesVenta);
+
 export default routes;
