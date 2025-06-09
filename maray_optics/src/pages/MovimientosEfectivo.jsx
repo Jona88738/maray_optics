@@ -1,11 +1,18 @@
+import { useEffect, useState } from "react"
 
 const MovimientoEfectivo = ({page}) =>{
 
-    
+    const [movimientoEfecto, setMovimientoEfecto] = useState();
+
+    useEffect(() =>{
+
+        fetch()
+    },[])
+
     return(<>
             <main className="containerProducts">
                 <button onClick={() => page(1)}>Regresar</button>
-                <button >Cancelar Venta</button>
+                
 
                 <button>Corte de caja</button>
                 <button>Movimiento de efectivo</button>

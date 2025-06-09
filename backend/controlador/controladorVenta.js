@@ -1,7 +1,11 @@
 import { conn } from "../db/connectionMysql.js"
 
+const tipoVenta = [	'venta', 'entrada', 'salida', 'devolucion']
+const descripcion = [ 'PAGO A VENTA', 'DEVOLUCIÓN DE VENTA', 'ENTRADA - FONDO DE CAJA' ]
+
 const getVentas = async (req, res) => {
 let datos;
+
     try {
         [datos] = await conn.query(`SELECT v.*, e.nombre FROM venta v
             LEFT JOIN expediente e ON e.id  = v.paciente_id`);
@@ -18,7 +22,8 @@ let datos;
 const insertVenta = async (req, res) =>{
          const { dato, dataUsuario } = req.body;
     console.log("datos: ",dato, " DataUsuario: ", dataUsuario)
-
+    
+     
     let total =  dato.reduce((acc, actual) =>{
         return acc + actual.subtotal;
     },0)
@@ -84,6 +89,11 @@ const insertVenta = async (req, res) =>{
         VALUES ?`,
        [values]
      );
+     
+     let montoEfectivo = dataUsuario.tipo === 2 ? dataUsuario.pago_venta: total;
+     const movimientoEfectivo = connection.query(`INSERT INTO movimiento_efectivo
+      (descripcion, tipo,  monto, id_venta)
+      VALUES(?, ?, ?, ? )`,[descripcion[0], tipoVenta[0], montoEfectivo, ventaId])
 
      await connection.commit();
      const hoy = new Date().toISOString().split('T')[0];
@@ -165,6 +175,22 @@ const detallesVenta = async (req, res) =>{
 
   console.log("DetallesVenta")
   // res.json({})
+}
+
+const movimientoEfectivo = async ()  =>{
+
+  let datos;
+    try {
+        [datos] = await conn.query(`SELECT fecha, descripcion, cantidad FROM movimiento_efectivo`);
+       // console.log(datos)
+       
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+
+    res.json({result: true, data: datos, message: "exito"})
+
 }
 
 export default {
