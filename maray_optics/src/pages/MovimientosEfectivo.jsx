@@ -1,5 +1,7 @@
 
 const MovimientoEfectivo = ({page}) =>{
+
+    
     return(<>
             <main className="containerProducts">
                 <button onClick={() => page(1)}>Regresar</button>

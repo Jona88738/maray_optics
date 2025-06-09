@@ -24,6 +24,7 @@ const Venta = () =>{
  const [datosTabla, setdatosTabla] = useState([])
  const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
  const [informacionVenta, setInformacionVenta ] = useState({select:0, id:0, nombre:''})
+ const [descuento, setDescuento] =useState(0);
 
  const manejarSeleccion = (usuario) => {
     console.log('Usuario seleccionado:', usuario);
@@ -84,11 +85,12 @@ const contentRef = useRef(null);
     const totall =datosTabla.reduce((acc, valorActual) =>{return acc += valorActual.subtotal; },0);
 
      const agregarDatosTabla = (data) =>{
+        data.descuento = 0;
         setdatosTabla([
             ...datosTabla,
             data,
         ])
-        console.log("Datos: ",datosTabla, data)
+        console.log("Datos importante: ", data)
      }
 
     const btnRegistrarPaciente = () =>{
@@ -112,14 +114,17 @@ const contentRef = useRef(null);
     
     const handleChangeCantidad = (element,event) =>{
         console.log(element,event.target.value)
+        element.descuento = 0;
         
         const nuevosDatos = datosTabla.map((elemento) =>{
             const result = elemento.nombre === element.nombre ? true: false;
             if(result && element.cantidad_compra < parseInt(event.target.value)){
+                elemento.subtotal = elemento.cantidad_compra * elemento.precio_venta;
                 elemento.subtotal +=  element.precio_venta;
                 element.cantidad_compra += 1;
                 
             }else if(result){
+                elemento.subtotal = elemento.cantidad_compra * elemento.precio_venta;
                 elemento.subtotal -= element.precio_venta;
                 element.cantidad_compra -= 1;
             }
@@ -132,6 +137,84 @@ const contentRef = useRef(null);
          setdatosTabla(nuevosDatos)
         console.log("datosTable: ",datosTabla)
         
+    }
+
+    function redondeoSiSupera80(valor) {
+  const entero = Math.floor(valor);
+        const decimal = valor - entero;
+
+        if (decimal >= 0.50) {
+            return Math.ceil(valor);
+        } else {
+            return Math.floor(valor);
+        }
+        }
+
+
+    const handleChangeDescuento = (element,event) =>{
+        const {value} = event.target;
+
+        // const descuento = (value / 100) * (totall / 100).toFixed(2) 
+        // element.subtotal = element.subtotal - descuento;
+
+        const nuevosDatos = datosTabla.map((elemento) =>{
+            const result = elemento.nombre === element.nombre ? true: false;
+            console.log(descuento, value)
+            if(result && elemento.descuento < parseInt(event.target.value)){
+
+                // totall y precio_venta deben estar en centavos, por ejemplo: 5400 = $54.00
+                elemento.descuento =value;
+console.log("Mi totall", (totall / 100).toFixed(2));
+                console.log( value, "Mi value final")
+// Calcular el descuento en centavos redondeando hacia abajo
+const descuentoPorcentaje = Math.floor(( value*  (element.precio_venta * element.cantidad_compra)) / 100);
+
+console.log(totall, "Mi value");
+console.log(descuentoPorcentaje , "Mi descuento1");
+
+// Restar el descuento también en centavos
+
+elemento.subtotal = Math.floor((( element.precio_venta * element.cantidad_compra)  - descuentoPorcentaje) / 100);
+
+elemento.subtotal = elemento.subtotal * 100;
+//console.log((elemento.subtotal / 100).toFixed(2), "Este es mi elemento Subtotal");
+ console.log(Math.floor((element.precio_venta - descuentoPorcentaje) / 100), "Este es mi elemento Subtotal");
+                // console.log("Mi totall", (totall / 100).toFixed(2))
+                //  const descuentoPorcentaje = ((value / 100) * totall )
+                //  console.log(totall , "Mi value")
+                //  console.log((descuentoPorcentaje / 100).toFixed(2), "Mi descuento")
+                //   elemento.subtotal = Math.floor(element.precio_venta  - descuentoPorcentaje );
+                // console.log( (elemento.subtotal / 100).toFixed(2), "Este es mi elemento Subtotal")
+                //  console.log(  (elemento.subtotal ))
+                 
+            }else if(result){
+                console.log("Entro")
+                elemento.descuento =value;
+                //Calcular el descuento en centavos redondeando hacia abajo
+               // const descuentoPorcentaje = Math.floor(( 30* 400 ) / 100);
+                 const descuentoPorcentaje = Math.floor((value * element.precio_venta) / 100);
+
+                console.log(totall, "Mi value");
+                console.log((descuentoPorcentaje / 100).toFixed(2), "Mi descuento");
+
+                // Restar el descuento también en centavos
+                elemento.subtotal = Math.floor(( (element.precio_venta * element.cantidad_compra)   - descuentoPorcentaje) / 100);
+                elemento.subtotal = elemento.subtotal * 100;
+                //elemento.subtotal = element.precio_venta - descuentoPorcentaje;
+
+                console.log(Math.floor((elemento.subtotal / 100)), "Este es mi elemento Subtotal");
+
+                //  const descuentoPorcentaje = ((value / 100) * (totall / 100).toFixed(2) )
+                //  console.log( descuentoPorcentaje , "Mi descuento")
+                //  elemento.subtotal = Math.round( (( element.precio_venta / 100).toFixed(2) + descuentoPorcentaje ) * 100);
+                 
+                //  const descuentoPorcentaje = (value / 100) * (totall / 100).toFixed(2) 
+                //  elemento.subtotal = (element.subtotal / 100).toFixed(2) + descuentoPorcentaje;
+            }
+                return elemento;
+        })
+        // setDescuento(value)
+        setdatosTabla(nuevosDatos)
     }
     
     return(<>
@@ -194,7 +277,13 @@ const contentRef = useRef(null);
                                 <td> <input type="number" placeholder="Cantidad" min={1} value={element.cantidad_compra}  onChange={(event) =>handleChangeCantidad(element,event)}/> </td>
                                 <td>{element.cantidad}</td>
                                 <td>{ (element.precio_venta / 100).toFixed(2)} </td>
-                                <td> <input type="number" placeholder="Descuento" min={0} value={0} /> </td>
+                                <td> <input type="number" placeholder="Descuento" min={0} value={element.descuento}  onChange={(event) => handleChangeDescuento(element, event)
+                                } 
+                                 onKeyDown={(e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+      }
+    }}/> </td>
                                 <td>{(element.subtotal / 100).toFixed(2) } </td>
                         
                     </tr>
@@ -215,7 +304,7 @@ const contentRef = useRef(null);
             <button className="btnAgregar" onClick={btnGenerarVenta}>Generar venta</button>
                 {/* <div > */}
     
-      <Ticket ref={contentRef} sale={datosTabla} obtenerTotal={totall} />
+      {/* <Ticket ref={contentRef} sale={datosTabla} obtenerTotal={totall} /> */}
 
         
         </section>

@@ -27,18 +27,18 @@ const Ticket = forwardRef(({  sale, obtenerTotal }, ref) => (
       <span>cantidad</span>
       <span>Precio</span>
     </div>
-    {sale.map((item, i) => (
+    {sale.articulos.map((item, i) => (
       <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
         <span>{item.nombre}</span>
-        <span>{item.cantidad_compra}</span>
-        <span>${(item.subtotal / 100).toFixed(2)}</span>
+        <span>{item.cantidad}</span>
+        <span>${item.subtotal }</span>
       </div>
     ))}
     
     <hr />
     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold" }}>
       <span>Total</span>
-      <span>${(obtenerTotal / 100).toFixed(2) }</span>
+      <span>${obtenerTotal()  }</span>
     </div>
     <hr />
     <p style={{ textAlign: "center" }}>¡Gracias por su compra!</p>

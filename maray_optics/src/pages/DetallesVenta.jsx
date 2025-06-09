@@ -1,6 +1,9 @@
- import { useEffect } from 'react';
+import { useEffect, useState, useRef} from 'react';
 import '../../styles/detallesVenta.css';
-import { data } from 'react-router-dom';
+import Ticket from "../components/ImprimirTicket.jsx"; 
+import { useReactToPrint } from 'react-to-print';
+import PagoDiferido from '../components/FormPagoDiferido.jsx';
+import ShowModal from '../components/showModal.jsx';
 
 const verificarEstatus = (estatus) =>{
     if(estatus === 1) return 'Pagado';
@@ -13,16 +16,59 @@ const verificarTipo = (estatus) =>{
     
     return 'Adeudo';
 }
+const acumuladoPagoDiferido = (dato) =>{
+    let total =  dato.reduce((acc, actual) =>{
+        return acc + actual.cantidad_pago;
+    },0)
+    return total;
+}
+
 
 
 
 const DetallesVenta = ({page, informacion}) => {
-    const {dataUsuario, dato } = informacion; 
-    console.log("llego de venta: ",informacion);
-    console.log("llego de venta: ",dato);
+    
+    // const {dataUsuario, dato } = informacion; 
+
+
+    // console.log("llego de venta: ",informacion);
+    // console.log("llego de venta: ",dato);
+
+    const btnAbrirModal = () =>{
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 1
+        })
+    }
+    const btnCerrarModal = () =>{
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 0
+        })
+    }
+
+    const contentRef = useRef(null);
+    // size: 50mm 150mm;
+      const handlePrint =  useReactToPrint({
+        contentRef,
+        pageStyle: `
+        @page {
+          size: 80mm auto;
+          margin: 0;
+        }
+    
+        body {
+          -webkit-print-color-adjust: exact;
+          font-family: monospace;
+        }
+      `,
+      });
+
+    const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
+    const [dato, setDatosVenta] = useState({ articulos:[], pago_realizados: []});
     useEffect(() =>{
-        
-        fetch(`/api/ventas/detallesVenta?id=${informacion.data}`,{
+        console.log("id",informacion)
+        fetch(`/api/ventas/detallesVenta?id=${informacion}`,{
             method: 'GET',
             headers:{
                 'Content-Type': 'application/json'
@@ -31,17 +77,23 @@ const DetallesVenta = ({page, informacion}) => {
         })
             .then((res) => res.json())
             .then((res) =>{
-
+                console.log(res.data)
+                setDatosVenta(res.data)
             })
     },[])
     
      const calcularTotal = () =>{
-        let total =  dato.reduce((acc, actual) =>{
+        let total =  dato.articulos.reduce((acc, actual) =>{
         return acc + actual.subtotal;
     },0)
     return total;
     }
 
+    const generarTicket = () =>{
+        handlePrint()
+        console.log("Ya imprimio")
+    }
+    
     return(<>
        
         <main className="containerProducts"> 
@@ -57,40 +109,40 @@ const DetallesVenta = ({page, informacion}) => {
                  <hr />
                  <form  className='formDatosVenta'>
                     <div className="input">
-                        <label htmlFor="">Atendido por {informacion.data}</label>
-                        <input type="text" />
+                        <label htmlFor="">Atendido por</label>
+                        <input type="text" value={'ND'} disabled/>
                     </div>
                     <section className="datosVenta">
                         <div>
                         <label htmlFor="">Fecha de venta</label>
-                        <input type="text" value={dataUsuario.fecha}/>
+                        <input type="text" value={dato.fecha ?? 2} disabled/>
                         </div>
 
                         <div>
                             <label htmlFor="">Nombre de paciente</label>
-                            <input type="text" value={dataUsuario.nombre}/>
+                            <input type="text" value={dato.nombre ?? 'Venta Publica'} disabled/>
                         </div>
 
                         <div>
                             <label htmlFor="">Telefono</label>
-                            <input type="text" value={dataUsuario.telefono !== undefined ? dataUsuario.telefono: "ND" }/>
+                            <input type="text" value={dato.telefono !== undefined ? dato.telefono: "ND" } disabled/>
                         </div>
 
                         <div>
                             <label htmlFor="">Tipo</label>
-                            <input type="text" value={verificarTipo(dataUsuario.status)}/>
+                            <input type="text" value={verificarTipo(dato.status)} disabled/>
                         </div>
 
                         <div>
                             <label htmlFor="">Estatus</label>
-                            <input type="text" value={verificarEstatus(dataUsuario.status)}/>
+                            <input type="text" value={verificarEstatus(dato.status)} disabled/>
                         </div>
 
                        
                     </section>
                     <div className='inputDomici'>
                             <label htmlFor="">Domicilio del paciente</label>
-                            <input type="text" value={'ND'}/>
+                            <input type="text" value={'ND'} disabled/>
                     </div>
                  </form>
             <hr />
@@ -109,17 +161,17 @@ const DetallesVenta = ({page, informacion}) => {
                     </tr>
                 </thead>
                 <tbody>    
-                        {dato.map((element)=>{
+                        {dato.articulos.map((element)=>{
                             return(
 
                     <tr key={element.id}>
                                 <td>{element.codigo}</td>
                                 <td>{element.descripcion} </td>
-                                <td> {element.cantidad_compra} </td>
+                                <td> {element.cantidad} </td>
                                 
-                                <td>{ (element.precio_venta / 100).toFixed(2)} </td>
+                                <td>{ element.precio_unitario} </td>
                                 <td> {} </td>
-                                <td> { (element.subtotal / 100).toFixed(2)}</td>
+                                <td> { element.subtotal }</td>
                         
                     </tr>
                             )
@@ -134,11 +186,13 @@ const DetallesVenta = ({page, informacion}) => {
 
                 <label htmlFor="">Total</label>
                 {/* Usa useMemo() */}
-                <input type="text" value={(calcularTotal() / 100).toFixed(2)} disabled />
+                <input type="text" value={calcularTotal() } disabled />
                  
             </section>
 
             <hr />
+            {dato.status !== 1 ? (
+            <>
             <section>
                 <h3>Pagos realizados</h3>
 
@@ -156,16 +210,22 @@ const DetallesVenta = ({page, informacion}) => {
                     </tr>
                 </thead>
                 <tbody>
+                    {dato.pago_realizados.map((element, index) =>{
+                        return(
+
                             <tr>
-                                <td></td>
-                                <td> </td>
-                                <td> <input type="number" placeholder="Cantidad" min={1} /> </td>
+                                <td>{index+1}</td>
+                                <td>{element.fecha} </td>
+                                <td>{element.cantidad_pago} </td>
                                 
-                                <td> </td>
-                                <td> <input type="number" placeholder="Descuento" min={0} value={0} /> </td>
+                                <td>{element.metodo_pago} </td>
+                                <td> ND </td>
                                 <td></td>
                         
-                    </tr>
+                             </tr>
+                        )
+                    })}
+                            
                         
                 </tbody>
             </table>
@@ -176,27 +236,29 @@ const DetallesVenta = ({page, informacion}) => {
             <article className='containerpagoInfo'>
                 <div className='inputDomici'>
                     <label htmlFor="">Acumulado</label>
-                    <input type="text" />
+                    <input type="text" value={acumuladoPagoDiferido(dato.pago_realizados)} disabled/>
                 </div>
 
                 <div className='inputDomici'>
                     <label htmlFor="">Cantidad restante</label>
-                    <input type="text" />
+                    <input type="text"  value={calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) } disabled/>
                     
                 </div>
-                <button>Realiza Pago</button>
+                <button onClick={btnAbrirModal}>Realiza Pago</button>
             </article>
+            
                 <hr />
-
+            </> 
+            ):""}
                 <section  className='containerBtnReciTicket'>
-                    <button className='btnAgregar'>Recibo</button>
-                    <button className='btnAgregar'>Ticket</button>
+                    <button className='btnAgregar' >Recibo</button>
+                    <button className='btnAgregar' onClick={generarTicket}>Ticket</button>
                 </section>
             </section>
-
+        <Ticket ref={contentRef} sale={dato} obtenerTotal={calcularTotal} />
             
             
-
+ { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<PagoDiferido   ModalOpen={btnCerrarModal} />} /> : null} 
         </main>
     </>)
 }

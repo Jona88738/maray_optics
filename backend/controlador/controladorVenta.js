@@ -5,7 +5,7 @@ let datos;
     try {
         [datos] = await conn.query(`SELECT v.*, e.nombre FROM venta v
             LEFT JOIN expediente e ON e.id  = v.paciente_id`);
-        console.log(datos)
+       // console.log(datos)
        
     } catch (error) {
         console.error("Error: ", error.message)
@@ -38,10 +38,10 @@ const insertVenta = async (req, res) =>{
       ValuesVenta.push(dataUsuario.tipo)
       camposventa.push('tipo')
     }
-    if(dataUsuario.pago_venta !== undefined){
-      ValuesVenta.push(dataUsuario.pago_venta)
-      camposventa.push('pago_venta')
-    }
+    // if(dataUsuario.pago_venta !== undefined){
+    //   ValuesVenta.push(dataUsuario.pago_venta)
+    //   camposventa.push('pago_venta')
+    // }
 
      const valuesVentasql = camposventa.map(() => '?').join(', ')
 
@@ -57,6 +57,15 @@ const insertVenta = async (req, res) =>{
     //  );
 
      const ventaId = result.insertId;
+
+    if(dataUsuario.tipo === 2){
+
+      const sentenciaPagosAdeudos = await connection.query(`INSERT INTO pago_realizado
+        (cantidad_pago, metodo_pago, venta_id ) VALUES(?, ?, ?)`,[dataUsuario.pago_venta, dataUsuario.metodo_pago, ventaId]); 
+    }
+
+
+
 
 //     // Arreglo de productos
      const values = dato.map((item) => [
@@ -78,7 +87,7 @@ const insertVenta = async (req, res) =>{
 
      await connection.commit();
      const hoy = new Date().toISOString().split('T')[0];
-    console.log(hoy);
+    console.log(ventaId);
      res.status(200).json({ success: true, idVenta: ventaId, totalVenta: total, fecha: hoy });
    } catch (error) {
      await connection.rollback();
@@ -97,17 +106,62 @@ const detallesVenta = async (req, res) =>{
    try {
         const { id } = req.query;
         console.log("mi id: ",id);
-        const [datos] = await conn.query(`SELECT v.fecha_inicio, e.nombre, e.telefono FROM venta v
-          LEFT JOIN expediente e ON e.id  = v.paciente_id 
-          WHERE v.id = ?`
+        // const [datos] = await conn.query(`SELECT 
+        //   v.fecha_inicio as fecha, v.tipo, v.status,
+        //   e.nombre, e.telefono,
+
+        //   dv.precio_unitario, dv.subtotal, dv.cantidad, 
+        //   p.codigo, p.descripcion
+
           
-          ,[id])
-          console.log(datos);
+        //   FROM venta v
+        //   INNER JOIN detalles_venta dv ON  v.id = dv.venta_id
+        //   INNER JOIN  producto p ON p.id = dv.producto_id
+        //   LEFT JOIN expediente e ON e.id  = v.paciente_id 
+          
+        //   WHERE v.id = ?`
+          
+        //   ,[id])
+        const [datos] = await conn.query(`
+  SELECT JSON_OBJECT(
+    'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d %H:%i:%s'),
+    'tipo', v.tipo,
+    'status', v.status,
+    'nombre', e.nombre,
+    'telefono', e.telefono,
+    'pago_realizados', JSON_ARRAYAGG(
+        JSON_OBJECT(
+          'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d %H:%i:%s'),
+          'cantidad_pago', pr.cantidad_pago,
+          'metodo_pago', pr.metodo_pago
+        )
+    ),
+    'articulos', JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'precio_unitario', dv.precio_unitario,
+        'subtotal', dv.subtotal,
+        'cantidad', dv.cantidad,
+        'codigo', p.codigo,
+        'nombre', p.nombre,
+        'descripcion', p.descripcion
+      )
+    )
+  ) AS resultado
+  FROM venta v
+  INNER JOIN detalles_venta dv ON v.id = dv.venta_id
+  INNER JOIN producto p ON p.id = dv.producto_id
+  LEFT JOIN expediente e ON e.id = v.paciente_id
+  LEFT JOIN pago_realizado pr ON pr.venta_id = v.id
+  WHERE v.id = ?
+  GROUP BY v.id
+`, [id]);
+          console.log(datos[0].resultado, "datosVentaDetalles");
+          res.json({ result: true,  data: datos[0].resultado})
     } catch (error) {
         console.error("Error: ", error.message)
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     }
-    res.json({ result: true,  mensaje: "Productos eliminado" })
+    
 
   console.log("DetallesVenta")
   // res.json({})

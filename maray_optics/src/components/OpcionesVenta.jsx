@@ -14,11 +14,13 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                 
                 ['select']: '1',
                 [name]: value
+
             })
         }else if(value === '2'){
             setMostrar({
                 
                 ['select']: '2',
+
                 
             })
             console.log("Opcion 2")
@@ -32,13 +34,13 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
         //if()
         if(mostrar.select === '1'){
             dataUsuario.status = 1;
-            
+            dataUsuario.tipo = 1;
         } 
         
         if(mostrar.select === '2' && dataUsuario.nombre != 'Venta al publico'){
             dataUsuario.status = 2;
             dataUsuario.pago_venta = pagoDiferido;
-            dataUsuario.tipo = 1;
+            dataUsuario.tipo = 2;
 
          } else if( mostrar.select === '2' && dataUsuario.nombre === 'Venta al publico'){
             return Swal.fire({title:"Alerta", text: "Es necesario seleccionar un cliente o paciente para completar esta acción", icon:'warning'})
@@ -69,7 +71,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                            datosAEnviar.dataUsuario.fecha = res.fecha;
                            datosAEnviar.dataUsuario.totalVenta = res.total;
                            datosAEnviar.dataUsuario.idVenta = res.ventaId;
-                            page(2, datosAEnviar)
+                            page(2, res.idVenta)
                             //console.log("Producto registrado");
                         }else{
                             console.log("algo fallo", res.result)

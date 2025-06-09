@@ -6,6 +6,8 @@ const getProducts =  async (req, res) => {
         [datos] = await conn.query(`SELECT pr.*, c.nombre as nombreCategoria FROM producto  pr
             JOIN categoria c ON c.id = pr.categoria
             WHERE pr.estado = 1`);
+        // datos.descuento = 0
+        // console.log(datos)
         //console.log(datos)
         //const [datos] = await conn.query("SELECT ")
     } catch (error) {
