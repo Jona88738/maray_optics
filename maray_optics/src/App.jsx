@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Usuario from './pages/Usuarios';
 import Productos from './pages/Productos';
 import Venta from './pages/Venta.jsx';
+import Expediente from './pages/expediente.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,7 +21,7 @@ function App() {
           <Route path='/usuarios' element={<Usuario />} />
           <Route path='/venta' element={<Venta />}/>
           <Route path='/productos' element={<Productos />} />
-          
+          <Route path='/expediente' element={<Expediente />} />
         </Routes>
       
       

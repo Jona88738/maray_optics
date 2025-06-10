@@ -2,21 +2,33 @@ import { useEffect, useState } from "react"
 
 const MovimientoEfectivo = ({page}) =>{
 
-    const [movimientoEfecto, setMovimientoEfecto] = useState();
+    const [movimientoEfecto, setMovimientoEfecto] = useState([]);
 
     useEffect(() =>{
 
-        fetch()
+        fetch("/api/ventas/movimientoEfectivo", {
+            method:'GET',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+            .then((res) => res.json())
+            .then((res) =>{
+                console.log(res.data)
+                setMovimientoEfecto(res.data)
+            })
     },[])
 
     return(<>
             <main className="containerProducts">
-                <button onClick={() => page(1)}>Regresar</button>
+                <section className="containerTitulo" style={{marginTop:"20px"}}>
+                <button className="btnRegresar" onClick={() => page(1)}>Regresar</button>
                 
 
-                <button>Corte de caja</button>
-                <button>Movimiento de efectivo</button>
-
+                <button className="btnBaja">Corte de caja</button>
+                <button className="btnBaja">Movimiento de efectivo</button>
+                </section>
                 <section className="containerTabla">
                     <h2>Movimientos Efectivos</h2>
 
@@ -33,14 +45,20 @@ const MovimientoEfectivo = ({page}) =>{
                     </tr>
                 </thead>
                 <tbody>
-                            <tr>
-                                <td></td>
-                                <td> </td>
+                    {movimientoEfecto.map((element,index) =>{
+
+                        return(
+                    <tr>
+                                <td>{index}</td>
+                                <td>{element.fecha} </td>
                                 
-                                <td> <input type="number" placeholder="Descuento" min={0} value={0} /> </td>
-                                <td></td>
+                                <td> {element.descripcion}</td>
+                                <td> {element.monto}</td>
                         
                     </tr>
+                        )
+                    })}
+                            
                         
                 </tbody>
             </table>

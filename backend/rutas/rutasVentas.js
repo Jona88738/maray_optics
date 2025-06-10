@@ -9,6 +9,6 @@ routes.post("/",controladorVenta.insertVenta);
 
 routes.get("/detallesVenta", controladorVenta.detallesVenta);
 
-
+routes.get("/movimientoEfectivo",controladorVenta.movimientoEfectivo)
 
 export default routes;

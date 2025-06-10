@@ -177,11 +177,11 @@ const detallesVenta = async (req, res) =>{
   // res.json({})
 }
 
-const movimientoEfectivo = async ()  =>{
+const movimientoEfectivo = async (req,res)  =>{
 
   let datos;
     try {
-        [datos] = await conn.query(`SELECT fecha, descripcion, cantidad FROM movimiento_efectivo`);
+        [datos] = await conn.query(`SELECT  DATE_FORMAT(fecha, '%Y-%m-%d %H:%i:%s') as fecha,  descripcion, monto FROM movimiento_efectivo`);
        // console.log(datos)
        
     } catch (error) {
@@ -196,5 +196,6 @@ const movimientoEfectivo = async ()  =>{
 export default {
     getVentas,
     insertVenta,
-    detallesVenta
+    detallesVenta,
+    movimientoEfectivo
 }
