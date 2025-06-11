@@ -111,6 +111,12 @@ const insertVenta = async (req, res) =>{
         
 }
 
+const deleteVenta = async (req, res) =>{
+
+  res.json({})
+}
+
+
 const detallesVenta = async (req, res) =>{
 
    try {
@@ -196,6 +202,7 @@ const movimientoEfectivo = async (req,res)  =>{
 export default {
     getVentas,
     insertVenta,
+    deleteVenta,
     detallesVenta,
     movimientoEfectivo
 }

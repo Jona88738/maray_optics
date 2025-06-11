@@ -4,6 +4,8 @@ import Ticket from "../components/ImprimirTicket.jsx";
 import { useReactToPrint } from 'react-to-print';
 import PagoDiferido from '../components/FormPagoDiferido.jsx';
 import ShowModal from '../components/showModal.jsx';
+import Swal from 'sweetalert2';
+
 
 const verificarEstatus = (estatus) =>{
     if(estatus === 1) return 'Pagado';
@@ -93,13 +95,101 @@ const DetallesVenta = ({page, informacion}) => {
         handlePrint()
         console.log("Ya imprimio")
     }
+
+    const cancelarVenta = () => {
+
+         Swal.fire({title: "Alerta", text: "¿Estas seguro de cancelar esta venta?", icon: "question",
+                            showConfirmButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: "Si, estoy seguro",
+                            cancelButtonText: "No, quiero elimnar"
+                        }).then((res) =>{
+
+                            if(res.isConfirmed){
+
+                                Swal.fire({
+                                    title: 'Ingresa el motivo de la cancelacion',
+                                    input: 'text',
+                                    inputPlaceholder: 'Ej: Por garantia',
+                                    // showCancelButton: true,
+                                    confirmButtonText: 'Aceptar',
+                                    // cancelButtonText: 'Cancelar',
+                                    // inputValidator: (value) => {
+                                    //     if (!value) {
+                                    //     return '¡Debes escribir algo!';
+                                    //     }
+                                    // }
+                                    }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        console.log('Cliente:', result.value);
+                                        // Puedes hacer lo que necesites con el valor ingresado
+
+
+
+                                        Swal.fire({title: "Alerta", text: "¿Deseas regresar los articulos al inventario?", icon: "question",
+                                            showConfirmButton: true,
+                                            showCancelButton: true,
+                                            confirmButtonText: "Si",
+                                            cancelButtonText: "No"
+                                        }).then((res) =>{
+                                            if(res.isConfirmed){
+
+
+                                                 Swal.fire({title: "Alerta", text: `¿Realizar devolucion en efectivo  de ${calcularTotal()}?`, icon: "question",
+                                                    showConfirmButton: true,
+                                                    showCancelButton: true,
+                                                    confirmButtonText: "Si, realizar",
+                                                    cancelButtonText: "No, solo cancelar"
+                                                }).then((res) =>{
+                                                    if(res.isConfirmed){
+
+                                                    }else{
+
+                                                    }
+                                                })
+
+                                            }else{
+
+                                            }
+                                        })
+
+
+
+                                    }
+                                    });
+
+
+
+                                // fetch(`/api/ventas?id=${id}`, {
+                                //     method: 'DELETE',
+                                //     headers: {
+                                //         'Content-Type': 'application/json'
+                                //     },
+                                //     credentials: 'include'
+                                // })
+                                // .then((res) => res.json())
+                                // .then((res) => {
+                                //     if(res.result){
+                                //         Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                                //         setActualizarDatos(!actualizarDatos)
+                                //     }
+        
+                                // })
+                                
+                            }else{
+                                
+                            }
+                
+                        }) 
+
+    }
     
     return(<>
        
         <main className="containerProducts"> 
             <div className="containerTitulo">
                 <button onClick={() => page(1) } className="btnRegresar">Regresar</button>
-            <button className="btnRegresar" >Cancelar Venta</button>
+            <button className="btnRegresar" onClick={cancelarVenta} >Cancelar Venta</button>
             </div>
             
            

@@ -7,6 +7,8 @@ routes.get("/",controladorVenta.getVentas);
 
 routes.post("/",controladorVenta.insertVenta);
 
+routes.delete("/", controladorVenta.deleteVenta);
+
 routes.get("/detallesVenta", controladorVenta.detallesVenta);
 
 routes.get("/movimientoEfectivo",controladorVenta.movimientoEfectivo)
