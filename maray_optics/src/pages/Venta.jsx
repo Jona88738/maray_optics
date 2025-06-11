@@ -233,11 +233,15 @@ elemento.subtotal = elemento.subtotal * 100;
             <form >
                 <h2>Nueva Venta</h2>
                 <hr />
+                <label htmlFor="" style={{marginBottom: '15px'}}>*Elegir cliente o venta al público</label>
+                
                 <SelectorUsuarios onSelect={manejarSeleccion} />
                 <hr />
                 {informacionVenta.select === 0 ? "":(<>
-                    <label htmlFor="">Nombre</label>
-                    <input type="text" value={informacionVenta.nombre} disabled />
+                    <div className="input">
+                        <label htmlFor="">Nombre de usuario</label>
+                        <input type="text" value={informacionVenta.nombre} disabled />
+                    </div>
                 </>)}
             </form>
             

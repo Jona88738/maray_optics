@@ -35,6 +35,15 @@
     padding: 10px;
 }
 
+.inputNombreVenta{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.inputNombreVenta input{
+    width: 80%;
+}
+
 .containerTabla{
      width: 100%;
     /* background-color: gray; */

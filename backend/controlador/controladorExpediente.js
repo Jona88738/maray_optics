@@ -4,7 +4,7 @@ const getExpedientes = async (req, res) =>{
 
      let datos;
     try {
-        [datos] = await conn.query(`SELECT id, nombre from expediente`);
+        [datos] = await conn.query(`SELECT id, nombre from expediente where estado = 1`);
         //console.log(datos)
         //const [datos] = await conn.query("SELECT ")
     } catch (error) {
