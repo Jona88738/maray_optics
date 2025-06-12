@@ -1,11 +1,25 @@
 import Navbar from "../components/navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const usuarios = () => {
 
      //  Nuevo estado para la búsqueda
     const [filtroNombre, setFiltroNombre] = useState('');
+    const [usuarios, setUsuarios] = useState();
+    useEffect(()=> {
 
+        fetch("/api/usuario/getusers", {
+            headers:{
+
+            },
+            credentials: 'include'
+        })
+            .then((res) => res.json())
+            .the((res) => {
+                setUsuarios(res.data);
+            })
+
+    },[])
     return(
         <>
         <Navbar/>
@@ -46,8 +60,8 @@ const usuarios = () => {
                 </thead>
                 <tbody>
                 
-                {/* {datosFiltrados.length > 0 ? (
-                                datosFiltrados.map(element => (
+                 {usuarios.length > 0 ? (
+                                usuarios.map(element => (
                                     <tr key={element.id}>
                                         
                                         <td id="codigo">{element.codigo}</td>
@@ -65,7 +79,7 @@ const usuarios = () => {
                                 <tr>
                                     <td colSpan="5" style={{ textAlign: 'center' }}>No hay resultados</td>
                                 </tr>
-                            )} */}
+                            )} 
                     {/* {datos.map((element) =>{
                         return (
 

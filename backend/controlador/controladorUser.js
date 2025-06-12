@@ -20,7 +20,25 @@ const login = async (req, res) =>{
 
 }
 
+const getUsers = async (req, res) =>{
+      let datos;
+    try {
+        [datos] = await conn.query(`SELECT * FROM usuario`); //Agregar  columnas
+        // datos.descuento = 0
+        // console.log(datos)
+        //console.log(datos)
+        //const [datos] = await conn.query("SELECT ")
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+
+    res.json({result: true, data: datos, message: "exito"})
+   
+}
+
 
 export default {
-    login
+    login,
+    getUsers
 }

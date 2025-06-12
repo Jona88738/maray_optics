@@ -4,5 +4,7 @@ const routes = Router();
 
 routes.get("/login",user.login);
 
+routes.get("/getusers", user.getUsers);
+
 
 export default routes;
