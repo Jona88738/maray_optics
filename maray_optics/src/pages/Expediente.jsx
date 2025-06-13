@@ -1,6 +1,7 @@
 import Navbar from "../components/navbar";
 import Form from "../components/FormCreateExpediente";
 import ShowModal from "../components/showModal";
+import Swal from 'sweetalert2';
 
 import { useEffect, useState } from "react";
 const Expediente = () => {
@@ -42,6 +43,38 @@ const Expediente = () => {
             action: 0
         })
     }
+
+      const btnDelete = (id) => {
+            Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar este expediente?", icon: "question",
+                        showConfirmButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: "Si, estoy seguro",
+                        cancelButtonText: "No, quiero elimnar"
+                    }).then((res) =>{
+                        if(res.isConfirmed){
+                            fetch(`/api/producto?id=${id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include'
+                            })
+                            .then((res) => res.json())
+                            .then((res) => {
+                                if(res.result){
+                                    Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                                    setActualizarDatos(!actualizarDatos)
+                                }
+    
+                            })
+                            
+                        }else{
+                            
+                        }
+            
+                    })
+    
+        }
 
     return(<>
         <Navbar/>

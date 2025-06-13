@@ -1,11 +1,12 @@
 import Navbar from "../components/navbar";
 import { useEffect, useState } from "react";
+import Swal from 'sweetalert2';
 
 const usuarios = () => {
 
      //  Nuevo estado para la búsqueda
     const [filtroNombre, setFiltroNombre] = useState('');
-    const [usuarios, setUsuarios] = useState();
+    const [usuarios, setUsuarios] = useState([]);
     useEffect(()=> {
 
         fetch("/api/usuario/getusers", {
@@ -20,6 +21,41 @@ const usuarios = () => {
             })
 
     },[])
+
+    const btnDelete = (id) => {
+                Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar este expediente?", icon: "question",
+                            showConfirmButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: "Si, estoy seguro",
+                            cancelButtonText: "No, quiero elimnar"
+                        }).then((res) =>{
+                            if(res.isConfirmed){
+                                fetch(`/api/producto?id=${id}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    credentials: 'include'
+                                })
+                                .then((res) => res.json())
+                                .then((res) => {
+                                    if(res.result){
+                                        Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                                        setActualizarDatos(!actualizarDatos)
+                                    }
+        
+                                })
+                                
+                            }else{
+                                
+                            }
+                
+                        })
+        
+            }
+
+
+
     return(
         <>
         <Navbar/>
