@@ -1,0 +1,16 @@
+
+.mainFormMovimiento{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.bodyFormMovimiento{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0px 25px;
+}
+.BtnMovimientoEfectivoForm{
+    display: flex;
+    justify-content: space-around;
+}

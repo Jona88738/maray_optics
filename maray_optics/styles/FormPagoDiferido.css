@@ -1,0 +1,14 @@
+
+.bodyPagoDiferido{
+    display: flex;
+    gap: 50px;
+    padding: 0px 20px 0px 20px;
+
+}
+.bodyPagoDiferido section {
+    width: 50%;
+}
+.fooderPagoDiferdo{
+    display: flex;
+    justify-content: space-around;
+}

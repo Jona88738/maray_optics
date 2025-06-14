@@ -338,21 +338,22 @@ const DetallesVenta = ({page, informacion}) => {
                     <input type="text"  value={calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) } disabled/>
                     
                 </div>
-                <button onClick={btnAbrirModal}>Realiza Pago</button>
+                <button className='btnAgregar' onClick={btnAbrirModal}>Realiza Pago</button>
             </article>
             
                 <hr />
             </> 
             ):""}
                 <section  className='containerBtnReciTicket'>
-                    <button className='btnAgregar' >Recibo</button>
-                    <button className='btnAgregar' onClick={generarTicket}>Ticket</button>
+                    <button className='btnBaja' >Recibo</button>
+                    <button className='btnBaja' onClick={generarTicket}>Ticket</button>
                 </section>
             </section>
+        <div style={{display: "none"}}>
         <Ticket ref={contentRef} sale={dato} obtenerTotal={calcularTotal} />
+        </div> 
             
-            
- { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<PagoDiferido   ModalOpen={btnCerrarModal} />} /> : null} 
+ { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<PagoDiferido closeModal={btnCerrarModal}   ModalOpen={btnCerrarModal} />} /> : null} 
         </main>
     </>)
 }

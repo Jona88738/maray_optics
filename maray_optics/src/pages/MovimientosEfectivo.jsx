@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react"
+import Swal from "sweetalert2";
+import ShowModal from "../components/showModal";
+import ModalMovimientoEfectivo from '../components/FormMovimientoEfectivo'
 
 const MovimientoEfectivo = ({page}) =>{
 
     const [movimientoEfecto, setMovimientoEfecto] = useState([]);
+    const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
     const [paginaActual, setPaginaActual] = useState(1);
     const elementosPorPagina = 3;
 
@@ -35,7 +39,73 @@ const MovimientoEfectivo = ({page}) =>{
     }
 };
 
+const btnAbrirMoodal = () =>{
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 1
+        })
+    }
 
+const btnCerrarModal = () =>{
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 0
+        })
+    }
+
+  const  realizaCorteCaja = () =>{
+
+      console.log("Se realizo un corte de caja")
+  }
+
+  const CorteCaja = () =>{
+
+    Swal.fire({title: "Alerta", text: "¿Desea realizar el corte de caja?", icon: "question",
+                                showConfirmButton: true,
+                                showCancelButton: true,
+                                confirmButtonText: "Si, estoy seguro",
+                                cancelButtonText: "No, quiero"
+                            }).then((res) =>{
+                                if(res.isConfirmed){
+
+                                  Swal.fire({title: "Alerta", text: "¿Desea incluir un fondo de caja para el proximo corte de caja?", icon: "question",
+                                showConfirmButton: true,
+                                showCancelButton: true,
+                                confirmButtonText: "Si, estoy seguro",
+                                cancelButtonText: "No, quiero"
+                            }).then((res) => {
+
+                              if(res.isConfirmed){
+
+                                Swal.fire({
+                                  title: 'Fondo de caja',
+                                  input: 'number',
+                                  inputPlaceholder: 'Escribe aquí...',
+                                  showCancelButton: true,
+                                  confirmButtonText: 'Aceptar',
+                                  cancelButtonText: 'Cancelar'
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    console.log('Fondo:', result.value);
+                                    // Aquí puedes usar result.value como necesites
+                                    realizaCorteCaja();
+                                  }
+                                });
+
+                              }else{
+                                realizaCorteCaja();
+                              }
+
+                            })
+
+                                }
+
+
+                            } )
+
+  }
+
+  
 
     return(<>
             <main className="containerProducts">
@@ -43,8 +113,8 @@ const MovimientoEfectivo = ({page}) =>{
                 <button className="btnRegresar" onClick={() => page(1)}>Regresar</button>
                 
 
-                <button className="btnBaja">Corte de caja</button>
-                <button className="btnAgregar">Movimiento de efectivo</button>
+                <button className="btnBaja" onClick={CorteCaja}>Corte de caja</button>
+                <button className="btnAgregar" onClick={btnAbrirMoodal}>Movimiento de efectivo</button>
                 </section>
                 <section className="containerTabla">
                     <h2>Movimientos Efectivos</h2>
@@ -115,6 +185,8 @@ const MovimientoEfectivo = ({page}) =>{
 
                 </section>
             </main>
+
+            { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<ModalMovimientoEfectivo ModalOpen={btnCerrarModal} dato={modalOpenAll.datos}/>} /> : null} 
     </>)
 }
 
