@@ -6,9 +6,13 @@ import Swal from 'sweetalert2';
 import { useEffect, useState } from "react";
 const Expediente = () => {
 
+    const [paginaActual, setPaginaActual] = useState(1);
+     const elementosPorPagina = 10;
+
     //  Nuevo estado para la búsqueda
     const [filtroNombre, setFiltroNombre] = useState('');
     const [expedientes, setExpedientes]   = useState([]);
+    
      const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
     useEffect(() =>{
         fetch("/api/expedientes", {
@@ -28,6 +32,20 @@ const Expediente = () => {
                 }
             })
     },[])
+
+     const totalPaginas = Math.ceil(expedientes.length / elementosPorPagina);
+    
+    const datosPaginados = expedientes.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+);
+
+    const cambiarPagina = (nuevaPagina) => {
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+        setPaginaActual(nuevaPagina);
+    }
+};
+
 
     const registrarExpediente = () =>{
 
@@ -115,8 +133,9 @@ const Expediente = () => {
                 <tbody>
                 
                  {expedientes.length > 0 ? (
-                                expedientes.map(element => (
+                                datosPaginados.map((element, index) => (
                                     <tr key={element.id}>
+                                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
                                         
                                         <td id="codigo">{element.id}</td>
                                         <td id="nombre">{element.nombre}</td>
@@ -156,6 +175,32 @@ const Expediente = () => {
                 </tbody>
             </table>
         </section>
+
+
+         <nav aria-label="Page navigation">
+  <ul className="pagination justify-content-center mt-3">
+    <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual - 1)}>
+        Anterior
+      </button>
+    </li>
+
+    {Array.from({ length: totalPaginas }, (_, i) => (
+      <li key={i} className={`page-item ${paginaActual === i + 1 ? 'active' : ''}`}>
+        <button className="page-link" onClick={() => cambiarPagina(i + 1)}>
+          {i + 1}
+        </button>
+      </li>
+    ))}
+
+    <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual + 1)}>
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>
+
         </section>
         { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> : null} 
          </main>

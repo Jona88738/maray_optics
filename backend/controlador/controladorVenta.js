@@ -112,7 +112,7 @@ const insertVenta = async (req, res) =>{
 }
 
 const deleteVenta = async (req, res) =>{
-  const { motivo, regreArticulos, devoluEfectivo, idVenta, listaArticulos } = req.body;
+  const { motivo, regreArticulos, devoluEfectivo, idVenta, listaArticulos, total } = req.body;
   console.log("id_user: ",req.session.idUser )
   const campos = ["venta_id", "usuario_id"];
   const valores = [idVenta,  req.session.idUser];
@@ -121,49 +121,54 @@ const deleteVenta = async (req, res) =>{
     try {
       await connection.beginTransaction();
 
-      if(!motivo){
+      if(motivo){
         campos.push("motivo");
         valores.push(motivo)
       }
-      if(!devoluEfectivo){
+      if(devoluEfectivo){
         campos.push("monto");
-        valores.push(devoluEfectivo);
+        valores.push(total);
       }
       const sqlCancelarVenta = `INSERT INTO devoluciones(${campos.join(', ')}) VALUES(${valores.map((element) => '?').join(', ')}) `;
 
-      const [insertCancelarVenta] = connection.query(sqlCancelarVenta,valores);
+       const [insertCancelarVenta] = await connection.query(sqlCancelarVenta,valores);
+
+       const idDevolucion = insertCancelarVenta.insertId;
+
+       const [sqlVentaCancelar] = await connection.query(`UPDATE venta SET status = ? WHERE id = ?`, [3, idVenta]);
+
 
       if(regreArticulos){
         
+         const ids = listaArticulos.map(item => item.id_producto).join(',');
 
-           // Arreglo de productos
-    //  const values = listaArticulos.map((item) => [
-     
-    //    item.id,    
-    //  ]);
+            const cantidadCase = listaArticulos
+          .map(item => `WHEN ${item.id_producto} THEN cantidad + ${item.cantidad}`)
+          .join(' ');
+
+        const sql = `
+          UPDATE producto
+          SET cantidad = CASE id
+            ${cantidadCase}
+          END
+          WHERE id IN (${ids});
+        `;
+
+        await connection.query(sql);
+
       }
+      if(devoluEfectivo){
 
-      const ids = listaArticulos.map(item => item.id).join(',');
+        const sqldevoEfectivo =  `INSERT INTO movimiento_efectivo
+        (descripcion, tipo, monto, id_usuario, id_venta, id_devolucion)
+        VALUES(?, ?, ? ,?, ?, ?)`;
 
-      await connection.query(
-       `INSERT INTO detalles_venta (venta_id, producto_id, nombre_producto, cantidad, precio_unitario, subtotal)
-        VALUES ?`,
-       [values]
-     );
+        const [insertCancelarVenta] = await connection.query(sqldevoEfectivo,
+          ['DEVOLUCIÓN DE VENTA', 'DEVOLUCION', total, req.session.idUser, idVenta ,idDevolucion,  ]);
+      }
+     
 
-      const cantidadCase = listaArticulos
-    .map(item => `WHEN ${item.id} THEN cantidad + ${item.cantidad}`)
-    .join(' ');
-
-  const sql = `
-    UPDATE productos
-    SET cantidad = CASE id
-      ${cantidadCase}
-    END
-    WHERE id IN (${ids});
-  `;
-
-  await connection.query(sql);
+      
 
       await connection.commit();
 

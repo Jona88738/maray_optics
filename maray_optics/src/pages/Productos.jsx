@@ -9,6 +9,9 @@ import Swal from 'sweetalert2';
 
 const Productos = () => {
 
+    const [paginaActual, setPaginaActual] = useState(1);
+    const elementosPorPagina = 3;
+
     const [modalOpen, setModalOpen] = useState(false);
     const [categoriaOpen, setCategoriaOpen]  = useState(false);
     const [actualizarDatos, setActualizarDatos] = useState(false);
@@ -34,6 +37,19 @@ const Productos = () => {
         })
    // }
     },[actualizarDatos])
+
+     const totalPaginas = Math.ceil(datos.length / elementosPorPagina);
+    
+    const datosPaginados = datos.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+);
+
+    const cambiarPagina = (nuevaPagina) => {
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+        setPaginaActual(nuevaPagina);
+    }
+};
 
     const btnAgregar = () =>{
         setModalOpen(!modalOpen)
@@ -138,9 +154,9 @@ const Productos = () => {
                 <tbody>
                 
                 {datosFiltrados.length > 0 ? (
-                                datosFiltrados.map(element => (
+                                datosPaginados.map((element, index) => (
                                     <tr key={element.id}>
-                                        
+                                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
                                         <td id="codigo">{element.codigo}</td>
                                         <td id="nombre">{element.nombre}</td>
                                         <td id="categoria">{element.nombreCategoria}</td>
@@ -180,6 +196,32 @@ const Productos = () => {
                 </tbody>
             </table>
         </section>
+
+                <nav aria-label="Page navigation">
+  <ul className="pagination justify-content-center mt-3">
+    <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual - 1)}>
+        Anterior
+      </button>
+    </li>
+
+    {Array.from({ length: totalPaginas }, (_, i) => (
+      <li key={i} className={`page-item ${paginaActual === i + 1 ? 'active' : ''}`}>
+        <button className="page-link" onClick={() => cambiarPagina(i + 1)}>
+          {i + 1}
+        </button>
+      </li>
+    ))}
+
+    <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual + 1)}>
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>
+
+
         </section>
  </>
         ): <Categoria btnRegresar={btnCategoria} />}

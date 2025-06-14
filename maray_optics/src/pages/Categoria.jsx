@@ -7,6 +7,9 @@ import FormEditarCategoria from '../components/FormEditarCategoria';
 
 const Categoria = ({btnRegresar}) =>{
 
+    const [paginaActual, setPaginaActual] = useState(1);
+    const elementosPorPagina = 3;
+
     const [modalOpen, setModalOpen] = useState(false);
     const [datosTabla, setDatosTable] = useState([]);
     const [actualizarDatos, setActualizarDatos] = useState(false);
@@ -31,6 +34,19 @@ const Categoria = ({btnRegresar}) =>{
         })
     //}
     },[actualizarDatos])
+
+    const totalPaginas = Math.ceil(datosTabla.length / elementosPorPagina);
+    
+    const datosPaginados = datosTabla.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+);
+
+    const cambiarPagina = (nuevaPagina) => {
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+        setPaginaActual(nuevaPagina);
+    }
+};
 
     const btnCategoria = () =>{
         setModalOpen(!modalOpen);
@@ -134,8 +150,9 @@ const Categoria = ({btnRegresar}) =>{
                 <tbody>
 
                      {datosFiltrados.length > 0 ? (
-                                datosFiltrados.map(element => (
+                                datosPaginados.map((element, index) => (
                                     <tr key={element.id}>
+                                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
                                         <td id="id">{element.id}</td>
                                         <td id="Nombre">{element.nombre}</td>
                                         <td id="RegistrosCategoria">{element.registroTotal}</td>
@@ -174,6 +191,31 @@ const Categoria = ({btnRegresar}) =>{
 
                 </tbody>
             </table>
+
+                     <nav aria-label="Page navigation">
+  <ul className="pagination justify-content-center mt-3">
+    <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual - 1)}>
+        Anterior
+      </button>
+    </li>
+
+    {Array.from({ length: totalPaginas }, (_, i) => (
+      <li key={i} className={`page-item ${paginaActual === i + 1 ? 'active' : ''}`}>
+        <button className="page-link" onClick={() => cambiarPagina(i + 1)}>
+          {i + 1}
+        </button>
+      </li>
+    ))}
+
+    <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual + 1)}>
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>
+
         </section>
     </section>
 { modalOpen === true  ? <ShowModal open={btnCategoria} form={<FormCreateCategoria ModalOpen={btnCategoria}/>} /> : null} 

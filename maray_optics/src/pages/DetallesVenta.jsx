@@ -98,7 +98,7 @@ const DetallesVenta = ({page, informacion}) => {
     }
 
     const cancelarVenta = () => {
-        const paramsCancel ={motivo: "", regreArticulos: false, devoluEfectivo: "", idVenta: dato.id_venta, listaArticulos: dato.articulos};
+        const paramsCancel ={motivo: "", regreArticulos: false, devoluEfectivo: "", idVenta: dato.id_venta, listaArticulos: dato.articulos, total: calcularTotal()};
          Swal.fire({title: "Alerta", text: "¿Estas seguro de cancelar esta venta?", icon: "question",
                             showConfirmButton: true,
                             showCancelButton: true,
@@ -157,7 +157,7 @@ const DetallesVenta = ({page, informacion}) => {
                                                         .then((res) => res.json())
                                                         .then((res) => {
                                                             if(res.result){
-                                                                Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                                                                Swal.fire({title: "Exito", text: "Se cancelao  correctamente", icon: "success"})
                                                                 setActualizarDatos(!actualizarDatos)
                                                             }
                                 

@@ -4,6 +4,11 @@ import Swal from 'sweetalert2';
 
 const usuarios = () => {
 
+    const [paginaActual, setPaginaActual] = useState(1);
+    const elementosPorPagina = 3;
+
+     
+
      //  Nuevo estado para la búsqueda
     const [filtroNombre, setFiltroNombre] = useState('');
     const [usuarios, setUsuarios] = useState([]);
@@ -21,6 +26,19 @@ const usuarios = () => {
             })
 
     },[])
+
+    const totalPaginas = Math.ceil(usuarios.length / elementosPorPagina);
+    
+    const datosPaginados = usuarios.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+);
+
+    const cambiarPagina = (nuevaPagina) => {
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+        setPaginaActual(nuevaPagina);
+    }
+};
 
     const btnDelete = (id) => {
                 Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar este expediente?", icon: "question",
@@ -97,8 +115,10 @@ const usuarios = () => {
                 <tbody>
                 
                  {usuarios.length > 0 ? (
-                                usuarios.map(element => (
+                                datosPaginados.map((element,index) => (
                                     <tr key={element.id}>
+
+                                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
                                         
                                         <td id="codigo">{element.codigo}</td>
                                         <td id="nombre">{element.nombre}</td>
@@ -139,6 +159,31 @@ const usuarios = () => {
                 </tbody>
             </table>
         </section>
+
+        <nav aria-label="Page navigation">
+  <ul className="pagination justify-content-center mt-3">
+    <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual - 1)}>
+        Anterior
+      </button>
+    </li>
+
+    {Array.from({ length: totalPaginas }, (_, i) => (
+      <li key={i} className={`page-item ${paginaActual === i + 1 ? 'active' : ''}`}>
+        <button className="page-link" onClick={() => cambiarPagina(i + 1)}>
+          {i + 1}
+        </button>
+      </li>
+    ))}
+
+    <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual + 1)}>
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>
+
         </section>
 
          </main>

@@ -4,6 +4,8 @@ import '../../styles/ListadoProductos.css';
 const ListadoProducto = ({page}) => {
 
     const [ventas, setVentas] = useState([]);
+    const [paginaActual, setPaginaActual] = useState(1);
+    const elementosPorPagina = 3;
 
     const btnRegresar = () => {
         page(0)
@@ -31,6 +33,19 @@ const ListadoProducto = ({page}) => {
             setVentas(res.data)
         })
     },[])
+
+    const totalPaginas = Math.ceil(ventas.length / elementosPorPagina);
+    
+    const datosPaginados = ventas.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+);
+
+    const cambiarPagina = (nuevaPagina) => {
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+        setPaginaActual(nuevaPagina);
+    }
+};
 
     return (<>
         <h2 className='TituloProductos'>Listado de ventas</h2>
@@ -64,11 +79,11 @@ const ListadoProducto = ({page}) => {
                 </thead>
                 <tbody>
 
-                    {ventas.map((element) =>{
+                    {datosPaginados.map((element,index) =>{
                         return (
 
-                            <tr>
-                        
+                            <tr  key={index}>
+                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
                         <td id="Fecha">{element.fecha_inicio}</td>
                         <td id="Venta">{element.id}</td>
                         <td id="Paciente">{element.paciente_id === null ? "Venta al publico": element.nombre}</td>
@@ -87,6 +102,31 @@ const ListadoProducto = ({page}) => {
                 </tbody>
             </table>
         </section>
+
+
+         <nav aria-label="Page navigation">
+  <ul className="pagination justify-content-center mt-3">
+    <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual - 1)}>
+        Anterior
+      </button>
+    </li>
+
+    {Array.from({ length: totalPaginas }, (_, i) => (
+      <li key={i} className={`page-item ${paginaActual === i + 1 ? 'active' : ''}`}>
+        <button className="page-link" onClick={() => cambiarPagina(i + 1)}>
+          {i + 1}
+        </button>
+      </li>
+    ))}
+
+    <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
+      <button className="page-link" onClick={() => cambiarPagina(paginaActual + 1)}>
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>
         </section>
 
 
