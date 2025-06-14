@@ -35,10 +35,11 @@ const ListadoProducto = ({page}) => {
     return (<>
         <h2 className='TituloProductos'>Listado de ventas</h2>
         <section className="containerTitulo">
-
-            <button className="btnVentaRegistrarP" onClick={btnRegresar}>Regresar</button>
-            <button style={{ right: '100px' }} >Listado de ventas</button>
-            <button className="btnVentaBuscarProducto" onClick={() => page(3)}>Caja y movimiento</button>
+                                {/* btnVentaRegistrarP */}
+            <button className="btnRegresar" onClick={btnRegresar}>Regresar</button>
+            {/* <button style={{ right: '100px' }} >Listado de ventas</button> */}
+                                {/* btnVentaBuscarProducto */}
+            <button className="btnAgregar" onClick={() => page(3)}>Caja y movimiento</button>
         </section>
     <main className="containerProducts"> 
         <section className="inputBusqueda">

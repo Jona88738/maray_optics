@@ -7,6 +7,7 @@ import Usuario from './pages/Usuarios';
 import Productos from './pages/Productos';
 import Venta from './pages/Venta.jsx';
 import Expediente from './pages/expediente.jsx';
+import Entrar from './Contexto/Entrar/ProvedorContext.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,11 +18,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login />} />
-          <Route path='/Home' element={<Home />} />
-          <Route path='/usuarios' element={<Usuario />} />
-          <Route path='/venta' element={<Venta />}/>
-          <Route path='/productos' element={<Productos />} />
-          <Route path='/expediente' element={<Expediente />} />
+          <Route element={<Entrar />}>
+            <Route path='/Home' element={<Home />} />
+            <Route path='/usuarios' element={<Usuario />} />
+            <Route path='/venta' element={<Venta />}/>
+            <Route path='/productos' element={<Productos />} />
+            <Route path='/expediente' element={<Expediente />} />
+          </Route>
         </Routes>
       
       

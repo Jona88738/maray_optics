@@ -34,13 +34,13 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
         //if()
         if(mostrar.select === '1'){
             dataUsuario.status = 1;
-            dataUsuario.tipo = 1;
+            dataUsuario.tipo = 0;
         } 
         
         if(mostrar.select === '2' && dataUsuario.nombre != 'Venta al publico'){
             dataUsuario.status = 2;
             dataUsuario.pago_venta = pagoDiferido;
-            dataUsuario.tipo = 2;
+            dataUsuario.tipo = 1;
 
          } else if( mostrar.select === '2' && dataUsuario.nombre === 'Venta al publico'){
             return Swal.fire({title:"Alerta", text: "Es necesario seleccionar un cliente o paciente para completar esta acción", icon:'warning'})

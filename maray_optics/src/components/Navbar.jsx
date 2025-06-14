@@ -19,10 +19,34 @@ const Navbar = () =>{
             }
         }).then((result) => {
             if(result.isConfirmed){
+                // navigate('/')
+
+                 fetch("/api/usuario/logout")
+                    .then(res => json(res))
+                    .then(res => console.log("resultado: "+res.message))
+
+                    .catch(error =>{console.log(error+"errorxD")})
+
+                    
                 navigate('/')
             }
         })
     }   
+
+//     function Salir(myvalor){
+//     let num = Number(myvalor);
+
+//     console.log(num);
+//     if(myvalor == 6){
+
+     
+//     }
+         
+//     setCount(num);    
+//   }
+
+
+
     return (
         <>
         <nav className="navbar">

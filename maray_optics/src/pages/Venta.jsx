@@ -222,10 +222,12 @@ elemento.subtotal = elemento.subtotal * 100;
     {cambiarPage.action === 0 ? <> 
         <h2 className="tituloVenta">Venta</h2>
         <section className="containerTitulo">
-                
-                <button className="btnVentaRegistrarP" onClick={btnRegistrarPaciente}>Registrar Paciente</button>
-                <button style={{ right: '100px'}} onClick={() => verPage(1)}>Listado de ventas</button>
-                <button className="btnVentaBuscarProducto" onClick={btnBuscarProducto}>Buscar Producto</button>
+                                    {/* btnVentaRegistrarP */}
+                <button className="btnAgregar" onClick={btnRegistrarPaciente}>Registrar Paciente</button>
+
+                <button className="btnBaja" onClick={() => verPage(1)}>Listado de ventas</button>
+                                    {/* btnVentaBuscarProducto */}
+                <button className="btnEdit" onClick={btnBuscarProducto}>Buscar Producto</button>
             </section>
         <main className="containerProducts"> 
             

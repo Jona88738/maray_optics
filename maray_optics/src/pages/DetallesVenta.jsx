@@ -14,9 +14,10 @@ const verificarEstatus = (estatus) =>{
 }
 
 const verificarTipo = (estatus) =>{
-    if(estatus === 1) return 'Venta Liquidada';
+    if(estatus === 0) return 'Venta Liquidada';
+    if(estatus === 1) return 'En pagos';
     
-    return 'Adeudo';
+    // return 'Adeudo';
 }
 const acumuladoPagoDiferido = (dato) =>{
     let total =  dato.reduce((acc, actual) =>{
@@ -97,7 +98,7 @@ const DetallesVenta = ({page, informacion}) => {
     }
 
     const cancelarVenta = () => {
-
+        const paramsCancel ={motivo: "", regreArticulos: false, devoluEfectivo: "", idVenta: dato.id_venta, listaArticulos: dato.articulos};
          Swal.fire({title: "Alerta", text: "¿Estas seguro de cancelar esta venta?", icon: "question",
                             showConfirmButton: true,
                             showCancelButton: true,
@@ -120,8 +121,9 @@ const DetallesVenta = ({page, informacion}) => {
                                     //     }
                                     // }
                                     }).then((result) => {
-                                    if (result.isConfirmed) {
+                                    // if (result.isConfirmed) {
                                         console.log('Cliente:', result.value);
+                                        paramsCancel.motivo = result.value;
                                         // Puedes hacer lo que necesites con el valor ingresado
 
 
@@ -132,8 +134,8 @@ const DetallesVenta = ({page, informacion}) => {
                                             confirmButtonText: "Si",
                                             cancelButtonText: "No"
                                         }).then((res) =>{
-                                            if(res.isConfirmed){
-
+                                            // if(res.isConfirmed){
+                                            paramsCancel.regreArticulos = res.isConfirmed;
 
                                                  Swal.fire({title: "Alerta", text: `¿Realizar devolucion en efectivo  de ${calcularTotal()}?`, icon: "question",
                                                     showConfirmButton: true,
@@ -141,40 +143,42 @@ const DetallesVenta = ({page, informacion}) => {
                                                     confirmButtonText: "Si, realizar",
                                                     cancelButtonText: "No, solo cancelar"
                                                 }).then((res) =>{
-                                                    if(res.isConfirmed){
+                                                    paramsCancel.devoluEfectivo = res.isConfirmed;
+                                                    console.log(paramsCancel)
+                                                  
+                                                      fetch(`/api/ventas`, {
+                                                            method: 'DELETE',
+                                                            headers: {
+                                                                'Content-Type': 'application/json'
+                                                            },
+                                                            credentials: 'include',
+                                                            body: JSON.stringify( paramsCancel)
+                                                        })
+                                                        .then((res) => res.json())
+                                                        .then((res) => {
+                                                            if(res.result){
+                                                                Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
+                                                                setActualizarDatos(!actualizarDatos)
+                                                            }
+                                
+                                                        })
 
-                                                    }else{
 
-                                                    }
                                                 })
 
-                                            }else{
+                                            // }else{
 
-                                            }
+                                            // }
                                         })
 
 
 
-                                    }
+                                    // }
                                     });
 
+                                
 
-
-                                // fetch(`/api/ventas?id=${id}`, {
-                                //     method: 'DELETE',
-                                //     headers: {
-                                //         'Content-Type': 'application/json'
-                                //     },
-                                //     credentials: 'include'
-                                // })
-                                // .then((res) => res.json())
-                                // .then((res) => {
-                                //     if(res.result){
-                                //         Swal.fire({title: "Exito", text: "Se elimino  correctamente", icon: "success"})
-                                //         setActualizarDatos(!actualizarDatos)
-                                //     }
-        
-                                // })
+                              
                                 
                             }else{
                                 
@@ -220,7 +224,7 @@ const DetallesVenta = ({page, informacion}) => {
 
                         <div>
                             <label htmlFor="">Tipo</label>
-                            <input type="text" value={verificarTipo(dato.status)} disabled/>
+                            <input type="text" value={verificarTipo(dato.tipo)} disabled/>
                         </div>
 
                         <div>

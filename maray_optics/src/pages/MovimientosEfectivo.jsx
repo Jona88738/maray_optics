@@ -27,7 +27,7 @@ const MovimientoEfectivo = ({page}) =>{
                 
 
                 <button className="btnBaja">Corte de caja</button>
-                <button className="btnBaja">Movimiento de efectivo</button>
+                <button className="btnAgregar">Movimiento de efectivo</button>
                 </section>
                 <section className="containerTabla">
                     <h2>Movimientos Efectivos</h2>

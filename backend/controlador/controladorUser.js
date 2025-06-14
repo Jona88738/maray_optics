@@ -7,11 +7,14 @@ const login = async (req, res) =>{
         const {usuario, password} = req.query;
 
         const [datos] = await conn.query("SELECT * FROM usuario WHERE usuario = ? && password = ?", [usuario, password]);
+        console.log(datos)
         if(datos.length <= 0) return res.json({result: false, message: "Verifica los datos"})
-        req.session.usuario = {
-            id: 5,
-            nombre: datos[0].nombre,
-        };
+        req.session.idUser = datos[0].id;
+        req.session.nombre = datos[0].nombre;
+        // req.session.usuario = {
+        //     idUser: datos[0].id,
+        //     nombre: datos[0].nombre,
+        // };
     } catch (error) {
         console.error("Error: ", error.message);
         return res.json({message: "Hubo un error en el servidor, intente mas tarde"})
@@ -37,8 +40,36 @@ const getUsers = async (req, res) =>{
    
 }
 
+const sesion = (req,res) =>{
+
+  const MySesion = req.session.idUser;
+  console.log("Esta es la session",MySesion);
+
+  if(MySesion === undefined){
+  return  res.json({"Valor":false})
+  }
+
+ return  res.json({"Valor":true})
+}
+
+const Logout = (req,res) => {
+     // Destruye la sesión
+   req.session.destroy((err) => {
+    if (err) {
+      return res.send('Error al cerrar sesión');
+    }
+    //res.redirect('/login');
+  //  console.log("salio "+ req.session.idUser)
+    res.status(200).json({
+
+      "message":true
+    })
+  });
+}
 
 export default {
     login,
-    getUsers
+    getUsers,
+    sesion,
+    Logout
 }

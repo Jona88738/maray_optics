@@ -112,8 +112,71 @@ const insertVenta = async (req, res) =>{
 }
 
 const deleteVenta = async (req, res) =>{
+  const { motivo, regreArticulos, devoluEfectivo, idVenta, listaArticulos } = req.body;
+  console.log("id_user: ",req.session.idUser )
+  const campos = ["venta_id", "usuario_id"];
+  const valores = [idVenta,  req.session.idUser];
 
-  res.json({})
+  const connection = await conn.getConnection();    
+    try {
+      await connection.beginTransaction();
+
+      if(!motivo){
+        campos.push("motivo");
+        valores.push(motivo)
+      }
+      if(!devoluEfectivo){
+        campos.push("monto");
+        valores.push(devoluEfectivo);
+      }
+      const sqlCancelarVenta = `INSERT INTO devoluciones(${campos.join(', ')}) VALUES(${valores.map((element) => '?').join(', ')}) `;
+
+      const [insertCancelarVenta] = connection.query(sqlCancelarVenta,valores);
+
+      if(regreArticulos){
+        
+
+           // Arreglo de productos
+    //  const values = listaArticulos.map((item) => [
+     
+    //    item.id,    
+    //  ]);
+      }
+
+      const ids = listaArticulos.map(item => item.id).join(',');
+
+      await connection.query(
+       `INSERT INTO detalles_venta (venta_id, producto_id, nombre_producto, cantidad, precio_unitario, subtotal)
+        VALUES ?`,
+       [values]
+     );
+
+      const cantidadCase = listaArticulos
+    .map(item => `WHEN ${item.id} THEN cantidad + ${item.cantidad}`)
+    .join(' ');
+
+  const sql = `
+    UPDATE productos
+    SET cantidad = CASE id
+      ${cantidadCase}
+    END
+    WHERE id IN (${ids});
+  `;
+
+  await connection.query(sql);
+
+      await connection.commit();
+
+     } catch (error) {
+     await connection.rollback();
+     console.error('Error en transacción:', error);
+     res.status(500).json({ success: false, error: 'Error al registrar la venta.' });
+   } finally {
+     connection.release();
+   }
+    res.json({result: true, message: "exito"})
+
+  //res.json({})
 }
 
 
@@ -141,6 +204,7 @@ const detallesVenta = async (req, res) =>{
         const [datos] = await conn.query(`
   SELECT JSON_OBJECT(
     'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d %H:%i:%s'),
+    'id_venta', v.id,
     'tipo', v.tipo,
     'status', v.status,
     'nombre', e.nombre,
@@ -154,6 +218,7 @@ const detallesVenta = async (req, res) =>{
     ),
     'articulos', JSON_ARRAYAGG(
       JSON_OBJECT(
+        'id_producto', p.id,
         'precio_unitario', dv.precio_unitario,
         'subtotal', dv.subtotal,
         'cantidad', dv.cantidad,

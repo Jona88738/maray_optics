@@ -16,7 +16,7 @@ const usuarios = () => {
             credentials: 'include'
         })
             .then((res) => res.json())
-            .the((res) => {
+            .then((res) => {
                 setUsuarios(res.data);
             })
 
