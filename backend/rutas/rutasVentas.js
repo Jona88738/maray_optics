@@ -13,4 +13,6 @@ routes.get("/detallesVenta", controladorVenta.detallesVenta);
 
 routes.get("/movimientoEfectivo",controladorVenta.movimientoEfectivo)
 
+routes.post('/pagoDiferido', controladorVenta.pagoDiferido);
+
 export default routes;

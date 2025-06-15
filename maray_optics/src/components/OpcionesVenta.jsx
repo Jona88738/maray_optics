@@ -71,6 +71,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                            datosAEnviar.dataUsuario.fecha = res.fecha;
                            datosAEnviar.dataUsuario.totalVenta = res.total;
                            datosAEnviar.dataUsuario.idVenta = res.ventaId;
+                           ModalOpen()
                             page(2, res.idVenta)
                             //console.log("Producto registrado");
                         }else{

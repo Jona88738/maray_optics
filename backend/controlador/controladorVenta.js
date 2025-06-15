@@ -63,7 +63,7 @@ const insertVenta = async (req, res) =>{
 
      const ventaId = result.insertId;
 
-    if(dataUsuario.tipo === 2){
+    if(dataUsuario.tipo === 1){
 
       const sentenciaPagosAdeudos = await connection.query(`INSERT INTO pago_realizado
         (cantidad_pago, metodo_pago, venta_id ) VALUES(?, ?, ?)`,[dataUsuario.pago_venta, dataUsuario.metodo_pago, ventaId]); 
@@ -168,7 +168,7 @@ const deleteVenta = async (req, res) =>{
       }
      
 
-      
+      await connection.query('UPDATE pago_realizado SET cantidad_pago = ? WHERE venta_id = ?',[0, idVenta])
 
       await connection.commit();
 
@@ -206,40 +206,82 @@ const detallesVenta = async (req, res) =>{
         //   WHERE v.id = ?`
           
         //   ,[id])
-        const [datos] = await conn.query(`
-  SELECT JSON_OBJECT(
+//         const [datos] = await conn.query(`
+//   SELECT JSON_OBJECT(
+//     'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d %H:%i:%s'),
+//     'id_venta', v.id,
+//     'tipo', v.tipo,
+//     'status', v.status,
+//     'nombre', e.nombre,
+//     'telefono', e.telefono,
+//     'pago_realizados', JSON_ARRAYAGG(
+//         JSON_OBJECT(
+//           'fecha', DATE_FORMAT(pr.fecha, '%Y-%m-%d %H:%i:%s'),
+//           'cantidad_pago', pr.cantidad_pago,
+//           'metodo_pago', pr.metodo_pago
+//         )
+//     ),
+//     'articulos', JSON_ARRAYAGG(
+//       JSON_OBJECT(
+//         'id_producto', p.id,
+//         'precio_unitario', dv.precio_unitario,
+//         'subtotal', dv.subtotal,
+//         'cantidad', dv.cantidad,
+//         'codigo', p.codigo,
+//         'nombre', p.nombre,
+//         'descripcion', p.descripcion
+//       )
+//     )
+//   ) AS resultado
+//   FROM venta v
+//   INNER JOIN detalles_venta dv ON v.id = dv.venta_id
+//   INNER JOIN producto p ON p.id = dv.producto_id
+//   LEFT JOIN expediente e ON e.id = v.paciente_id
+//   LEFT JOIN pago_realizado pr ON pr.venta_id = v.id
+//   WHERE v.id = ?
+//   GROUP BY v.id
+// `, [id]);
+
+ const [datos] = await conn.query(`
+SELECT JSON_OBJECT(
     'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d %H:%i:%s'),
     'id_venta', v.id,
     'tipo', v.tipo,
     'status', v.status,
     'nombre', e.nombre,
     'telefono', e.telefono,
-    'pago_realizados', JSON_ARRAYAGG(
-        JSON_OBJECT(
-          'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d %H:%i:%s'),
-          'cantidad_pago', pr.cantidad_pago,
-          'metodo_pago', pr.metodo_pago
+    'pago_realizados', (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'fecha', DATE_FORMAT(pr.fecha, '%Y-%m-%d %H:%i:%s'),
+                'cantidad_pago', pr.cantidad_pago,
+                'metodo_pago', pr.metodo_pago
+            )
         )
+        FROM pago_realizado pr
+        WHERE pr.venta_id = v.id
     ),
-    'articulos', JSON_ARRAYAGG(
-      JSON_OBJECT(
-        'id_producto', p.id,
-        'precio_unitario', dv.precio_unitario,
-        'subtotal', dv.subtotal,
-        'cantidad', dv.cantidad,
-        'codigo', p.codigo,
-        'nombre', p.nombre,
-        'descripcion', p.descripcion
-      )
+    'articulos', (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'id_producto', p.id,
+                'precio_unitario', dv.precio_unitario,
+                'subtotal', dv.subtotal,
+                'cantidad', dv.cantidad,
+                'codigo', p.codigo,
+                'nombre', p.nombre,
+                'descripcion', p.descripcion
+            )
+        )
+        FROM detalles_venta dv
+        INNER JOIN producto p ON p.id = dv.producto_id
+        WHERE dv.venta_id = v.id
     )
-  ) AS resultado
-  FROM venta v
-  INNER JOIN detalles_venta dv ON v.id = dv.venta_id
-  INNER JOIN producto p ON p.id = dv.producto_id
-  LEFT JOIN expediente e ON e.id = v.paciente_id
-  LEFT JOIN pago_realizado pr ON pr.venta_id = v.id
-  WHERE v.id = ?
-  GROUP BY v.id
+) AS resultado
+FROM venta v
+LEFT JOIN expediente e ON e.id = v.paciente_id
+WHERE v.id = ?;
+
 `, [id]);
           console.log(datos[0].resultado, "datosVentaDetalles");
           res.json({ result: true,  data: datos[0].resultado})
@@ -269,10 +311,25 @@ const movimientoEfectivo = async (req,res)  =>{
 
 }
 
+const pagoDiferido  = async (req, res) =>{
+
+  try {
+        const {pagoDiferido, id_venta}  = req.body;
+
+        const [datos] = await conn.query("INSERT INTO pago_realizado(cantidad_pago, metodo_pago, venta_id) VALUES(?, ?, ?)",[pagoDiferido, 'Efectivo', id_venta,])
+    } catch (error) {
+        console.error("Error: ", error.message);
+        return res.json({message: "Hubo un error en el servidor, intente mas tarde"})
+    }
+
+    return res.json({result: true, message: "exito"})
+}
+
 export default {
     getVentas,
     insertVenta,
     deleteVenta,
     detallesVenta,
-    movimientoEfectivo
+    movimientoEfectivo,
+    pagoDiferido
 }

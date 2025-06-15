@@ -111,6 +111,15 @@ const contentRef = useRef(null);
         })
     }
 
+    const btnCerrarModalCompleteVenta = () =>{
+        setdatosTabla([])
+        setInformacionVenta({select:0, id:0, nombre:''})
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 0
+        })
+    }
+
     
     const handleChangeCantidad = (element,event) =>{
         console.log(element,event.target.value)
@@ -317,7 +326,7 @@ elemento.subtotal = elemento.subtotal * 100;
                 
          { modalOpen === true  ? <ShowModal open={btnRegistrarPaciente} form={<Form   ModalOpen={btnRegistrarPaciente} />} /> : null} 
          { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarBuscarProducto} form={<CatalogoProducto ModalOpen={btnCerrarBuscarProducto} dato={modalOpenAll.datos}/>} /> : null} 
-         { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarBuscarProducto} form={<OpcionesVenta ModalOpen={btnCerrarBuscarProducto} dato={datosTabla} dataUsuario={informacionVenta} page={verPage}/>} /> : null} 
+         { modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModalCompleteVenta} form={<OpcionesVenta ModalOpen={btnCerrarModalCompleteVenta} dato={datosTabla} dataUsuario={informacionVenta} page={verPage}/>} /> : null} 
         </main>
         </>: cambiarPage.action === 1 ? (<ListadoProducto  page={verPage} /> )
         : cambiarPage.action === 2 ? <DetallesVenta page={verPage} informacion={cambiarPage.data} />

@@ -83,7 +83,7 @@ const ListadoProducto = ({page}) => {
                         return (
 
                             <tr  key={index}>
-                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
+                        {/* <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td> */}
                         <td id="Fecha">{element.fecha_inicio}</td>
                         <td id="Venta">{element.id}</td>
                         <td id="Paciente">{element.paciente_id === null ? "Venta al publico": element.nombre}</td>

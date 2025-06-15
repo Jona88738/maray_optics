@@ -44,6 +44,14 @@ const DetallesVenta = ({page, informacion}) => {
         })
     }
     const btnCerrarModal = () =>{
+        setActualizarDatos(!actualizarDatos)
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 0
+        })
+    }
+    const btnCerrarModalCompleteVenta = () =>{
+        setDatosVenta({ articulos:[], pago_realizados: []})
         setmodalOpenAll({
             ...modalOpenAll,
             action: 0
@@ -68,6 +76,7 @@ const DetallesVenta = ({page, informacion}) => {
       });
 
     const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
+    const [actualizarDatos, setActualizarDatos] = useState(false);
     const [dato, setDatosVenta] = useState({ articulos:[], pago_realizados: []});
     useEffect(() =>{
         console.log("id",informacion)
@@ -83,7 +92,7 @@ const DetallesVenta = ({page, informacion}) => {
                 console.log(res.data)
                 setDatosVenta(res.data)
             })
-    },[])
+    },[actualizarDatos])
     
      const calcularTotal = () =>{
         let total =  dato.articulos.reduce((acc, actual) =>{
@@ -98,7 +107,7 @@ const DetallesVenta = ({page, informacion}) => {
     }
 
     const cancelarVenta = () => {
-        const paramsCancel ={motivo: "", regreArticulos: false, devoluEfectivo: "", idVenta: dato.id_venta, listaArticulos: dato.articulos, total: calcularTotal()};
+        const paramsCancel ={motivo: "", regreArticulos: false, devoluEfectivo: "", idVenta: dato.id_venta, listaArticulos: dato.articulos, total: dato.tipo === 0 ? calcularTotal(): acumuladoPagoDiferido(dato.pago_realizados)};
          Swal.fire({title: "Alerta", text: "¿Estas seguro de cancelar esta venta?", icon: "question",
                             showConfirmButton: true,
                             showCancelButton: true,
@@ -137,7 +146,7 @@ const DetallesVenta = ({page, informacion}) => {
                                             // if(res.isConfirmed){
                                             paramsCancel.regreArticulos = res.isConfirmed;
 
-                                                 Swal.fire({title: "Alerta", text: `¿Realizar devolucion en efectivo  de ${calcularTotal()}?`, icon: "question",
+                                                 Swal.fire({title: "Alerta", text: `Realizar devolucion en efectivo  de ${dato.tipo === 0 ? calcularTotal(): acumuladoPagoDiferido(dato.pago_realizados)} `, icon: "question",
                                                     showConfirmButton: true,
                                                     showCancelButton: true,
                                                     confirmButtonText: "Si, realizar",
@@ -193,7 +202,10 @@ const DetallesVenta = ({page, informacion}) => {
         <main className="containerProducts"> 
             <div className="containerTitulo">
                 <button onClick={() => page(1) } className="btnRegresar">Regresar</button>
+            {dato.status === 3 ? (null): (
             <button className="btnRegresar" onClick={cancelarVenta} >Cancelar Venta</button>
+
+            )}      
             </div>
             
            
@@ -201,6 +213,13 @@ const DetallesVenta = ({page, informacion}) => {
             <section className="containerTabla">
                  <h2>Detalles Venta</h2>
                  <hr />
+                 {dato.status === 3 ? (
+                    <div style={{background: '#dd4b39'}}>
+                        <h2 style={{color: 'white'}}>Venta cancelada</h2>
+                    </div>
+                    ):
+                 
+                 ('')}
                  <form  className='formDatosVenta'>
                     <div className="input">
                         <label htmlFor="">Atendido por</label>
@@ -285,7 +304,7 @@ const DetallesVenta = ({page, informacion}) => {
             </section>
 
             <hr />
-            {dato.status !== 1 ? (
+            {dato.status === 2 ? (
             <>
             <section>
                 <h3>Pagos realizados</h3>
@@ -338,7 +357,9 @@ const DetallesVenta = ({page, informacion}) => {
                     <input type="text"  value={calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) } disabled/>
                     
                 </div>
+                {dato.status === 3 ? (null): (
                 <button className='btnAgregar' onClick={btnAbrirModal}>Realiza Pago</button>
+                )}
             </article>
             
                 <hr />
@@ -353,7 +374,7 @@ const DetallesVenta = ({page, informacion}) => {
         <Ticket ref={contentRef} sale={dato} obtenerTotal={calcularTotal} />
         </div> 
             
- { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<PagoDiferido closeModal={btnCerrarModal}   ModalOpen={btnCerrarModal} />} /> : null} 
+ { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<PagoDiferido closeModal={btnCerrarModal}   ModalOpen={btnCerrarModal} idVenta={dato.id_venta} restante_pago={calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) } />} /> : null} 
         </main>
     </>)
 }
