@@ -2,10 +2,12 @@ import { useEffect, useState } from "react"
 import Swal from "sweetalert2";
 import ShowModal from "../components/showModal";
 import ModalMovimientoEfectivo from '../components/FormMovimientoEfectivo'
+import '../../styles/MovimientosEfectivos.css'
 
 const MovimientoEfectivo = ({page}) =>{
 
     const [movimientoEfecto, setMovimientoEfecto] = useState([]);
+    const [actualizar, setActualizar]  = useState(false);
     const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
     const [paginaActual, setPaginaActual] = useState(1);
     const elementosPorPagina = 3;
@@ -24,7 +26,7 @@ const MovimientoEfectivo = ({page}) =>{
                 console.log(res.data)
                 setMovimientoEfecto(res.data)
             })
-    },[])
+    },[actualizar])
 
     const totalPaginas = Math.ceil(movimientoEfecto.length / elementosPorPagina);
     
@@ -47,6 +49,8 @@ const btnAbrirMoodal = () =>{
     }
 
 const btnCerrarModal = () =>{
+      setActualizar(!actualizar);
+
         setmodalOpenAll({
             ...modalOpenAll,
             action: 0
@@ -105,7 +109,36 @@ const btnCerrarModal = () =>{
 
   }
 
-  
+  const calculoMovimiento = (tipo) =>{
+    if(tipo === 'Entrada'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+        
+        return valorActual.tipo === 'Entrada' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      return valor;
+    }
+    if(tipo === 'venta'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+        
+        return valorActual.tipo === 'venta' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      return valor;
+    }
+    if(tipo === 'DEVOLUCION'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+        
+        return valorActual.tipo === 'DEVOLUCION' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      return valor;
+    }
+    if(tipo === 'Retiro'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+        
+        return valorActual.tipo === 'Retiro' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      return valor;
+    }
+  }
 
     return(<>
             <main className="containerProducts">
@@ -141,7 +174,7 @@ const btnCerrarModal = () =>{
                                 <td>{element.fecha} </td>
                                 
                                 <td> {element.descripcion}</td>
-                                <td> {element.monto}</td>
+                                <td style={element.tipo  === 'Entrada' || element.tipo  === 'venta' ?  ({color:'green'}): ({color: 'red'})}> {element.tipo === 'Entrada' || element.tipo  === 'venta'  ? ('$'+element.monto): ('-$'+element.monto)}</td>
                         
                     </tr>
                         )
@@ -182,7 +215,30 @@ const btnCerrarModal = () =>{
   </ul>
 </nav>
 
+<hr />
+<section className="informacionMovimientosEfectivos">
+  <article>
+    <h5>${calculoMovimiento('venta')}</h5>
+    <span>Ventas</span>
+  </article>
 
+  <article>
+    <h5>${calculoMovimiento('Entrada')} </h5>
+    <span>Entradas</span>
+  </article>
+
+  <article>
+    <h5>${calculoMovimiento('DEVOLUCION')} </h5>
+    <span>Devoluciones</span>
+  </article>
+
+  <article>
+    <h5>${calculoMovimiento('Retiro')} </h5>
+    <span>Retiros</span>
+  </article>
+  
+
+</section>
                 </section>
             </main>
 

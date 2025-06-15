@@ -184,6 +184,19 @@ const deleteVenta = async (req, res) =>{
   //res.json({})
 }
 
+const ingresarEfectivo = async (req, res) =>{
+try {
+        const {descripcion, tipo, monto, }  = req.body;
+
+        const [datos] = await conn.query("INSERT INTO movimiento_efectivo(descripcion, tipo, monto, id_usuario) VALUES(?, ?, ?, ?)",[descripcion, tipo, monto, req.session.idUser])
+    } catch (error) {
+        console.error("Error: ", error.message);
+        return res.json({message: "Hubo un error en el servidor, intente mas tarde"})
+    }
+
+    return res.json({result: true, message: "exito"})
+}
+
 
 const detallesVenta = async (req, res) =>{
 
@@ -299,7 +312,7 @@ const movimientoEfectivo = async (req,res)  =>{
 
   let datos;
     try {
-        [datos] = await conn.query(`SELECT  DATE_FORMAT(fecha, '%Y-%m-%d %H:%i:%s') as fecha,  descripcion, monto FROM movimiento_efectivo`);
+        [datos] = await conn.query(`SELECT  DATE_FORMAT(fecha, '%Y-%m-%d %H:%i:%s') as fecha,  descripcion, monto, tipo FROM movimiento_efectivo  WHERE id_corte IS NULL`);
        // console.log(datos)
        
     } catch (error) {
@@ -331,5 +344,6 @@ export default {
     deleteVenta,
     detallesVenta,
     movimientoEfectivo,
-    pagoDiferido
+    pagoDiferido,
+    ingresarEfectivo
 }
