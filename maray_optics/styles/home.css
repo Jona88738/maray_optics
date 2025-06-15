@@ -108,22 +108,33 @@
 .containerMainHome{
     display: flex;
     flex-direction: column;
+    gap: 15px;
 }
 .containerApartadoHomeVenta{
     background-color: green;
     width: 100%;
+    display: flex;
+
 }
 .containerApartadoHomeConsulta{
     background-color: rgb(15, 96, 158);
     width: 100%;
+    display: flex;
 }
 .containerApartadoHomeExpediente{
     background-color: rgb(134, 13, 35);
     width: 100%;
+    display: flex;
 }
 .containerApartadoHomeProducto{
     background-color: rgb(106, 108, 12);
     width: 100%;
+    display: flex;
+}
+.containerHome{
+  width: 80%;
+  height: 100%;
+  margin-left: 12%;
 }
 
 .TitleHome{

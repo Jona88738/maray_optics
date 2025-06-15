@@ -17,4 +17,6 @@ routes.post("/movimientoEfectivo", controladorVenta.ingresarEfectivo)
 
 routes.post('/pagoDiferido', controladorVenta.pagoDiferido);
 
+routes.post('/corteCaja', controladorVenta.corteCaja);
+
 export default routes;

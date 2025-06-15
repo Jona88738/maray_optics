@@ -57,13 +57,31 @@ const btnCerrarModal = () =>{
         })
     }
 
-  const  realizaCorteCaja = () =>{
+  const  realizaCorteCaja = (datoEnviar) =>{
 
+    fetch("/api/ventas/corteCaja", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(datoEnviar)
+    })
+      .then(res => res.json())
+      .then((res) =>{
+        if(res.result){
+          setActualizar(!actualizar);
+          Swal.fire({title:"Se realizo el corte con exito!!", text: "Corte realizado", icon:"success"});
+          
+          
+        }
+      })
       console.log("Se realizo un corte de caja")
   }
 
   const CorteCaja = () =>{
 
+    const datoEnviar = { fondoCaja: false, movimientoEfectivo: movimientoEfecto}
     Swal.fire({title: "Alerta", text: "¿Desea realizar el corte de caja?", icon: "question",
                                 showConfirmButton: true,
                                 showCancelButton: true,
@@ -90,14 +108,16 @@ const btnCerrarModal = () =>{
                                   cancelButtonText: 'Cancelar'
                                 }).then((result) => {
                                   if (result.isConfirmed) {
+                                    datoEnviar.fondoCaja = true;
+                                    datoEnviar.montoFondoCaja = result.value;
                                     console.log('Fondo:', result.value);
                                     // Aquí puedes usar result.value como necesites
-                                    realizaCorteCaja();
+                                    realizaCorteCaja(datoEnviar);
                                   }
                                 });
 
                               }else{
-                                realizaCorteCaja();
+                                realizaCorteCaja(datoEnviar);
                               }
 
                             })

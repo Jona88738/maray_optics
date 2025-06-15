@@ -270,6 +270,7 @@ elemento.subtotal = elemento.subtotal * 100;
             <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Codigo</th>
                         <th>Descripcion</th>
                         <th>Cantidad</th>
@@ -287,6 +288,7 @@ elemento.subtotal = elemento.subtotal * 100;
 
                         return (
                             <tr>
+                                <td><button>Eliminar</button></td>
                                 <td>{element.nombre} </td>
                                 <td>{element.descripcion} </td>
                                 <td> <input type="number" placeholder="Cantidad" min={1} value={element.cantidad_compra}  onChange={(event) =>handleChangeCantidad(element,event)}/> </td>

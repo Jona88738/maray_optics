@@ -1,6 +1,6 @@
 import { conn } from "../db/connectionMysql.js"
 
-const tipoVenta = [	'venta', 'entrada', 'salida', 'devolucion']
+const tipoVenta = [	'venta', 'Entrada', 'salida', 'devolucion']
 const descripcion = [ 'PAGO A VENTA', 'DEVOLUCIÓN DE VENTA', 'ENTRADA - FONDO DE CAJA' ]
 
 const getVentas = async (req, res) => {
@@ -338,6 +338,79 @@ const pagoDiferido  = async (req, res) =>{
     return res.json({result: true, message: "exito"})
 }
 
+
+const calculoMovimiento = (tipo, movimientoEfecto) =>{
+  const valorDevolver = {valor: 0, count: 0};
+    if(tipo === 'Entrada'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+        if(valorActual.tipo === 'Entrada')  valorDevolver.count += 1;
+        return valorActual.tipo === 'Entrada' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      valorDevolver.valor = valor
+      return valorDevolver;
+    }
+    if(tipo === 'venta'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+        if(valorActual.tipo === 'venta')  valorDevolver.count += 1;
+        return valorActual.tipo === 'venta' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      valorDevolver.valor = valor
+      return valorDevolver;
+    }
+    if(tipo === 'DEVOLUCION'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+        if(valorActual.tipo === 'DEVOLUCION')  valorDevolver.count += 1;
+        return valorActual.tipo === 'DEVOLUCION' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      valorDevolver.valor = valor
+      return valorDevolver;
+    }
+    if(tipo === 'Retiro'){
+      const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
+         if(valorActual.tipo === 'Retiro')  valorDevolver.count += 1;
+        return valorActual.tipo === 'Retiro' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+      },0)
+      valorDevolver.valor = valor
+      return valorDevolver;
+    }
+  }
+
+const corteCaja = async (req, res) => {
+
+  try {
+        const {fondoCaja, movimientoEfectivo, montoFondoCaja}  = req.body;
+        const total_entradas = calculoMovimiento('Entrada', movimientoEfectivo)
+
+        const total_venta = calculoMovimiento('venta', movimientoEfectivo);
+        
+        const total_salidas = calculoMovimiento('Retiro', movimientoEfectivo)
+        const total_devoluciones = calculoMovimiento('DEVOLUCION', movimientoEfectivo)
+
+        const [datos] = await conn.query(`INSERT INTO corte_caja
+          (total_ventas, total_entradas, total_salidas, total_devoluciones, movimientos_ventas, movimientos_entradas, movimientos_salidas, movimientos_devoluciones, usuario_id)
+          VALUES(?, ?, ?, ?, ?, ? , ?, ?, ? )`,[
+            total_venta.valor, total_entradas.valor, total_salidas.valor, total_devoluciones.valor,
+            total_venta.count,  total_entradas.count, total_salidas.count, total_devoluciones.count, req.session.idUser
+           ])
+        const corteCajaId =  datos.insertId
+
+        const [datosMovimientoEfectivo] = await conn.query(`UPDATE movimiento_efectivo SET id_corte = ? WHERE id_corte IS NULL`,[corteCajaId])
+        
+           if(fondoCaja){
+
+           const monto = montoFondoCaja === '' ? 0: parseInt(montoFondoCaja)
+            const [datosFondoEntrada] = await conn.query('INSERT movimiento_efectivo(descripcion, tipo, monto, id_usuario) VALUES(?, ?, ?, ?)',[descripcion[2], tipoVenta[1], monto, req.session.idUser])
+           }
+
+    } catch (error) {
+        console.error("Error: ", error.message);
+        return res.json({message: "Hubo un error en el servidor, intente mas tarde"})
+    }
+
+    return res.json({result: true, message: "exito"})
+
+}
+
 export default {
     getVentas,
     insertVenta,
@@ -345,5 +418,6 @@ export default {
     detallesVenta,
     movimientoEfectivo,
     pagoDiferido,
-    ingresarEfectivo
+    ingresarEfectivo,
+    corteCaja
 }
