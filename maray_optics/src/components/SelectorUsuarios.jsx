@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,forwardRef } from 'react';
 import '../../styles/SelectorUsuarios.css';
 
-const SelectorUsuarios = ({ onSelect }) => {
+const SelectorUsuarios = forwardRef( ({ onSelect, setFiltro, filtro}, ref) => {
   const [usuarios, setUsuarios] = useState([]);
-  const [filtro, setFiltro] = useState('');
+  // const [filtro, setFiltro] = useState('');
   const [mostrarOpciones, setMostrarOpciones] = useState(false);
 
   // Traer todos los usuarios una sola vez
@@ -43,6 +43,7 @@ const SelectorUsuarios = ({ onSelect }) => {
         type="text"
         placeholder="Buscar usuario..."
         value={filtro}
+        ref={ref} 
         onChange={(e) => setFiltro(e.target.value)}
         onFocus={() => setMostrarOpciones(true)}
         onBlur={() => setTimeout(() => setMostrarOpciones(false), 200)}
@@ -61,6 +62,6 @@ const SelectorUsuarios = ({ onSelect }) => {
       )}
     </div>
   );
-};
+});
 
 export default SelectorUsuarios;

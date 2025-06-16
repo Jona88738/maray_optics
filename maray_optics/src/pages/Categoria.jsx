@@ -35,9 +35,14 @@ const Categoria = ({btnRegresar}) =>{
     //}
     },[actualizarDatos])
 
+    //  Aplicar filtro por nombre
+    const datosFiltrados = datosTabla.filter(item =>
+        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
+    );
+
     const totalPaginas = Math.ceil(datosTabla.length / elementosPorPagina);
     
-    const datosPaginados = datosTabla.slice(
+    const datosPaginados = datosFiltrados.slice(
     (paginaActual - 1) * elementosPorPagina,
     paginaActual * elementosPorPagina
 );
@@ -101,16 +106,19 @@ const Categoria = ({btnRegresar}) =>{
         setmodalOpenEdit({action: 1, datos:data});
     }
 
-     //  Aplicar filtro por nombre
-    const datosFiltrados = datosTabla.filter(item =>
-        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
-    );
+     
 
 
     return(<>
         <section className='containerbtnCategoria'>
-        <button onClick={btnRegresar} className="btnRegresar">Regresar</button>
-        <button onClick={btnCategoria} className='btnAgregar'>Nueva categoria</button>
+        <button onClick={btnRegresar} className="btnRegresar">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+                
+            Regresar</button>
+        <button onClick={btnCategoria} className='btnAgregar'>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                    
+            Nueva categoria</button>
         </section>
 
         {/* <section className="inputBusqueda">
@@ -133,8 +141,9 @@ const Categoria = ({btnRegresar}) =>{
                 </div>
             </section>
 
-        <h2 style={{textAlign:'center'}}>Categoria</h2>
+        
         <section className="containerTabla">
+            <h2 style={{textAlign:'center'}}>Categoria</h2>
         <section className="table-responsive">
             <table  className="table table-bordered table-hover">
                 <thead>
@@ -152,14 +161,20 @@ const Categoria = ({btnRegresar}) =>{
                      {datosFiltrados.length > 0 ? (
                                 datosPaginados.map((element, index) => (
                                     <tr key={element.id}>
-                                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
+                                        {/* <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td> */}
                                         <td id="id">{element.id}</td>
                                         <td id="Nombre">{element.nombre}</td>
                                         <td id="RegistrosCategoria">{element.registroTotal}</td>
                                         <td id="ExistenciasCategoria">{element.cantidadTotal === null ? 0 : element.cantidadTotal}</td>
                                         <td>
-                                            <button onClick={() => btnEditar(element)} className='btnEdit'>Editar</button>
-                                            <button onClick={() => btnDelete(element)} className='btnDelete'>Eliminar</button>
+                                            <button onClick={() => btnEditar(element)} className='btnEdit'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/></svg>
+                                                
+                                                </button>
+                                            <button onClick={() => btnDelete(element)} className='btnDelete'>
+                                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                                                
+                                                </button>
                                         </td>
                                     </tr>
                                 ))

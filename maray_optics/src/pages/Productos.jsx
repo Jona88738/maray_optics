@@ -38,9 +38,15 @@ const Productos = () => {
    // }
     },[actualizarDatos])
 
+    //  Aplicar filtro por nombre
+    const datosFiltrados = datos.filter(item =>
+        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase()) ||
+        item.codigo.toLowerCase().includes(filtroNombre.toLowerCase())
+    );
+
      const totalPaginas = Math.ceil(datos.length / elementosPorPagina);
     
-    const datosPaginados = datos.slice(
+    const datosPaginados = datosFiltrados.slice(
     (paginaActual - 1) * elementosPorPagina,
     paginaActual * elementosPorPagina
 );
@@ -99,10 +105,7 @@ const Productos = () => {
         setCategoriaOpen(!categoriaOpen);
     }
 
-     //  Aplicar filtro por nombre
-    const datosFiltrados = datos.filter(item =>
-        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
-    );
+     
 
     return(<>
     <Navbar />
@@ -132,9 +135,16 @@ const Productos = () => {
 
         <section className="containerButtons">
 
-            <button className="btnAgregar" onClick={btnAgregar}>Agregar</button>
-            <button className="btnBaja">Baja de producto</button>
-            <button className="btnVerCategoria" onClick={btnCategoria}>ver categoria</button>
+            <button className="btnAgregar" onClick={btnAgregar}>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                    
+                Agregar</button>
+            <button className="btnBaja">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M200-440v-80h560v80H200Z"/></svg>
+                Baja de producto</button>
+            <button className="btnVerCategoria" onClick={btnCategoria}>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M280-600v-80h560v80H280Zm0 160v-80h560v80H280Zm0 160v-80h560v80H280ZM160-600q-17 0-28.5-11.5T120-640q0-17 11.5-28.5T160-680q17 0 28.5 11.5T200-640q0 17-11.5 28.5T160-600Zm0 160q-17 0-28.5-11.5T120-480q0-17 11.5-28.5T160-520q17 0 28.5 11.5T200-480q0 17-11.5 28.5T160-440Zm0 160q-17 0-28.5-11.5T120-320q0-17 11.5-28.5T160-360q17 0 28.5 11.5T200-320q0 17-11.5 28.5T160-280Z"/></svg>
+                ver categoria</button>
 
         </section>
          <section className="containerTabla">
@@ -156,15 +166,19 @@ const Productos = () => {
                 {datosFiltrados.length > 0 ? (
                                 datosPaginados.map((element, index) => (
                                     <tr key={element.id}>
-                                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
+                                        {/* <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td> */}
                                         <td id="codigo">{element.codigo}</td>
                                         <td id="nombre">{element.nombre}</td>
                                         <td id="categoria">{element.nombreCategoria}</td>
                                         <td id="existencia">{element.cantidad}</td>
                                         <td id="precio">{element.precio_venta}</td>
                                         <td>
-                                            <button onClick={() => btnEditar(element)}  className='btnEdit'>Editar</button>
-                                            <button onClick={() => btnDelete(element.id)} className='btnDelete'>Eliminar</button>
+                                            <button onClick={() => btnEditar(element)}  className='btnEdit'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/></svg>
+                                                </button>
+                                            <button onClick={() => btnDelete(element.id)} className='btnDelete'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                                                </button>
                                         </td>
                                     </tr>
                                 ))
@@ -173,24 +187,7 @@ const Productos = () => {
                                     <td colSpan="5" style={{ textAlign: 'center' }}>No hay resultados</td>
                                 </tr>
                             )}
-                    {/* {datos.map((element) =>{
-                        return (
-
-                            <tr>
-                         <td id="imagen"></td> 
-                        <td id="codigo">{element.codigo}</td>
-                        <td id="nombre">{element.nombre}</td>
-                        <td id="categoria">{element.nombreCategoria}</td>
-                        <td id="existencia">{element.cantidad}</td>
-                        <td id="precio">{element.precio_venta}</td>
-                        
-                        <td id="opciones">
-                            <button onClick={() => btnEditar(element)}  className='btnEdit'>Editar</button>
-                            <button onClick={() => btnDelete(element.id)} className='btnDelete'>Eliminar</button>
-                        </td>
-                    </tr>
-                        )
-                    } )}  */}
+                    
                     
 
                 </tbody>

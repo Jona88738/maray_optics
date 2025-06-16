@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-const AutocompleteInput = ({tabla}) => {
+const AutocompleteInput = ({tabla,valor,setValor}) => {
   const [sugerencias, setSugerencias] = useState([]);
-  const [valor, setValor] = useState('');
+  // const [valor, setValor] = useState('');
   const [todasLasOpciones, setTodasLasOpciones] = useState([]);
 
  // const todasLasOpciones = [{id: 1,nombre: 'Bogotá'}, {id: 2,nombre: 'Medellín'}, {id: 3,nombre: 'Barranquilla'}, {id: 4,nombre: 'Cali'}];
@@ -36,7 +36,8 @@ const AutocompleteInput = ({tabla}) => {
 
     if (texto.length > 0) {
       const filtradas = todasLasOpciones.filter(op =>
-        op.nombre.toLowerCase().includes(texto.toLowerCase())
+        op.nombre.toLowerCase().includes(texto.toLowerCase()) ||
+        op.codigo.toLowerCase().includes(texto.toLowerCase())
 
       );
       //console.log(filtradas)
@@ -80,7 +81,7 @@ const AutocompleteInput = ({tabla}) => {
         }}>
           {sugerencias.map((op, i) => (
             <li key={i} onClick={() => seleccionarOpcion(op)} style={{ cursor: 'pointer', padding: '5px' }}>
-              {op.nombre}
+              {op.codigo +' - ' +op.nombre}
             </li>
           ))}
         </ul>

@@ -68,6 +68,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                         if(res.success){
                             Swal.fire({title:"Se ingreso con exito", text: "Categoria agregada", icon:"success"})
                            // ModalOpen();
+                           
                            datosAEnviar.dataUsuario.fecha = res.fecha;
                            datosAEnviar.dataUsuario.totalVenta = res.total;
                            datosAEnviar.dataUsuario.idVenta = res.ventaId;
@@ -156,8 +157,8 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
 
             <hr />
             <div className='containerbtnOpVenta'>
-                <button onClick={salir}>Volver</button>
-                <button onClick={finalizarVenta}>Finalizar Venta</button>
+                <button onClick={salir} className='btnRegresar'>Volver</button>
+                <button onClick={finalizarVenta} className='btnGuardar'>Finalizar Venta</button>
             </div>
         </form>
     </>)

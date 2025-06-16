@@ -7,7 +7,9 @@ const getVentas = async (req, res) => {
 let datos;
 
     try {
-        [datos] = await conn.query(`SELECT v.*, e.nombre FROM venta v
+        [datos] = await conn.query(`SELECT 
+          DATE_FORMAT(v.fecha_inicio, '%d/%m/%Y %H:%i:%s') AS fecha_formateada,
+          v.*, e.nombre FROM venta v
             LEFT JOIN expediente e ON e.id  = v.paciente_id`);
        // console.log(datos)
        
@@ -79,13 +81,14 @@ const insertVenta = async (req, res) =>{
        item.nombre,
        item.cantidad_compra,
        (item.precio_venta / 100).toFixed(2),
-       (item.subtotal / 100).toFixed(2)
+       (item.subtotal / 100).toFixed(2),
+       parseInt(item.descuento),
        
      ]);
 
 //     // Un solo insert para todos los productos
     await connection.query(
-       `INSERT INTO detalles_venta (venta_id, producto_id, nombre_producto, cantidad, precio_unitario, subtotal)
+       `INSERT INTO detalles_venta (venta_id, producto_id, nombre_producto, cantidad, precio_unitario, subtotal, descuento)
         VALUES ?`,
        [values]
      );
@@ -283,7 +286,8 @@ SELECT JSON_OBJECT(
                 'cantidad', dv.cantidad,
                 'codigo', p.codigo,
                 'nombre', p.nombre,
-                'descripcion', p.descripcion
+                'descripcion', p.descripcion,
+                'descuento', dv.descuento
             )
         )
         FROM detalles_venta dv
