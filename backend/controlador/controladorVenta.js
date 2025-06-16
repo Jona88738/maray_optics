@@ -34,8 +34,8 @@ const insertVenta = async (req, res) =>{
   const connection = await conn.getConnection();
    try {
      await connection.beginTransaction();
-    const ValuesVenta = [total, dataUsuario.metodo_pago, dataUsuario.status];
-    const camposventa = ['total','metodo_pago', 'status']
+    const ValuesVenta = [total, dataUsuario.metodo_pago, dataUsuario.status, req.session.idUser];
+    const camposventa = ['total','metodo_pago', 'status', 'usuario_id']
 
     if(dataUsuario.id !== -2){
       ValuesVenta.push(dataUsuario.id)
@@ -266,6 +266,7 @@ SELECT JSON_OBJECT(
     'status', v.status,
     'nombre', e.nombre,
     'telefono', e.telefono,
+    'usuario_nombre', usuario.nombre,
     'pago_realizados', (
         SELECT JSON_ARRAYAGG(
             JSON_OBJECT(
@@ -292,11 +293,13 @@ SELECT JSON_OBJECT(
         )
         FROM detalles_venta dv
         INNER JOIN producto p ON p.id = dv.producto_id
+        
         WHERE dv.venta_id = v.id
     )
 ) AS resultado
 FROM venta v
 LEFT JOIN expediente e ON e.id = v.paciente_id
+INNER JOIN usuario usuario ON usuario.id = v.usuario_id
 WHERE v.id = ?;
 
 `, [id]);
@@ -332,6 +335,17 @@ const pagoDiferido  = async (req, res) =>{
 
   try {
         const {pagoDiferido, id_venta}  = req.body;
+
+        const [datosPagosSelect] = await conn.query(`
+          SELECT SUM(pr.cantidad_pago) as totalPagos, venta.total FROM venta 
+            INNER JOIN pago_realizado pr ON pr.venta_id = venta.id
+            where venta.id = ?
+          `,[id_venta])
+          const restantePago = parseInt(datosPagosSelect[0].totalPagos) + parseInt(pagoDiferido);
+          if(restantePago === parseInt(datosPagosSelect[0].total)){
+            console.log("Finalizo la venta");
+            const [datosVenta] = await conn.query(`UPDATE venta SET status = ? where  id = ?`,[1, id_venta])
+          }
 
         const [datos] = await conn.query("INSERT INTO pago_realizado(cantidad_pago, metodo_pago, venta_id) VALUES(?, ?, ?)",[pagoDiferido, 'Efectivo', id_venta,])
     } catch (error) {

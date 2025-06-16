@@ -228,7 +228,7 @@ const DetallesVenta = ({page, informacion}) => {
                  <form  className='formDatosVenta'>
                     <div className="input">
                         <label htmlFor="">Atendido por</label>
-                        <input type="text" value={'ND'} disabled/>
+                        <input type="text" value={dato.usuario_nombre} disabled/>
                     </div>
                     <section className="datosVenta">
                         <div>
@@ -362,8 +362,10 @@ const DetallesVenta = ({page, informacion}) => {
                     <input type="text"  value={calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) } disabled/>
                     
                 </div>
-                {dato.status === 3 ? (null): (
-                <button className='btnAgregar' onClick={btnAbrirModal}>Realiza Pago</button>
+                {dato.status === 3 || (calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) ) === 0 ? (null): (
+
+                
+                <button className='btnAgregar' onClick={btnAbrirModal} >Realiza Pago</button>
                 )}
             </article>
             
