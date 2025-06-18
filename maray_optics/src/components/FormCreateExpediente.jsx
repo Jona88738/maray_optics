@@ -17,7 +17,7 @@ const FormCreateExpediente = ({ModalOpen}) => {
         e.preventDefault();
         if(!datos.nombre || !datos.apellido || !datos.edad || !datos.telefono || !datos.correo || !datos.fechaNacimiento) Swal.fire({title: "Alerta", text: "Todos los campos con * son obligatorios", icon: "warning"})
         
-        fetch("http://localhost:3000/expedientes",{
+        fetch("/api/expedientes",{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json'

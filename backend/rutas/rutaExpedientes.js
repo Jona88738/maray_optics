@@ -7,4 +7,6 @@ routes.get("/", expediente.getExpedientes);
 
 routes.post("/", expediente.insertExpediente)
 
+routes.delete("/", expediente.deleteExpediente)
+
 export default routes

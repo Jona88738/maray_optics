@@ -4,10 +4,13 @@ import ShowModal from "../components/showModal";
 import Swal from 'sweetalert2';
 
 import { useEffect, useState } from "react";
+import Consulta from "./Consulta";
 const Expediente = () => {
 
     const [paginaActual, setPaginaActual] = useState(1);
-     const elementosPorPagina = 10;
+    const [actualizarDatos, setActualizarDatos] = useState(false);
+    const elementosPorPagina = 10;
+    const [cambiarPage, setCambiarPage] = useState({action: 0, data: {}});
 
     //  Nuevo estado para la búsqueda
     const [filtroNombre, setFiltroNombre] = useState('');
@@ -31,7 +34,7 @@ const Expediente = () => {
 
                 }
             })
-    },[])
+    },[actualizarDatos])
 
      const totalPaginas = Math.ceil(expedientes.length / elementosPorPagina);
     
@@ -55,12 +58,17 @@ const Expediente = () => {
         })
     }
      const btnCerrarModal = () =>{
-        
+        setActualizarDatos(!actualizarDatos);
         setmodalOpenAll({
             ...modalOpenAll,
             action: 0
         })
     }
+
+    const verPage = (opcion, datos) =>{
+    console.log( typeof opcion, "Mi opcion")
+    setCambiarPage({action: opcion,data: datos})
+  }
 
       const btnDelete = (id) => {
             Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar este expediente?", icon: "question",
@@ -70,7 +78,7 @@ const Expediente = () => {
                         cancelButtonText: "No, quiero elimnar"
                     }).then((res) =>{
                         if(res.isConfirmed){
-                            fetch(`/api/producto?id=${id}`, {
+                            fetch(`/api/expedientes?id=${id}`, {
                                 method: 'DELETE',
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -96,12 +104,19 @@ const Expediente = () => {
 
     return(<>
         <Navbar/>
+        {cambiarPage.action === 0 ? <> 
         <h1  style={{textAlign: 'center', marginBottom: '15px'}}  >Expedientes </h1>
          <section className="containerTitulo">
                 
-                <button className="btnVentaRegistrarP" onClick={registrarExpediente} >Nuevo expediente</button>
+                <button className="btnAgregar " onClick={registrarExpediente} >
+                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                   
+                    Nuevo expediente</button>
                 
-                <button className="btnVentaBuscarProducto" >Nueva consulta</button>
+                <button className="btnBaja" onClick={() => verPage(1)} >
+                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M200-440v-80h560v80H200Z"/></svg>
+               
+                    Nueva consulta</button>
             </section>
          <main className="containerProducts">
 
@@ -135,15 +150,21 @@ const Expediente = () => {
                  {expedientes.length > 0 ? (
                                 datosPaginados.map((element, index) => (
                                     <tr key={element.id}>
-                                        <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td>
+                                        {/* <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td> */}
                                         
                                         <td id="codigo">{element.id}</td>
                                         <td id="nombre">{element.nombre}</td>
                                         <td id="categoria">{element.edad}</td>
                                         
                                         <td>
-                                            <button onClick={() => btnEditar(element)}  className='btnEdit'>Editar</button>
-                                            <button onClick={() => btnDelete(element.id)} className='btnDelete'>Eliminar</button>
+                                            <button onClick={() => btnEditar(element)}  className='btnEdit'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/></svg>
+                                                
+                                                </button>
+                                            <button onClick={() => btnDelete(element.id)} className='btnDelete'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                                                
+                                               </button>
                                         </td>
                                     </tr>
                                 ))
@@ -202,8 +223,10 @@ const Expediente = () => {
 </nav>
 
         </section>
-        { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> : null} 
+        { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
+        : null} 
          </main>
+         </> :cambiarPage.action === 1 ? (<Consulta />): null}
     </>)
 }
 

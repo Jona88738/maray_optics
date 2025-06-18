@@ -30,7 +30,21 @@ const insertExpediente = async (req, res) => {
     return res.json({result: true, message: "exito"})
 }
 
+const deleteExpediente = async (req, res) => {
+
+    try {
+        const { id } = req.query;
+        console.log("mi id: ",id);
+        const [datos] = await conn.query('UPDATE expediente set estado = 0 WHERE id = ?',[id])
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+    res.json({ result: true,  mensaje: "Productos eliminado" })
+}
+
 export default {
     getExpedientes,
-    insertExpediente
+    insertExpediente,
+    deleteExpediente
 }
