@@ -1,12 +1,13 @@
 import Navbar from "../components/navbar";
 import { useEffect, useState } from "react";
 import Swal from 'sweetalert2';
-
+import ShowModal from "../components/showModal";
+const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
 const usuarios = () => {
 
     const [paginaActual, setPaginaActual] = useState(1);
     const elementosPorPagina = 3;
-
+    const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
      
 
      //  Nuevo estado para la búsqueda
@@ -71,6 +72,14 @@ const usuarios = () => {
                         })
         
             }
+
+              const btnCerrarModal = () =>{
+        setActualizarDatos(!actualizarDatos);
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 0
+        })
+    }
 
 
 
@@ -185,6 +194,9 @@ const usuarios = () => {
 </nav>
 
         </section>
+
+        { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
+        : null} 
 
          </main>
         </>
