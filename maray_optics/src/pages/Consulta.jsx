@@ -3,10 +3,10 @@ const Consulta = () => {
 
     return(<>
         
-        <article className="mainFormMovimiento">
-<h2>Nueva consulta</h2>
-
-        </article>
+        
+        <main className="containerProducts">
+        <h2>Nueva consulta</h2>
+        </main>
     </>)
 }
 export default Consulta;

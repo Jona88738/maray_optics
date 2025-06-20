@@ -2,7 +2,8 @@ import Navbar from "../components/navbar";
 import { useEffect, useState } from "react";
 import Swal from 'sweetalert2';
 import ShowModal from "../components/showModal";
-const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
+import FormCreateUser from '../components/FormCreateUser'
+
 const usuarios = () => {
 
     const [paginaActual, setPaginaActual] = useState(1);
@@ -74,14 +75,20 @@ const usuarios = () => {
             }
 
               const btnCerrarModal = () =>{
-        setActualizarDatos(!actualizarDatos);
+        // setActualizarDatos(!actualizarDatos);
         setmodalOpenAll({
             ...modalOpenAll,
             action: 0
         })
     }
 
+    const registrarUsuario = () =>{
 
+        setmodalOpenAll({
+            ...modalOpenAll,
+            action: 1
+        })
+    }
 
     return(
         <>
@@ -90,7 +97,7 @@ const usuarios = () => {
             <section className="containerTitulo">
                 
                
-                <button className="btnVentaBuscarProducto" >Nuevo Usuario</button>
+                <button className="btnVentaBuscarProducto"  onClick={registrarUsuario}>Nuevo Usuario</button>
             </section>
             
             <main className="containerProducts">
@@ -195,7 +202,7 @@ const usuarios = () => {
 
         </section>
 
-        { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
+        { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<FormCreateUser ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
         : null} 
 
          </main>
