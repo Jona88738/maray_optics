@@ -8,7 +8,7 @@ import FormEditarCategoria from '../components/FormEditarCategoria';
 const Categoria = ({btnRegresar}) =>{
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const elementosPorPagina = 3;
+    const elementosPorPagina = 8;
 
     const [modalOpen, setModalOpen] = useState(false);
     const [datosTabla, setDatosTable] = useState([]);

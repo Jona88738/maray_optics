@@ -9,7 +9,7 @@ let datos;
     try {
         [datos] = await conn.query(`SELECT 
           DATE_FORMAT(v.fecha_inicio, '%d/%m/%Y %H:%i:%s') AS fecha_formateada,
-          v.*, e.nombre FROM venta v
+          v.*, e.nombre, e.apellido FROM venta v
             LEFT JOIN expediente e ON e.id  = v.paciente_id`);
        // console.log(datos)
        
@@ -71,6 +71,20 @@ const insertVenta = async (req, res) =>{
         (cantidad_pago, metodo_pago, venta_id ) VALUES(?, ?, ?)`,[dataUsuario.pago_venta, dataUsuario.metodo_pago, ventaId]); 
     }
 
+    const ids = dato.map(p => p.id).join(','); // "16,18,20"
+
+    const cases = dato.map(p => `WHEN ${p.id} THEN cantidad - ${p.cantidad_compra}`).join('\n');
+
+    const sentenciaProductos = `
+      UPDATE producto
+      SET cantidad = CASE id
+        ${cases}
+      END
+      WHERE id IN (${ids});
+    `;
+
+    // Ejecutar la consulta
+    await connection.query(sentenciaProductos);
 
 
 

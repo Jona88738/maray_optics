@@ -37,12 +37,20 @@ const ListadoProducto = ({page}) => {
         })
     },[])
 
-     //  Aplicar filtro por nombre
-    const datosFiltrados = ventas.filter(item =>
-        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
-        ||
-    item.id.toString().includes(filtroNombre)
+    //  //  Aplicar filtro por nombre
+    // const datosFiltrados = ventas.filter(item =>
+    //     item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
+    //     ||
+    // item.id.toString().includes(filtroNombre)
+    // );
+    const datosFiltrados = ventas.filter(item => {
+    const nombreCompleto = `${item.nombre} ${item.apellido}`.toLowerCase();
+    return (
+        nombreCompleto.includes(filtroNombre.toLowerCase()) ||
+        item.id.toString().includes(filtroNombre)
     );
+});
+
 
     const totalPaginas = Math.ceil(ventas.length / elementosPorPagina);
     
@@ -113,8 +121,11 @@ const ListadoProducto = ({page}) => {
                         {/* <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td> */}
                         <td id="Fecha">{element.fecha_formateada}</td>
                         <td id="Venta">{element.id}</td>
-                        <td id="Paciente">{element.paciente_id === null ? "Venta al publico": element.nombre}</td>
-                        <td id="Total">{element.total}</td>
+                        <td id="Paciente">{element.paciente_id === null ? "Venta al publico": element.nombre + ' ' +element.apellido}</td>
+                        <td id="Total">{Number(element.total).toLocaleString('es-MX', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}</td>
                         <td id="Status">{setStatus(element.status)}</td>
                         
                         <td id="opciones">

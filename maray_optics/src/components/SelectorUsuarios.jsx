@@ -28,12 +28,14 @@ const SelectorUsuarios = forwardRef( ({ onSelect, setFiltro, filtro}, ref) => {
 
   // Filtrar usuarios localmente
   const usuariosFiltrados = usuarios.filter((u) =>
-    u.nombre.toLowerCase().includes(filtro.toLowerCase())
+    u.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+    u.apellido.toLowerCase().includes(filtro.toLowerCase())
   );
 
   const handleSelect = (usuario) => {
-    setFiltro(usuario.nombre);
+    usuario.nombre === 'Venta al público' ? setFiltro(usuario.nombre): setFiltro(usuario.nombre +' '+ usuario.apellido);
     setMostrarOpciones(false);
+    //usuario.nombre === 'Venta al público' ? onSelect(usuario.nombre): onSelect(usuario.nombre +' '+ usuario.apellido);
     onSelect(usuario);
   };
 
@@ -55,7 +57,7 @@ const SelectorUsuarios = forwardRef( ({ onSelect, setFiltro, filtro}, ref) => {
           </li>
           {usuariosFiltrados.map((u) => (
             <li key={u.id} onClick={() => handleSelect(u)}>
-              {u.nombre}
+              {u.nombre +' ' + u.apellido}
             </li>
           ))}
         </ul>

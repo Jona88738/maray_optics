@@ -8,7 +8,7 @@ const FormCreateCategoria = ({ModalOpen}) =>{
         
         if(!nombre ) return  Swal.fire({title:"Alerta", text:"*El campo nombre es obligatorio", icon: "warning"} )
         
-            fetch("http://localhost:3000/categoria",{
+            fetch("/api/categoria",{
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

@@ -42,7 +42,7 @@ const Venta = () =>{
     }else if(usuario.id !== 0){
         setInformacionVenta({
             select: 1,
-             id:usuario.id, nombre:usuario.nombre
+             id:usuario.id, nombre:usuario.nombre + ' ' +usuario.apellido
         })
     }
   };

@@ -79,7 +79,7 @@ const DetallesVenta = ({page, informacion}) => {
     const [actualizarDatos, setActualizarDatos] = useState(false);
     const [dato, setDatosVenta] = useState({ articulos:[], pago_realizados: []});
     useEffect(() =>{
-        console.log("id",informacion)
+        
         fetch(`/api/ventas/detallesVenta?id=${informacion}`,{
             method: 'GET',
             headers:{

@@ -20,7 +20,7 @@ const Ticket = forwardRef(({  sale, obtenerTotal }, ref) => (
     <h2 style={{ textAlign: "center" }}>Maray optics</h2>
     <p>Paciente: Venta Publico</p>
     
-    <p>Fecha: {new Date().toLocaleString()}</p>
+    <p>Fecha: {sale.fecha}</p>
     <hr />
     <div style={{ display: "flex", justifyContent: "space-between" }}>
       <span>Articulo</span>

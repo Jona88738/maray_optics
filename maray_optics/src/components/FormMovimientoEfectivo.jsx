@@ -18,7 +18,7 @@ const ModalMovimientoEfectivo = ({ModalOpen}) => {
 
     const aplicarMovimiento = () =>{
         console.log(datos)
-        const datosEnviar = {descripcion: datos.descripcion, monto: parseInt(datos.cantidad), tipo: ''};
+        const datosEnviar = {descripcion: datos.descripcion, monto: Number(parseFloat(datos.cantidad).toFixed(2)), tipo: ''};
         datosEnviar.tipo = datos.optionSelect === '0' ? 'Entrada': 'Retiro';
         fetch('/api/ventas/movimientoEfectivo', {
             method:'POST',

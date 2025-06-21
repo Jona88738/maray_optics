@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 const Productos = () => {
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const elementosPorPagina = 3;
+    const elementosPorPagina = 8;
 
     const [modalOpen, setModalOpen] = useState(false);
     const [categoriaOpen, setCategoriaOpen]  = useState(false);
@@ -128,7 +128,7 @@ const Productos = () => {
                         type="text"
                         value={filtroNombre}
                         onChange={(e) => setFiltroNombre(e.target.value)}
-                        placeholder="Escribe el nombre..."
+                        placeholder="Buscar por nombre o código del producto"
                     />
                 </div>
             </section>

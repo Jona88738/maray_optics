@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
     const [mostrar, setMostrar] = useState({select:'1',ModoPago:''});
     const [pagoDiferido, setPagoDiferido] = useState(0.00);
-    
+    console.log(dato)
     const cambioModoPago = (event) =>{
         //setMostrar(1)
         const { name, value } = event.target;
@@ -30,6 +30,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
    
     const finalizarVenta = (e) =>{
         e.preventDefault();
+        if(parseFloat(pagoDiferido)  > ( (calcularTotal() / 100) ) )   return Swal.fire({title:"Alerta", text: "No puedes superar de la cantidad maxima", icon:'warning'})
         dataUsuario.metodo_pago = 'Efectivo'
         //if()
         if(mostrar.select === '1'){

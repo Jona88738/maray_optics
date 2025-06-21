@@ -133,28 +133,28 @@ const btnCerrarModal = () =>{
     if(tipo === 'Entrada'){
       const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
         
-        return valorActual.tipo === 'Entrada' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+        return valorActual.tipo === 'Entrada' ? ( valorAcumulado + parseFloat(valorActual.monto) ): valorAcumulado
       },0)
       return valor;
     }
     if(tipo === 'venta'){
       const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
         
-        return valorActual.tipo === 'venta' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+        return valorActual.tipo === 'venta' ? ( valorAcumulado + parseFloat(valorActual.monto)): valorAcumulado
       },0)
       return valor;
     }
     if(tipo === 'DEVOLUCION'){
       const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
         
-        return valorActual.tipo === 'DEVOLUCION' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+        return valorActual.tipo === 'DEVOLUCION' ? ( valorAcumulado + parseFloat(valorActual.monto)): valorAcumulado
       },0)
       return valor;
     }
     if(tipo === 'Retiro'){
       const valor = movimientoEfecto.reduce((valorAcumulado, valorActual) =>{
         
-        return valorActual.tipo === 'Retiro' ? ( valorAcumulado + parseInt(valorActual.monto)): valorAcumulado
+        return valorActual.tipo === 'Retiro' ? ( valorAcumulado + parseFloat(valorActual.monto)): valorAcumulado
       },0)
       return valor;
     }
@@ -247,22 +247,34 @@ const btnCerrarModal = () =>{
 <hr />
 <section className="informacionMovimientosEfectivos">
   <article>
-    <h5>${calculoMovimiento('venta')}</h5>
+    <h5>${calculoMovimiento('venta').toLocaleString('es-MX', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}</h5>
     <span>Ventas</span>
   </article>
 
   <article>
-    <h5>${calculoMovimiento('Entrada')} </h5>
+    <h5>${calculoMovimiento('Entrada').toLocaleString('es-MX', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })} </h5>
     <span>Entradas</span>
   </article>
 
   <article>
-    <h5>${calculoMovimiento('DEVOLUCION')} </h5>
+    <h5>${calculoMovimiento('DEVOLUCION').toLocaleString('es-MX', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })} </h5>
     <span>Devoluciones</span>
   </article>
 
   <article>
-    <h5>${calculoMovimiento('Retiro')} </h5>
+    <h5>${calculoMovimiento('Retiro').toLocaleString('es-MX', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })} </h5>
     <span>Retiros</span>
   </article>
   
