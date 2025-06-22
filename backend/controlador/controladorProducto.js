@@ -26,6 +26,14 @@ const insertProducto = async (req, res) => {
         valores.push(req.body.marca);
         campos.push('marca');
     }
+    if(req.body.sat_producto){
+        valores.push(req.body.sat_producto)
+        campos.push('sat_producto')
+    }
+    if(req.body.sat_unidad){
+        valores.push(req.body.sat_unidad);
+        campos.push('sat_unidad');
+    }
 
     const values = campos.map(() => '?').join(', ')
 

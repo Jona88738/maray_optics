@@ -225,7 +225,7 @@ const Productos = () => {
     </main>
 
 
-    { modalOpen === true  ? <ShowModal open={btnAgregar} form={<Form   ModalOpen={btnAgregar} />} /> : null} 
+    { modalOpen === true  ? <ShowModal open={btnAgregar} form={<Form   ModalOpen={btnAgregar} producto={datos} />} /> : null} 
     { modalOpenEdit.action === 1  ? <ShowModal open={btnCategoriaModal} form={<FormEditarProducto ModalOpen={btnCategoriaModal} dato={modalOpenEdit.datos}/>} /> : null}  
     </>)
 }
