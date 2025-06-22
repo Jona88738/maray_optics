@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Swal from 'sweetalert2';
 import ShowModal from "../components/showModal";
 import FormCreateUser from '../components/FormCreateUser'
+import FormEditarUser from "../components/FormEditUser";
 
 const usuarios = () => {
 
@@ -41,6 +42,11 @@ const usuarios = () => {
         setPaginaActual(nuevaPagina);
     }
 };
+
+ const btnEditar = (data) => {
+        //console.log("mi id: ",id)
+        setmodalOpenAll({action: 2, datos:data});
+    }
 
     const btnDelete = (id) => {
                 Swal.fire({title: "Alerta", text: "¿Estas seguro de eliminar este expediente?", icon: "question",
@@ -124,6 +130,7 @@ const usuarios = () => {
                 <thead>
                     <tr>
                     {/* <th>Imagen</th> */}
+                    <th>Usuario</th>
                     <th>Nombre</th>
                     <th>Correo</th>
                     <th>Nivel</th>
@@ -140,6 +147,7 @@ const usuarios = () => {
                                         {/* <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td> */}
                                         
                                         {/* <td id="codigo">{element.codigo}</td> */}
+                                        <td id="nombre">{element.usuario}</td>
                                         <td id="nombre">{element.nombre}</td>
                                         <td id="categoria">{element.correo}</td>
                                         <td id="existencia">{element.cantidad}</td>
@@ -211,7 +219,8 @@ const usuarios = () => {
 
         </section>
 
-        { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<FormCreateUser ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
+        { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<FormCreateUser ModalOpen={btnCerrarModal} dato={usuarios}/>} /> 
+        : modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModal} form={<FormEditarUser ModalOpen={btnCerrarModal} dato={usuarios}/>} />
         : null} 
 
          </main>

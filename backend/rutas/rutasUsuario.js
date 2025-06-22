@@ -10,4 +10,6 @@ routes.get("/sesion",user.sesion)
 
 routes.get("/logout",user.Logout)
 
+routes.post("/", user.insertUser);
+
 export default routes;

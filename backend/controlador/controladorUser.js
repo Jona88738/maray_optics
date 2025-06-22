@@ -66,10 +66,34 @@ const Logout = (req,res) => {
     })
   });
 }
+const insertUser = (req, res) =>{
+  const {usuario, nombre, apellido, contraseña, correo, telefono, curp, titulo_profesional} = req.body;
+
+  const valores = [usuario, nombre, apellido, contraseña, correo, telefono];
+  const campos = ['usuario', 'nombre', 'apellidos', 'password', 'correo', 'telefono'];
+
+  if(curp){
+    valores.push(curp);
+    campos.push('curpo')
+  }
+  if(titulo_profesional){
+    valores.push(titulo_profesional);
+    campos.push('titulo_profesional');
+  }
+  const sentenciasql = "INSERT INTO "
+  try {
+    
+  } catch (error) {
+    console.error("Error: ", error.message)
+    return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+  }
+  return req.json({})
+}
 
 export default {
     login,
     getUsers,
     sesion,
-    Logout
+    Logout,
+    insertUser
 }
