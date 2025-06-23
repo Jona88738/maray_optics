@@ -3,7 +3,7 @@ import { useState } from "react";
 const FormEditExpediente = ({dato}) =>{
 
      const [datos, setDatos] = useState(dato);
-    
+    console.log(datos)
         const onChangeDatos = (e) => {
             const {name, value} = e.target;
     
@@ -13,6 +13,12 @@ const FormEditExpediente = ({dato}) =>{
             })
     
         }
+
+        const formatearFechaParaInput = (fechaStr) => {
+  if (!fechaStr) return '';
+  const [dia, mes, anio] = fechaStr.split('/');
+  return `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+};
 
     return(<>
 
@@ -38,7 +44,7 @@ const FormEditExpediente = ({dato}) =>{
                     <label htmlFor="">*Fecha de nacimiento</label>
                     <input type="date"
                     name="fechaNacimiento"
-                    value={datos.fechaNacimiento}
+                    value={formatearFechaParaInput(datos.fecha_formateada)}
                     onChange={onChangeDatos} />
                 </div>
                 <div className="input">

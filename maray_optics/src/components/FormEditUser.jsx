@@ -1,9 +1,9 @@
 import { useState } from "react";
-
-const FormEditarUser = ({dato})=> {
+import Swal from "sweetalert2";
+const FormEditarUser = ({ModalOpen, dato})=> {
 
     const [datos, setDatos] = useState(dato);
-
+    console.log(datos)
     const onChangeDatos = (e) => {
         const {name, value} = e.target;
 
@@ -13,6 +13,37 @@ const FormEditarUser = ({dato})=> {
         })
 
     }
+    const btnGuardar = (e) =>{
+                e.preventDefault();
+                if(!datos.usuario || !datos.nombre || !datos.apellidos || !datos.correo  || !datos.telefono ) return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
+                if(datos.usuario === dato.usuario && datos.nombre === dato.nombre && datos.apellidos === dato.apellidos && datos.correo === dato.correo && datos.telefono === dato.telefono && datos.curp === dato.curp &&
+                    datos.titulo_profesional === dato.titulo_profesional 
+                ) {
+                     Swal.fire({title:"Aviso", text: "Ningun dato  fue modificado", icon: "success"})
+                     return ModalOpen()
+                }
+                
+                // fetch('/api/producto',{
+                //     method: 'PUT',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     credentials: 'include',
+                //     body: JSON.stringify(datos)
+            
+                // })
+                // .then((res) => res.json())
+                // .then((res) =>{
+                //     if(res.result){
+                //         Swal.fire({title:"Se ingreso con exito", text: "Categoria agregada", icon:"success"})
+                //         ModalOpen();
+                //         //console.log("Producto registrado");
+                //     }else{
+                //         console.log("algo fallo", res.result)
+                //     }
+                // })
+                console.log("Se guardo");
+            }
 
     return(<>
     
@@ -77,7 +108,7 @@ const FormEditarUser = ({dato})=> {
                     />
                 </div>
 
-                <button className="btnGuardar">Guardar</button>
+                <button className="btnGuardar" onClick={btnGuardar}>Guardar</button>
         </form>
     </main>
     </>)

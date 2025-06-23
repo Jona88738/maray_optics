@@ -4,7 +4,7 @@ const getExpedientes = async (req, res) =>{
 
      let datos;
     try {
-        [datos] = await conn.query(`SELECT id, nombre, edad, apellido from expediente where estado = 1`);
+        [datos] = await conn.query(`SELECT id, nombre, edad, apellido,DATE_FORMAT(fecha_nacimiento, '%d/%m/%Y') AS fecha_formateada, telefono, correo from expediente where estado = 1`);
         //console.log(datos)
         //const [datos] = await conn.query("SELECT ")
     } catch (error) {
