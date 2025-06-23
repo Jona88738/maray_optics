@@ -11,5 +11,6 @@ routes.put("/", productos.updateProduct);
 
 routes.delete("/", productos.deleteProducts);
 
+routes.post("/bajaProducto", productos.bajaProducto)
 
 export default routes;

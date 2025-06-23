@@ -1,8 +1,20 @@
 import '../../styles/BajaProducto.css';
+import AutocompleteInput from "../components/AutoComplete";
+import { useEffect, useState } from 'react';
 
 const BajaProducto = ({btnRegresar}) =>{
 
+    const [datos, setdatos] = useState([])
+    const [valor, setValor] = useState('');
+
+    useEffect(() =>{
+        fetch('/api/bajaProducto')
+    },[])
     const GuardarDatos = () =>{
+
+    }
+
+    const onChangeDatos = () =>{
 
     }
 
@@ -21,13 +33,15 @@ const BajaProducto = ({btnRegresar}) =>{
                 <h2>Baja Producto</h2>
                 <hr />
                 <form className="formBajaProducto">
+                    
                     <div className="input">
+                        
                         <label htmlFor="">*Codigo del producto</label>
-                        <input type="text" />
+                        <AutocompleteInput tabla={onChangeDatos} valor={valor}  setValor={setValor}/>
                     </div>
                     <div className="input">
                         <label htmlFor="">*Cantidad</label>
-                        <input type="number" />
+                        <input type="number" min={1} />
                     </div>
                     <div className="input" >
                         <label htmlFor="">Stock Actual</label>

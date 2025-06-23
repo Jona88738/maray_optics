@@ -8,8 +8,9 @@ import FormEditarUser from "../components/FormEditUser";
 const usuarios = () => {
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const elementosPorPagina = 3;
+    const elementosPorPagina = 8;
     const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
+    const [actualizarDatos, setActualizarDatos] = useState(false);
      
 
      //  Nuevo estado para la búsqueda
@@ -25,10 +26,11 @@ const usuarios = () => {
         })
             .then((res) => res.json())
             .then((res) => {
+                console.log(res.data)
                 setUsuarios(res.data);
             })
 
-    },[])
+    },[actualizarDatos])
 
     const totalPaginas = Math.ceil(usuarios.length / elementosPorPagina);
     
@@ -56,7 +58,7 @@ const usuarios = () => {
                             cancelButtonText: "No, quiero elimnar"
                         }).then((res) =>{
                             if(res.isConfirmed){
-                                fetch(`/api/producto?id=${id}`, {
+                                fetch(`/api/usuario?id=${id}`, {
                                     method: 'DELETE',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -81,7 +83,7 @@ const usuarios = () => {
             }
 
               const btnCerrarModal = () =>{
-        // setActualizarDatos(!actualizarDatos);
+                setActualizarDatos(!actualizarDatos)
         setmodalOpenAll({
             ...modalOpenAll,
             action: 0
@@ -151,7 +153,7 @@ const usuarios = () => {
                                         <td id="nombre">{element.nombre}</td>
                                         <td id="categoria">{element.correo}</td>
                                         <td id="existencia">{element.cantidad}</td>
-                                        <td id="precio">{element.precio_venta}</td>
+                                        <td id="precio">{element.fecha_formateada}</td>
                                         <td>
                                             <button onClick={() => btnEditar(element)}  className='btnEdit'>
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/></svg>
@@ -220,7 +222,7 @@ const usuarios = () => {
         </section>
 
         { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<FormCreateUser ModalOpen={btnCerrarModal} dato={usuarios}/>} /> 
-        : modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModal} form={<FormEditarUser ModalOpen={btnCerrarModal} dato={usuarios}/>} />
+        : modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModal} form={<FormEditarUser ModalOpen={btnCerrarModal} dato={modalOpenAll.datos}/>} />
         : null} 
 
          </main>

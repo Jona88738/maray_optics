@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 
-const FormCreateUser = ({dato}) => {
+const FormCreateUser = ({ModalOpen, dato}) => {
 
     const [datos, setDatos] = useState({usuario: '', nombre: '', apellido: '', contraseña: '', correo: '',  telefono: '', curp: '', titulo_profesional: ''})
 
@@ -18,9 +18,25 @@ const FormCreateUser = ({dato}) => {
     const guardarDatos = (e) => {
         e.preventDefault();
         const exiteUsuario = dato.some(p => p.usuario === datos.usuario);
-        if(exiteUsuario) Swal.fire({title: "Alerta", text: "Error, ese usuario ya existe, intenta con otro", icon: "warning"})
+        if(exiteUsuario) return  Swal.fire({title: "Alerta", text: "Error, ese usuario ya existe, intenta con otro", icon: "warning"})
         console.log("Existe usuario: ", exiteUsuario)
         console.log(datos)
+
+        fetch("/api/usuario", {
+            method: 'POST',
+            headers: {
+                 'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(datos)
+        })
+            .then(res => res.json())
+            .then((res) =>{
+                if(res.result){
+                    Swal.fire({title:"Se registro con exito", text: "Usuario registrado", icon:"success"})
+                    ModalOpen()
+                }
+            })
     }
     return(<>
     <main className="scroll">

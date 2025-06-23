@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 
 import { useEffect, useState } from "react";
 import Consulta from "./Consulta";
+import FormEditExpediente from "../components/FormEditExpediente";
 const Expediente = () => {
 
     const [paginaActual, setPaginaActual] = useState(1);
@@ -229,7 +230,7 @@ const Expediente = () => {
 
         </section>
         { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
-        : modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
+        : modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModal} form={<FormEditExpediente ModalOpen={btnCerrarModal} dato={modalOpenAll.datos}/>} /> 
         : null} 
          </main>
          </> :cambiarPage.action === 1 ? (<Consulta />): null}

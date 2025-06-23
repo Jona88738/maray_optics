@@ -106,9 +106,24 @@ const deleteProducts = async (req, res) => {
     res.json({ result: true,  mensaje: "Productos eliminado" })
 }
 
+const bajaProducto = (req, res) => {
+    const {} = req.body;
+
+    try {
+        
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+
+
+    res.json({})
+}
+
 export default {
     getProducts,
     insertProducto,
     updateProduct,
     deleteProducts,
+    bajaProducto
 }
