@@ -6,6 +6,7 @@ import Form from '../components/FormCreateProduct';
 import FormEditarProducto from '../components/FormEditarProducto';
 import Categoria from './Categoria';
 import Swal from 'sweetalert2';
+import BajaProducto from './BajaProducto';
 
 const Productos = () => {
 
@@ -13,7 +14,7 @@ const Productos = () => {
     const elementosPorPagina = 8;
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [categoriaOpen, setCategoriaOpen]  = useState(false);
+    const [categoriaOpen, setCategoriaOpen]  = useState({option: 0});
     const [actualizarDatos, setActualizarDatos] = useState(false);
 
     const  [modalOpenEdit, setmodalOpenEdit] = useState({action: 0, datos:""});
@@ -101,8 +102,8 @@ const Productos = () => {
                 })
 
     }
-    const btnCategoria = () =>{
-        setCategoriaOpen(!categoriaOpen);
+    const btnCategoria = (pageOption) =>{
+        setCategoriaOpen({option: pageOption});
     }
 
      
@@ -112,7 +113,7 @@ const Productos = () => {
 <h1  style={{textAlign: 'center', marginBottom: '15px'}} >Productos</h1>
     <main className="containerProducts">
        
-        {categoriaOpen === false ? ( <>
+        {categoriaOpen.option === 0 ? ( <>
        
         {/* <section className="inputBusqueda">
             <div className="input">
@@ -139,10 +140,10 @@ const Productos = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                     
                 Agregar</button>
-            <button className="btnBaja">
+            <button className="btnBaja" onClick={() => btnCategoria(2)}>
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M200-440v-80h560v80H200Z"/></svg>
                 Baja de producto</button>
-            <button className="btnVerCategoria" onClick={btnCategoria}>
+            <button className="btnVerCategoria" onClick={() => btnCategoria(1)}>
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M280-600v-80h560v80H280Zm0 160v-80h560v80H280Zm0 160v-80h560v80H280ZM160-600q-17 0-28.5-11.5T120-640q0-17 11.5-28.5T160-680q17 0 28.5 11.5T200-640q0 17-11.5 28.5T160-600Zm0 160q-17 0-28.5-11.5T120-480q0-17 11.5-28.5T160-520q17 0 28.5 11.5T200-480q0 17-11.5 28.5T160-440Zm0 160q-17 0-28.5-11.5T120-320q0-17 11.5-28.5T160-360q17 0 28.5 11.5T200-320q0 17-11.5 28.5T160-280Z"/></svg>
                 ver categoria</button>
 
@@ -221,7 +222,10 @@ const Productos = () => {
 
         </section>
  </>
-        ): <Categoria btnRegresar={btnCategoria} />}
+        ): categoriaOpen.option === 1 ? <Categoria btnRegresar={btnCategoria} />
+        : categoriaOpen.option === 2 ? <BajaProducto btnRegresar={btnCategoria} /> 
+        : null}
+        
     </main>
 
 

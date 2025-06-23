@@ -102,6 +102,11 @@ const Expediente = () => {
     
         }
 
+         const btnEditar = (data) => {
+        //console.log("mi id: ",id)
+        setmodalOpenAll({action: 2, datos:data});
+    }
+
     return(<>
         <Navbar/>
         {cambiarPage.action === 0 ? <> 
@@ -224,6 +229,7 @@ const Expediente = () => {
 
         </section>
         { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
+        : modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModal} form={<Form ModalOpen={btnCerrarModal} dato={"a"}/>} /> 
         : null} 
          </main>
          </> :cambiarPage.action === 1 ? (<Consulta />): null}
