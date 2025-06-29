@@ -14,6 +14,7 @@ const FormEditarUser = ({ModalOpen, dato})=> {
 
     }
     const btnGuardar = (e) =>{
+        console.log("Mis dato: ", datos)
                 e.preventDefault();
                 if(!datos.usuario || !datos.nombre || !datos.apellidos || !datos.correo  || !datos.telefono ) return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
                 if(datos.usuario === dato.usuario && datos.nombre === dato.nombre && datos.apellidos === dato.apellidos && datos.correo === dato.correo && datos.telefono === dato.telefono && datos.curp === dato.curp &&
@@ -23,25 +24,25 @@ const FormEditarUser = ({ModalOpen, dato})=> {
                      return ModalOpen()
                 }
                 
-                // fetch('/api/producto',{
-                //     method: 'PUT',
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     },
-                //     credentials: 'include',
-                //     body: JSON.stringify(datos)
+                fetch('/api/usuario',{
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(datos)
             
-                // })
-                // .then((res) => res.json())
-                // .then((res) =>{
-                //     if(res.result){
-                //         Swal.fire({title:"Se ingreso con exito", text: "Categoria agregada", icon:"success"})
-                //         ModalOpen();
-                //         //console.log("Producto registrado");
-                //     }else{
-                //         console.log("algo fallo", res.result)
-                //     }
-                // })
+                })
+                .then((res) => res.json())
+                .then((res) =>{
+                    if(res.result){
+                        Swal.fire({title:"Se modifico con exito con exito", text: "Categoria agregada", icon:"success"})
+                        ModalOpen();
+                        //console.log("Producto registrado");
+                    }else{
+                        console.log("algo fallo", res.result)
+                    }
+                })
                 console.log("Se guardo");
             }
 

@@ -37,9 +37,14 @@ const Expediente = () => {
             })
     },[actualizarDatos])
 
+    //  Aplicar filtro por nombre
+    const datosFiltrados = expedientes.filter(item =>
+        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase()) 
+    );
+
      const totalPaginas = Math.ceil(expedientes.length / elementosPorPagina);
     
-    const datosPaginados = expedientes.slice(
+    const datosPaginados = datosFiltrados.slice(
     (paginaActual - 1) * elementosPorPagina,
     paginaActual * elementosPorPagina
 );
@@ -128,7 +133,7 @@ const Expediente = () => {
 
             <section className="inputBusqueda">
                 <div className="input">
-                    <label htmlFor="">Buscar categoría</label>
+                    <label htmlFor="">Buscar Expediente</label>
                     <input
                         type="text"
                         value={filtroNombre}
@@ -233,7 +238,7 @@ const Expediente = () => {
         : modalOpenAll.action === 2  ? <ShowModal open={btnCerrarModal} form={<FormEditExpediente ModalOpen={btnCerrarModal} dato={modalOpenAll.datos}/>} /> 
         : null} 
          </main>
-         </> :cambiarPage.action === 1 ? (<Consulta />): null}
+         </> :cambiarPage.action === 1 ? (<Consulta  page={verPage}/>): null}
     </>)
 }
 

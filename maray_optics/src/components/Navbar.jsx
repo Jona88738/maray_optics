@@ -2,8 +2,11 @@ import '../../styles/home.css'
 import { Link, useNavigate } from 'react-router-dom';
 import Swalt from 'sweetalert2';
 import { Navigate } from 'react-router-dom';
+import { useState } from 'react';
 const Navbar = () =>{
     const navigate = useNavigate();
+    const [abrirNav, setAbrirNav ] = useState(false)
+
     const handleClick = () => {
         Swalt.fire({
             title: "Atención",
@@ -33,34 +36,24 @@ const Navbar = () =>{
         })
     }   
 
-//     function Salir(myvalor){
-//     let num = Number(myvalor);
-
-//     console.log(num);
-//     if(myvalor == 6){
-
-     
-//     }
-         
-//     setCount(num);    
-//   }
-
-
-
+   
     return (
         <>
-        <nav className="navbar">
+        {/* <nav className="navbar">
             <h2 style={{width: "100%"}}>Maray_Optics</h2>
-            {/* <Link to='/'>Inicio</Link>
-            <Link to='/usuarios'>Usuarios</Link>
-            <Link to='/venta'>Venta</Link>
-            <Link to='/productos'>Productos</Link>
-            <Link to='/expediente'>Expediente</Link>
-            <Link to='/salir'>Salir</Link> */}
-        </nav>
+            
+        </nav> */}
 
-        <div className="navbarIzquierda">
-
+        <button  className='btnAbrirNavbar' onClick={() => setAbrirNav(!abrirNav)}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#000000"><path d="M120-240v-66.67h720V-240H120Zm0-206.67v-66.66h720v66.66H120Zm0-206.66V-720h720v66.67H120Z"/></svg>
+            </button>
+        <div> 
+        {/* <div className={abrirNav === false ? 'ocultarNav': 'navbarIzquierda'}> */}
+        <div className={`navbarIzquierda ${abrirNav ? 'mostrarNav' : 'ocultarNav'}`}>
+            
+            <button className='btnAbrirCerrar' onClick={() => setAbrirNav(!abrirNav)} >
+                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#FFFFFF"><path d="m251.33-204.67-46.66-46.66L433.33-480 204.67-708.67l46.66-46.66L480-526.67l228.67-228.66 46.66 46.66L526.67-480l228.66 228.67-46.66 46.66L480-433.33 251.33-204.67Z"/></svg>
+                </button>
                     <section className="logo_login">
                         <img src="logo_maray.jpeg" alt="Logo" width="70%" height="auto" />
                     </section>
@@ -92,6 +85,7 @@ const Navbar = () =>{
                         </Link>
                     </section>
                 </div>
+            </div>
         </>
     )
 } 

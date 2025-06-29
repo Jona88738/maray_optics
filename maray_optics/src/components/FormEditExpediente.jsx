@@ -1,6 +1,6 @@
 import { useState } from "react";
-
-const FormEditExpediente = ({dato}) =>{
+import Swal from "sweetalert2";
+const FormEditExpediente = ({ModalOpen, dato}) =>{
 
      const [datos, setDatos] = useState(dato);
     console.log(datos)
@@ -19,6 +19,40 @@ const FormEditExpediente = ({dato}) =>{
   const [dia, mes, anio] = fechaStr.split('/');
   return `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
 };
+
+ const btnGuardar = (e) =>{
+    console.log("Datos: ", datos, "dato:",dato )
+                e.preventDefault();
+                if(!datos.nombre || !datos.apellido || !datos.fecha_formateada  || !datos.edad || !datos.telefono || !datos.correo) return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
+                if( datos.nombre === dato.nombre && datos.apellido === dato.apellido && datos.fecha_formateada === dato.fecha_formateada && datos.edad === dato.edad && datos.telefono === dato.telefono &&
+                    datos.correo === dato.correo 
+                ) {
+                     Swal.fire({title:"Aviso", text: "Ningun dato  fue modificado", icon: "success"})
+                     return ModalOpen()
+                }
+                
+                fetch('/api/expedientes',{
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(datos)
+            
+                })
+                .then((res) => res.json())
+                .then((res) =>{
+                    if(res.result){
+                        Swal.fire({title:"Se ingreso con exito", text: "Categoria agregada", icon:"success"})
+                        ModalOpen();
+                        //console.log("Producto registrado");
+                    }else{
+                        console.log("algo fallo", res.result)
+                    }
+                })
+                console.log("Se guardo");
+            }
+
 
     return(<>
 
@@ -68,7 +102,7 @@ const FormEditExpediente = ({dato}) =>{
                     value={datos.correo}
                     onChange={onChangeDatos}/>
                 </div>
-                <button   className="btnGuardar">Guardar</button>
+                <button  onClick={btnGuardar}  className="btnGuardar">Guardar</button>
             </form>
         </main>
     </>)

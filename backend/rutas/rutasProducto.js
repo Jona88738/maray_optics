@@ -13,4 +13,6 @@ routes.delete("/", productos.deleteProducts);
 
 routes.post("/bajaProducto", productos.bajaProducto)
 
+routes.get("/bajaProducto", productos.getBajaProducto)
+
 export default routes;

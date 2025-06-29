@@ -115,11 +115,59 @@ const deleteUser = async (req, res) =>{
 
   //return res.json({})
 }
+
+const updateUsuario = async (req, res) => {
+
+    try {
+        const { id, usuario, nombre, apellidos, correo, telefono, curp, titulo_profesional } = req.body;
+        const campos = ['usuario', 'nombre', 'apellidos', 'correo', 'telefono' ];
+        const valores = [usuario, nombre, apellidos, correo, telefono];
+        if(curp !== null){
+
+          if(curp === ''){
+            campos.push('curp');
+            valores.push(null);
+          }
+          if(curp){
+            campos.push('curp');
+            valores. push(curp);
+          }
+        }
+
+        if(titulo_profesional !== null){
+
+          if(titulo_profesional === ''){
+            campos.push('titulo_profesional');
+            valores.push(null);
+          }
+          if(titulo_profesional){
+            campos.push('titulo_profesional');
+            valores.push(titulo_profesional);
+          }
+        }
+       
+  const setClause = campos.map(campo => `${campo} = ?`).join(', ');
+
+  // Agregar ID al final para la cláusula WHERE
+  valores.push(id);
+
+  const sentencia = `UPDATE usuario SET ${setClause} WHERE id = ?`;
+  const [datos] = await conn.query(sentencia, valores);
+
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+    res.json({ result: true,  mensaje: "Productos eliminado" })
+    
+}
+
 export default {
     login,
     getUsers,
     sesion,
     Logout,
     insertUser,
-    deleteUser
+    deleteUser,
+    updateUsuario
 }

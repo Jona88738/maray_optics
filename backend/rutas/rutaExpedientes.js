@@ -9,4 +9,6 @@ routes.post("/", expediente.insertExpediente)
 
 routes.delete("/", expediente.deleteExpediente)
 
+routes.put("/", expediente.updateExpediente)
+
 export default routes

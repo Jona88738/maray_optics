@@ -15,4 +15,6 @@ routes.post("/", user.insertUser);
 
 routes.delete("/", user.deleteUser);
 
+routes.put("/", user.updateUsuario);
+
 export default routes;

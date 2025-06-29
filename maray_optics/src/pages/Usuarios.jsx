@@ -32,9 +32,15 @@ const usuarios = () => {
 
     },[actualizarDatos])
 
+    //  Aplicar filtro por nombre
+    const datosFiltrados = usuarios.filter(item =>
+        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())  ||
+        item.usuario.toLowerCase().includes(filtroNombre.toLowerCase()) 
+    );
+
     const totalPaginas = Math.ceil(usuarios.length / elementosPorPagina);
     
-    const datosPaginados = usuarios.slice(
+    const datosPaginados = datosFiltrados.slice(
     (paginaActual - 1) * elementosPorPagina,
     paginaActual * elementosPorPagina
 );
@@ -120,7 +126,7 @@ const usuarios = () => {
                         type="text"
                         value={filtroNombre}
                         onChange={(e) => setFiltroNombre(e.target.value)}
-                        placeholder="Escribe el nombre..."
+                        placeholder="Escribe el nombre o el usuario..."
                     />
                 </div>
             </section>

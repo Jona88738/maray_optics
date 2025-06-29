@@ -106,24 +106,43 @@ const deleteProducts = async (req, res) => {
     res.json({ result: true,  mensaje: "Productos eliminado" })
 }
 
-const bajaProducto = (req, res) => {
-    const {} = req.body;
+const bajaProducto = async (req, res) => {
+    const {idProducto, cantidad, anotacion} = req.body;
 
     try {
-        
+
+        const [datos] = await conn.query("INSERT INTO baja_producto(cantidad, anotaciones, producto_id, usuario_id) values(?, ?, ?, ?)", [cantidad, anotacion, idProducto,  req.session.idUser]);
+    
     } catch (error) {
         console.error("Error: ", error.message)
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
     }
 
 
-    res.json({})
+    res.json({ result: true,  mensaje: "Productos agregado" })
 }
+
+const getBajaProducto = async (req, res) => {
+
+    let datos;
+    try {
+        [datos] = await conn.query(`SELECT baja_producto.cantidad, baja_producto.anotaciones, DATE_FORMAT(baja_producto.fecha_baja, '%d/%m/%Y %H:%i:%s') AS fecha_formateada, usuario.nombre as nombreUser, producto.nombre FROM baja_producto
+            INNER JOIN usuario ON usuario.id = baja_producto.usuario_id
+            INNER JOIN producto ON producto.id = baja_producto.producto_id`);
+        
+    } catch (error) {
+        console.error("Error: ", error.message)
+        return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})
+    }
+
+    res.json({result: true, data: datos, message: "exito"})
+} 
 
 export default {
     getProducts,
     insertProducto,
     updateProduct,
     deleteProducts,
-    bajaProducto
+    bajaProducto,
+    getBajaProducto
 }

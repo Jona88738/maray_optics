@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import '../../styles/Consulta.css';
 
 // Main App component for New Consultation
-const Consulta = () => {
+const Consulta = ({page}) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [patientNameOrCode, setPatientNameOrCode] = useState('');
   const [isAnonymousPatient, setIsAnonymousPatient] = useState(false);
@@ -94,6 +94,12 @@ const Consulta = () => {
                 )}
               </button> */}
           </header>
+          <section className="containerButtons">
+            <button onClick={() => page(0) } className="btnRegresar">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+                
+                    Regresar</button>
+          </section>
 
           <main className="main-content">
             {/* Patient and Date Section */}
