@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState,  useRef   } from 'react';
 import '../../styles/Consulta.css';
+import SelectorUsuarios from '../components/SelectorUsuarios.jsx';
 
 // Main App component for New Consultation
 const Consulta = ({page}) => {
@@ -15,6 +16,26 @@ const Consulta = ({page}) => {
   const [patientNotes, setPatientNotes] = useState('');
   const [internalDoctorNotes, setInternalDoctorNotes] = useState('');
 
+  const [informacionVenta, setInformacionVenta] = useState({ select: 0, id: 0, nombre: '' })
+  const [filtro, setFiltro] = useState('');
+
+  const inputRef = useRef();
+
+  const manejarSeleccion = (usuario) => {
+        console.log('Usuario seleccionado:', usuario);
+        if (usuario.id === 0) {
+            console.log("Venta al publico")
+            setInformacionVenta({
+                select: 0,
+                id: -2, nombre: "Venta al publico"
+            })
+        } else if (usuario.id !== 0) {
+            setInformacionVenta({
+                select: 1,
+                id: usuario.id, nombre: usuario.nombre + ' ' + usuario.apellido
+            })
+        }
+    };
   // Simulated full screen mode using CSS
 //   const toggleFullScreen = () => {
 //     setIsFullScreen(prev => !prev);
@@ -56,6 +77,21 @@ const Consulta = ({page}) => {
       internalDoctorNotes,
     });
     // Add logic to save data
+
+    // fetch("api/expediente/consulta", {
+    //   method: 'POST', 
+    //   headers: {
+        
+    //   },
+    //   body: JSON.stringify({
+    //   patientNameOrCode,
+    //   isAnonymousPatient,
+    //   consultationDate,
+    //   eyeExamData,
+    //   patientNotes,
+    //   internalDoctorNotes,
+    // })
+    // })
   };
 
   // Finalize and make sale action
@@ -81,18 +117,7 @@ const Consulta = ({page}) => {
         <div className="content-area">
           <header className={`header ${isFullScreen ? 'fullscreen' : ''}`}>
               <h1 className="header-title" style={{color: 'black'}}>Nueva Consulta</h1>
-              {/* Full screen button */}
-              {/* <button
-                onClick={toggleFullScreen}
-                className="fullscreen-button"
-                title={isFullScreen ? "Salir de modo de vista expandida" : "Ver en modo de vista expandida"}
-              >
-                {isFullScreen ? (
-                  <MinimizeIcon className="icon-size" />
-                ) : (
-                  <MaximizeIcon className="icon-size" />
-                )}
-              </button> */}
+              
           </header>
           <section className="containerButtons">
             <button onClick={() => page(0) } className="btnRegresar">
@@ -105,26 +130,10 @@ const Consulta = ({page}) => {
             {/* Patient and Date Section */}
             <section className="section section-grid">
               <div>
-                <label htmlFor="patientSearch" className="form-label">Buscar por código o nombre *</label>
-                <input
-                  type="text"
-                  id="patientSearch"
-                  className="text-input"
-                  placeholder="Introduzca código o nombre del paciente"
-                  value={patientNameOrCode}
-                  onChange={(e) => setPatientNameOrCode(e.target.value)}
-                  disabled={isAnonymousPatient}
-                />
-                <div className="checkbox-container">
-                  <input
-                    type="checkbox"
-                    id="anonymousPatient"
-                    className="checkbox-input"
-                    checked={isAnonymousPatient}
-                    onChange={(e) => setIsAnonymousPatient(e.target.checked)}
-                  />
-                  <label htmlFor="anonymousPatient" className="checkbox-label">Paciente no registrado (mantener ANÓNIMO)</label>
-                </div>
+                <label htmlFor="" style={{ marginBottom: '15px' }}>*Elegir cliente o venta al público</label>
+                <SelectorUsuarios ref={inputRef} onSelect={manejarSeleccion} filtro={filtro} setFiltro={setFiltro} />
+
+                
               </div>
               <div>
                 <label htmlFor="consultationDate" className="form-label">Fecha de consulta *</label>
@@ -257,43 +266,30 @@ const Consulta = ({page}) => {
   );
 };
 
-// SVG Icons (reused from previous and new ones)
-// const MaximizeIcon = (props) => (
+// const HomeIcon = (props) => (
 //   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5v4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
+//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
 //   </svg>
 // );
 
-// const MinimizeIcon = (props) => (
+// const ChartLineIcon = (props) => (
 //   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h4m-4 0V4m0 4l5-5m7 11h4m-4 0v4m0-4l5 5M4 16h4m-4 0v4m0-4l5 5m7-11h4m-4 0V4m0 4l5-5" />
+//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8L11 2m9 9v9a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h9l-5 5h5z" />
 //   </svg>
 // );
 
-const HomeIcon = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-  </svg>
-);
+// const EyeIcon = (props) => (
+//   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+//   </svg>
+// );
 
-const ChartLineIcon = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8L11 2m9 9v9a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h9l-5 5h5z" />
-  </svg>
-);
-
-const EyeIcon = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-  </svg>
-);
-
-const CubeIcon = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-  </svg>
-);
+// const CubeIcon = (props) => (
+//   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+//   </svg>
+// );
 
 const InfoIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

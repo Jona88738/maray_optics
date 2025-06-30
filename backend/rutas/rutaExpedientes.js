@@ -11,4 +11,7 @@ routes.delete("/", expediente.deleteExpediente)
 
 routes.put("/", expediente.updateExpediente)
 
+routes.post("/consulta", expediente.consultaExpediente)
+
+
 export default routes

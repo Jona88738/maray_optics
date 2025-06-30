@@ -67,9 +67,24 @@ const deleteExpediente = async (req, res) => {
     res.json({ result: true,  mensaje: "Productos eliminado" })
 }
 
+const consultaExpediente = async(req, res) =>{
+
+     try {
+        const {nombre, apellido, fechaNacimiento, edad, telefono, correo }  = req.body;
+
+        const [datos] = await conn.query("INSERT INTO expediente(nombre, apellido, fecha_nacimiento, edad, telefono, correo) VALUES(?, ?, ?, ?, ?, ?)",[nombre, apellido, fechaNacimiento, edad, telefono, correo])
+    } catch (error) {
+        console.error("Error: ", error.message);
+        return res.json({message: "Hubo un error en el servidor, intente mas tarde"})
+    }
+
+    return res.json({result: true, message: "exito"})
+
+}
 export default {
     getExpedientes,
     insertExpediente,
     updateExpediente,
-    deleteExpediente
+    deleteExpediente,
+    consultaExpediente
 }

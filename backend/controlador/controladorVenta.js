@@ -45,6 +45,14 @@ const insertVenta = async (req, res) =>{
       ValuesVenta.push(dataUsuario.tipo)
       camposventa.push('tipo')
     }
+    if(dataUsuario.entradaEfectivo){
+      ValuesVenta.push(dataUsuario.entradaEfectivo)
+      camposventa.push('efectivoEntrada')
+    }
+    if(dataUsuario.cambio){
+      ValuesVenta.push(dataUsuario.cambio)
+      camposventa.push('cambio')
+    }
     // if(dataUsuario.pago_venta !== undefined){
     //   ValuesVenta.push(dataUsuario.pago_venta)
     //   camposventa.push('pago_venta')
