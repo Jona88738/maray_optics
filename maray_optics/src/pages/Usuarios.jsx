@@ -158,7 +158,7 @@ const usuarios = () => {
                                         <td id="nombre">{element.usuario}</td>
                                         <td id="nombre">{element.nombre}</td>
                                         <td id="categoria">{element.correo}</td>
-                                        <td id="existencia">{element.cantidad}</td>
+                                        <td id="existencia">{element.nombre}</td>
                                         <td id="precio">{element.fecha_formateada}</td>
                                         <td>
                                             <button onClick={() => btnEditar(element)}  className='btnEdit'>

@@ -19,4 +19,6 @@ routes.post('/pagoDiferido', controladorVenta.pagoDiferido);
 
 routes.post('/corteCaja', controladorVenta.corteCaja);
 
+routes.get("/getResumenVentasHoy", controladorVenta.getResumenVentasHoy);
+
 export default routes;

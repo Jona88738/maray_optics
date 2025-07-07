@@ -451,6 +451,47 @@ const corteCaja = async (req, res) => {
 
 }
 
+const getResumenVentasHoy = async (req, res) => {
+  const [ventaTotalUnidades] = await conn.query(`
+    
+        SELECT 'Ventas Totales' AS titulo, SUM(venta.total) AS total, SUM(detalles_venta.cantidad) AS unidad_vendidas FROM venta 
+        INNER JOIN  detalles_venta ON detalles_venta.venta_id = venta.id
+        INNER JOIN producto ON producto.id = detalles_venta.producto_id
+        INNER JOIN categoria ON categoria.id = producto.categoria
+        WHERE DATE(fecha_inicio) = CURDATE()
+  `);
+
+  const [detallesHoy] = await conn.query(`
+    SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total_venta FROM venta v
+    INNER JOIN detalles_venta dv ON dv.venta_id = v.id
+    INNER JOIN producto p ON p.id = dv.producto_id
+    INNER JOIN categoria c ON c.id = p.categoria
+    WHERE DATE(v.fecha_inicio) = CURDATE()  AND v.status != 3
+    GROUP BY c.nombre
+    UNION ALL
+    SELECT  'Devoluciones' AS tipo_agregacion, SUM(v.total)  FROM  venta v 
+    WHERE DATE(v.fecha_inicio) = CURDATE() AND v.status = 3;
+  `);
+
+  const [metodosPago] = await conn.query(`
+    SELECT v.metodo_pago, SUM(v.total) AS total FROM venta v
+    WHERE DATE(v.fecha_inicio) = CURDATE()
+    GROUP BY v.metodo_pago;
+  `);
+
+  // Crear el objeto final que enviarás al frontend
+const reporteCompletoDelDia = {
+    indicadoresGlobales: ventaTotalUnidades,
+    detallePorConcepto: detallesHoy,
+    metodosDePago: metodosPago
+};
+  res.json({
+    hoy: reporteCompletoDelDia || 0,
+    result: true
+  });
+};
+
+
 export default {
     getVentas,
     insertVenta,
@@ -459,5 +500,6 @@ export default {
     movimientoEfectivo,
     pagoDiferido,
     ingresarEfectivo,
-    corteCaja
+    corteCaja,
+    getResumenVentasHoy
 }

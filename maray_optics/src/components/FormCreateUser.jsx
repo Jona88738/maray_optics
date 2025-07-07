@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const FormCreateUser = ({ModalOpen, dato}) => {
 
-    const [datos, setDatos] = useState({usuario: '', nombre: '', apellido: '', contraseña: '', correo: '',  telefono: '', curp: '', titulo_profesional: ''})
+    const [datos, setDatos] = useState({usuario: '', nombre: '', apellido: '', contraseña: '', correo: '',  telefono: '', nivel: 'default', curp: '', titulo_profesional: ''})
 
     const onChangeDatos = (e) => {
         const {name, value} = e.target;
@@ -90,6 +90,17 @@ const FormCreateUser = ({ModalOpen, dato}) => {
                      onChange={onChangeDatos}
                     />
                 </div>
+                <div className="inputLogin">
+                <label htmlFor="">* Nivel</label>
+                
+                <select name="nivel" className="form-select"  id="" value={datos.nivel} onChange={onChangeDatos} >
+                    <option value="default"> Selecciona una opcion</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Cobrador</option>
+                    
+                    
+                </select>
+            </div>
                 <div className="input">
                     <label htmlFor="">Curp</label>
                     <input type="text" placeholder="Ingresa tu curp"

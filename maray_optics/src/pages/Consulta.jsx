@@ -2,6 +2,7 @@
 import React, { useState,  useRef   } from 'react';
 import '../../styles/Consulta.css';
 import SelectorUsuarios from '../components/SelectorUsuarios.jsx';
+import Swal from 'sweetalert2';
 
 // Main App component for New Consultation
 const Consulta = ({page}) => {
@@ -69,6 +70,7 @@ const Consulta = ({page}) => {
   // Finalize consultation action
   const handleFinalizeConsultation = () => {
     console.log('Consulta finalizada:', {
+      informacionVenta,
       patientNameOrCode,
       isAnonymousPatient,
       consultationDate,
@@ -78,20 +80,30 @@ const Consulta = ({page}) => {
     });
     // Add logic to save data
 
-    // fetch("api/expediente/consulta", {
-    //   method: 'POST', 
-    //   headers: {
-        
-    //   },
-    //   body: JSON.stringify({
-    //   patientNameOrCode,
-    //   isAnonymousPatient,
-    //   consultationDate,
-    //   eyeExamData,
-    //   patientNotes,
-    //   internalDoctorNotes,
-    // })
-    // })
+    if (informacionVenta.id === 0) return Swal.fire({ title: "Alerta!", text: "Debes seleccionar ya sea venta  publica o algun usuario ya registrado", icon: "warning" })
+
+    fetch("api/expedientes/consulta", {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+      patientNameOrCode,
+      isAnonymousPatient,
+      consultationDate,
+      eyeExamData,
+      patientNotes,
+      internalDoctorNotes,
+      informacionVenta,
+    })
+    })
+      .then((res) => res.json())
+      .then((res) =>{
+        if(res.result){
+            Swal.fire({title: "Exito", text: "Se registro  correctamente", icon: "success"})
+            page(0)
+        }
+      })
   };
 
   // Finalize and make sale action
@@ -104,6 +116,7 @@ const Consulta = ({page}) => {
       patientNotes,
       internalDoctorNotes,
     });
+
     // Add logic to save data and proceed to sale
   };
 
@@ -135,7 +148,7 @@ const Consulta = ({page}) => {
 
                 
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="consultationDate" className="form-label">Fecha de consulta *</label>
                 <input
                   type="datetime-local"
@@ -144,7 +157,7 @@ const Consulta = ({page}) => {
                   value={consultationDate}
                   onChange={(e) => setConsultationDate(e.target.value)}
                 />
-              </div>
+              </div> */}
             </section>
 
             {/* Eye Examination Section */}
@@ -246,13 +259,13 @@ const Consulta = ({page}) => {
                 <CheckCircleIcon className="icon-size" />
                 <span>Finalizar consulta</span>
               </button>
-              <button
+              {/* <button
                 onClick={handleFinalizeAndSell}
                 className="action-button button-sell"
               >
                 <ShoppingCartIcon className="icon-size" />
                 <span>Finalizar y realizar venta</span>
-              </button>
+              </button> */}
             </div>
           </main>
 

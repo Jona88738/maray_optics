@@ -32,7 +32,9 @@ const login = async (req, res) =>{
 const getUsers = async (req, res) =>{
       let datos;
     try {
-        [datos] = await conn.query(`SELECT *, DATE_FORMAT(registro, '%d/%m/%Y %H:%i:%s') AS fecha_formateada FROM usuario  where estado = 1`); //Agregar  columnas
+        [datos] = await conn.query(`SELECT usuario.*, DATE_FORMAT(usuario.registro, '%d/%m/%Y %H:%i:%s') AS fecha_formateada,roles.nombre FROM usuario
+            INNER JOIN roles ON roles.id = id_rol
+          where estado = 1`); //Agregar  columnas
        
     } catch (error) {
         console.error("Error: ", error.message)
@@ -70,14 +72,14 @@ const Logout = (req,res) => {
   });
 }
 const insertUser = async (req, res) =>{
-  const {usuario, nombre, apellido, contraseña, correo, telefono, curp, titulo_profesional} = req.body;
+  const {usuario, nombre, apellido, contraseña, correo, telefono, curp, titulo_profesional, nivel} = req.body;
   const password  = await encryptPass(contraseña);
-  const valores = [usuario, nombre, apellido, password, correo, telefono];
-  const campos = ['usuario', 'nombre', 'apellidos', 'password', 'correo', 'telefono'];
+  const valores = [usuario, nombre, apellido, password, correo, telefono, parseInt(nivel)];
+  const campos = ['usuario', 'nombre', 'apellidos', 'password', 'correo', 'telefono', 'id_rol'];
 
   if(curp){
     valores.push(curp);
-    campos.push('curpo')
+    campos.push('curp')
   }
   if(titulo_profesional){
     valores.push(titulo_profesional);
