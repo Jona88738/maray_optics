@@ -2,6 +2,8 @@ import { useEffect, useState, useRef} from 'react';
 import '../../styles/detallesVenta.css';
 import Ticket from "../components/ImprimirTicket.jsx"; 
 import { useReactToPrint } from 'react-to-print';
+import OrdenVenta from '../components/OrdenVenta.jsx'; // Ajusta la ruta según donde guardaste SalesOrder.jsx
+
 import PagoDiferido from '../components/FormPagoDiferido.jsx';
 import ShowModal from '../components/showModal.jsx';
 import Swal from 'sweetalert2';
@@ -74,6 +76,23 @@ const DetallesVenta = ({page, informacion}) => {
         }
       `,
       });
+      const contentRef2 = useRef(); // Ref para la Orden de Venta (SalesOrder)
+
+       // Handler para imprimir la Orden de Venta
+    const handlePrintOrdenVenta = useReactToPrint({
+        
+         contentRef: contentRef2,
+        pageStyle: `
+        @page {
+          size: A4; 
+          margin: 10mm; 
+        }
+        body {
+          -webkit-print-color-adjust: exact;
+          font-family: Arial, sans-serif; 
+        }
+      `,
+    });
 
     const  [modalOpenAll, setmodalOpenAll] = useState({action: 0, datos:""});
     const [actualizarDatos, setActualizarDatos] = useState(false);
@@ -104,6 +123,11 @@ const DetallesVenta = ({page, informacion}) => {
     const generarTicket = () =>{
         handlePrint()
         console.log("Ya imprimio")
+    }
+
+    const generarOrdenVenta = () => {
+        handlePrintOrdenVenta(); 
+        console.log("Ya imprimió Orden de Venta");
     }
 
     const cancelarVenta = () => {
@@ -196,6 +220,106 @@ const DetallesVenta = ({page, informacion}) => {
                         }) 
 
     }
+// *** INICIO DE LOS DATOS DE PRUEBA (MOCK DATA) ***
+// *** INICIO DE LOS DATOS DE PRUEBA (MOCK DATA) - Estos no cambiarán ***
+const mockVentaData = {
+    id_venta: 'VENTA-001-TEST',
+    fecha: '2025-07-07', // Formato YYYY-MM-DD
+    fecha_entrega_sugerida: '2025-07-15', // Fecha de entrega sugerida para pruebas
+    nombre: 'Juan Pérez García',
+    telefono: '5512345678',
+    domicilio: 'Calle Falsa 123, Colonia Simulación, Ciudad de Prueba',
+    tipo: 1, // 0: Venta Liquidada, 1: En pagos (para probar el adeudo)
+    status: 2, // 1: Pagado, 2: Adeudo, 3: Cancelado (para probar el adeudo)
+    usuario_nombre: 'Empleado Test',
+    id_cliente: 'CLI-007',
+    articulos: [
+        {
+            id: 101,
+            codigo: 'PROD001',
+            descripcion: 'Lentes de Sol Modelo X',
+            cantidad: 1,
+            precio_unitario: 1500.00,
+            descuento: 0,
+            subtotal: 1500.00
+        },
+        {
+            id: 102,
+            codigo: 'PROD002',
+            descripcion: 'Estuche Rígido para Lentes',
+            cantidad: 1,
+            precio_unitario: 250.00,
+            descuento: 10, // 10% de descuento
+            subtotal: 225.00 // 250 - (250 * 0.10)
+        },
+        {
+            id: 103,
+            codigo: 'SERV001',
+            descripcion: 'Examen de la Vista',
+            cantidad: 1,
+            precio_unitario: 300.00,
+            descuento: 0,
+            subtotal: 300.00
+        }
+    ],
+    pago_realizados: [
+        {
+            id: 201,
+            fecha: '2025-07-07',
+            cantidad_pago: 1000.00,
+            metodo_pago: 'Efectivo'
+        },
+        {
+            id: 202,
+            fecha: '2025-07-07',
+            cantidad_pago: 500.00,
+            metodo_pago: 'Tarjeta'
+        }
+    ]
+};
+// *** FIN DE LOS DATOS DE PRUEBA (MOCK DATA) ***
+
+    // Función para mapear los datos de `mockVentaData` a la estructura que espera 'OrdenVenta'
+    // La variable `dato` en los parámetros de esta función ya no existe, usamos `mockVentaData` directamente.
+    const mapDataToSalesOrder = () => {
+        if (!mockVentaData || !mockVentaData.articulos || !mockVentaData.pago_realizados) {
+            console.warn("mapDataToSalesOrder: 'mockVentaData' o sus propiedades no están disponibles (esto no debería ocurrir con mockData).", mockVentaData);
+            return null;
+        }
+
+        const patientName = mockVentaData.nombre || 'Venta Publico';
+        const patientPhone = mockVentaData.telefono !== undefined ? mockVentaData.telefono : "ND";
+        const patientAddress = mockVentaData.domicilio !== undefined ? mockVentaData.domicilio : "ND";
+
+        const saleDate = mockVentaData.fecha ? new Date(mockVentaData.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+        const suggestedDeliveryDate = mockVentaData.fecha_entrega_sugerida ? new Date(mockVentaData.fecha_entrega_sugerida).toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' }) : saleDate;
+
+        return {
+            patientCode: mockVentaData.id_cliente || 'N/A',
+            patientName: patientName,
+            patientPhone: patientPhone,
+            date: saleDate,
+            suggestedDeliveryDate: suggestedDeliveryDate,
+            saleNumber: mockVentaData.id_venta,
+            items: mockVentaData.articulos.map(item => ({
+                code: item.codigo,
+                description: item.descripcion,
+                quantity: item.cantidad,
+                price: item.precio_unitario,
+                subtotal: item.subtotal,
+            })),
+            total: calcularTotal(), // calcularTotal ya usa mockVentaData
+            payments: mockVentaData.pago_realizados.map(payment => ({
+                id: payment.id,
+                date: payment.fecha,
+                amount: payment.cantidad_pago,
+            })),
+            remainingAmount: calcularTotal() - acumuladoPagoDiferido(mockVentaData.pago_realizados), // acumuladoPagoDiferido ahora recibe mockVentaData.pago_realizados
+            attendedBy: mockVentaData.usuario_nombre || 'ADMINISTRADOR',
+            opticaAddress: 'Av Nevado de Toluca sector 64',
+            opticaPhone: '7299346129 y null'
+        };
+    };
     
     return(<>
        
@@ -373,7 +497,7 @@ const DetallesVenta = ({page, informacion}) => {
             </> 
             ):""}
                 <section  className='containerBtnReciTicket'>
-                    <button className='btnBaja' >
+                    <button className='btnBaja'  onClick={generarOrdenVenta}>
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
                         Recibo</button>
                     <button className='btnBaja' onClick={generarTicket}>
@@ -384,6 +508,14 @@ const DetallesVenta = ({page, informacion}) => {
         <div style={{display: "none"}}>
         <Ticket ref={contentRef} sale={dato} obtenerTotal={calcularTotal} />
         </div> 
+        <OrdenVenta ref={contentRef2}  />
+         {/* Contenedor oculto para la impresión de la Orden de Venta */}
+            <div style={{ display: "none" }}>
+                
+                {/* {dato && dato.articulos && dato.pago_realizados && ( // Asegurarse de que los datos estén cargados antes de renderizar
+                    
+                )} */}
+            </div>
             
  { modalOpenAll.action === 1  ? <ShowModal open={btnCerrarModal} form={<PagoDiferido closeModal={btnCerrarModal}   ModalOpen={btnCerrarModal} idVenta={dato.id_venta} restante_pago={calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) } />} /> : null} 
         </main>

@@ -114,6 +114,15 @@
    width: 60%;
  }
 
+ @media screen and (max-width: 430px){
+    .containerModal{
+        width: 90%;
+        border-radius: 15px;
+    }
+    .scroll{
+        border-radius: 15px;
+    }
+ }
 
  /* Estilos del main -> section- */
 

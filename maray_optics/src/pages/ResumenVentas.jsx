@@ -1,15 +1,4 @@
 import Navbar from "../components/navbar";
-
-// const ResumenVentas = () =>{
-
-//     return(<>
-//      <Navbar />
-//         <h2 style={{textAlign: 'center', marginBottom: '15px'}}>Resumen de ventas</h2>
-//     </>)
-// }
-
-// export default ResumenVentas;
-
 import React, { useState, useEffect } from 'react';
 
 // Estilos CSS como una cadena de texto
@@ -279,7 +268,7 @@ const appStyles = `
 
 // Datos de ejemplo para diferentes períodos
 const reportData = {
-    today: {
+    Hoy: {
         title: "Reporte de Hoy",
         displayTitle: "Hoy", // Nuevo campo para el título de la sección de detalle
         metrics: [
@@ -344,8 +333,26 @@ const reportData = {
 // Componente React
 const ResumenVentas = () => {
     // Estado para el período seleccionado, por defecto es 'monthly'
-    const [selectedPeriod, setSelectedPeriod] = useState('today');
+    const [selectedPeriod, setSelectedPeriod] = useState('Hoy');
     const  [datos, setDatos] = useState([]);
+
+    const cambioSelect = (e) => {
+
+         fetch(`/api/ventas/getResumenVentas${e.target.value}`,{
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                if(res.result){
+                    console.log(res.hoy)
+                    setDatos([res.hoy])
+                }
+            })
+
+        setSelectedPeriod(e.target.value)
+    }
     // Efecto para inyectar el CSS en el head del documento
     useEffect(() => {
         const styleSheet = document.createElement("style");
@@ -386,7 +393,7 @@ const ResumenVentas = () => {
                     {data.map((item, index) => (
                         <li key={index}>
                             <span>{item.tipo_agregacion}:</span>
-                            <span>{item.total_venta}</span>
+                            <span>{'$'+item.total}</span>
                         </li>
                     ))}
                 </ul>
@@ -408,9 +415,9 @@ const ResumenVentas = () => {
                     <select
                         id="periodSelect"
                         value={selectedPeriod}
-                        onChange={(e) => setSelectedPeriod(e.target.value)}
+                        onChange={cambioSelect}
                     >
-                        <option value="today">Hoy</option>
+                        <option value="Hoy">Hoy</option>
                         <option value="weekly">Semanal</option>
                         <option value="monthly">Mensual</option>
                     </select>
@@ -424,15 +431,15 @@ const ResumenVentas = () => {
                         {datos.map((metric, index) => (
                             <div className="metric-card" key={index}>
                                 <h3>{metric.indicadoresGlobales[0].titulo}</h3>
-                                <p>{metric.indicadoresGlobales[0].total}</p>
-                                <small>{"d"}</small>
+                                <p>{'$'+metric.indicadoresGlobales[0].total}</p>
+                                <small>{""}</small>
                             </div>
                         ))}
                     </div>
 
                     {/* Usamos el nuevo campo displayTitle para evitar "de de Hoy" */}
                     {renderListSection("Detalle de " + currentReport.displayTitle, datos[0].detallePorConcepto )}
-                    {renderListSection("Métodos de Pago", currentReport.payments)}
+                    {renderListSection("Métodos de Pago", datos[0].metodosDePago)}
 
                     {/* <div className="chart-placeholder">
                         {currentReport.chartText}

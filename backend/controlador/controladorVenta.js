@@ -462,7 +462,7 @@ const getResumenVentasHoy = async (req, res) => {
   `);
 
   const [detallesHoy] = await conn.query(`
-    SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total_venta FROM venta v
+    SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total FROM venta v
     INNER JOIN detalles_venta dv ON dv.venta_id = v.id
     INNER JOIN producto p ON p.id = dv.producto_id
     INNER JOIN categoria c ON c.id = p.categoria
@@ -474,9 +474,94 @@ const getResumenVentasHoy = async (req, res) => {
   `);
 
   const [metodosPago] = await conn.query(`
-    SELECT v.metodo_pago, SUM(v.total) AS total FROM venta v
+    SELECT v.metodo_pago AS tipo_agregacion, SUM(v.total) AS total FROM venta v
     WHERE DATE(v.fecha_inicio) = CURDATE()
     GROUP BY v.metodo_pago;
+  `);
+
+  // Crear el objeto final que enviarás al frontend
+const reporteCompletoDelDia = {
+    indicadoresGlobales: ventaTotalUnidades,
+    detallePorConcepto: detallesHoy,
+    metodosDePago: metodosPago
+};
+  res.json({
+    hoy: reporteCompletoDelDia || 0,
+    result: true
+  });
+};
+
+const getResumenVentasSemana = async (req, res) => {
+  console.log("Entro")
+  const [ventaTotalUnidades] = await conn.query(`
+    
+        SELECT SUM(venta.total) AS total, SUM(detalles_venta.cantidad) AS unidad_vendidas FROM venta 
+          INNER JOIN  detalles_venta ON detalles_venta.venta_id = venta.id
+          INNER JOIN producto ON producto.id = detalles_venta.producto_id
+          INNER JOIN categoria ON categoria.id = producto.categoria
+          WHERE YEARWEEK(fecha_inicio, 1) = YEARWEEK(CURDATE(), 1); 
+  `);
+
+//   const [detallesHoy] = await conn.query(`
+//     SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total FROM venta v
+//     INNER JOIN detalles_venta dv ON dv.venta_id = v.id
+//     INNER JOIN producto p ON p.id = dv.producto_id
+//     INNER JOIN categoria c ON c.id = p.categoria
+//     WHERE DATE(v.fecha_inicio) = CURDATE()  AND v.status != 3
+//     GROUP BY c.nombre
+//     UNION ALL
+//     SELECT  'Devoluciones' AS tipo_agregacion, SUM(v.total)  FROM  venta v 
+//     WHERE DATE(v.fecha_inicio) = CURDATE() AND v.status = 3;
+//   `);
+
+  const [metodosPago] = await conn.query(`
+    SELECT v.metodo_pago AS tipo_agregacion, SUM(v.total) AS total FROM venta v
+      INNER JOIN  detalles_venta ON detalles_venta.venta_id = v.id
+      INNER JOIN producto ON producto.id = detalles_venta.producto_id
+      INNER JOIN categoria ON categoria.id = producto.categoria
+      WHERE YEARWEEK(fecha_inicio, 1) = YEARWEEK(CURDATE(), 1)
+      GROUP BY v.metodo_pago;
+  `);
+
+  // Crear el objeto final que enviarás al frontend
+const reporteCompletoDelDia = {
+    indicadoresGlobales: ventaTotalUnidades,
+    detallePorConcepto: null,
+    metodosDePago: metodosPago
+};
+  res.json({
+    hoy: reporteCompletoDelDia || 0,
+    result: true
+  });
+};
+
+const getResumenVentasMes = async (req, res) => {
+  console.log("Entro")
+  const [ventaTotalUnidades] = await conn.query(`
+    
+        SELECT SUM(venta.total) AS total, SUM(detalles_venta.cantidad) AS unidad_vendidas FROM venta 
+          INNER JOIN  detalles_venta ON detalles_venta.venta_id = venta.id
+          INNER JOIN producto ON producto.id = detalles_venta.producto_id
+          INNER JOIN categoria ON categoria.id = producto.categoria
+          WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()); 
+  `);
+
+  const [detallesHoy] = await conn.query(`
+    SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total_venta FROM venta v
+      INNER JOIN detalles_venta dv ON dv.venta_id = v.id
+      INNER JOIN producto p ON p.id = dv.producto_id
+      INNER JOIN categoria c ON c.id = p.categoria
+      WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()) AND v.status != 3
+      GROUP BY c.nombre;
+  `);
+
+  const [metodosPago] = await conn.query(`
+    SELECT v.metodo_pago AS tipo_agregacion, SUM(v.total) AS total FROM venta v
+      INNER JOIN  detalles_venta ON detalles_venta.venta_id = v.id
+      INNER JOIN producto ON producto.id = detalles_venta.producto_id
+      INNER JOIN categoria ON categoria.id = producto.categoria
+      WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()) 
+      GROUP BY v.metodo_pago;
   `);
 
   // Crear el objeto final que enviarás al frontend
@@ -501,5 +586,7 @@ export default {
     pagoDiferido,
     ingresarEfectivo,
     corteCaja,
-    getResumenVentasHoy
+    getResumenVentasHoy,
+    getResumenVentasSemana,
+    getResumenVentasMes
 }

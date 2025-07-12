@@ -21,4 +21,8 @@ routes.post('/corteCaja', controladorVenta.corteCaja);
 
 routes.get("/getResumenVentasHoy", controladorVenta.getResumenVentasHoy);
 
+routes.get("/getResumenVentasweekly", controladorVenta.getResumenVentasSemana);
+
+routes.get("/getResumenVentamonthly", controladorVenta.getResumenVentasSemana);
+
 export default routes;

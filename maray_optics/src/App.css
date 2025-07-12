@@ -28,6 +28,11 @@ body{
   gap: 15px;
   padding: 50px;
 }
+@media screen and (max-width: 430px) {
+  .formLogin{
+    padding: 40px;
+  }
+}
 .inputLogin{
   display: flex;
   flex-direction: column;
