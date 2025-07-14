@@ -27,7 +27,7 @@ const AutocompleteInput = ({tabla,valor,setValor}) => {
           console.log("existe un error")
         }
       })
-  },[])
+  },[valor])
 
   const manejarCambio = (e) => {
     const texto = e.target.value;

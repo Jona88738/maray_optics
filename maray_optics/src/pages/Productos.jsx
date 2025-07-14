@@ -109,30 +109,11 @@ const Productos = () => {
      
 
     return(<>
-    <Navbar />
-<h1  style={{textAlign: 'center', marginBottom: '15px'}} >Productos</h1>
+    {/* <Navbar /> */}
+{/* <h1  style={{textAlign: 'center', marginBottom: '15px'}} >Productos</h1> */}
     <main className="containerProducts">
        
         {categoriaOpen.option === 0 ? ( <>
-       
-        {/* <section className="inputBusqueda">
-            <div className="input">
-            <label htmlFor="">Buscar Producto</label>
-            <input type="text" />
-            </div>
-        </section> */}
-        {/*  Input de búsqueda */}
-            <section className="inputBusqueda">
-                <div className="input">
-                    <label htmlFor="">Buscar categoría</label>
-                    <input
-                        type="text"
-                        value={filtroNombre}
-                        onChange={(e) => setFiltroNombre(e.target.value)}
-                        placeholder="Buscar por nombre o código del producto"
-                    />
-                </div>
-            </section>
 
         <section className="containerButtons">
 
@@ -148,6 +129,28 @@ const Productos = () => {
                 ver categoria</button>
 
         </section>
+       
+        {/* <section className="inputBusqueda">
+            <div className="input">
+            <label htmlFor="">Buscar Producto</label>
+            <input type="text" />
+            </div>
+        </section> */}
+        {/*  Input de búsqueda */}
+            <section className="inputBusqueda">
+                <h2 style={{fontWeight:'800'}}>Productos</h2>
+                        <hr />
+                <div className="input">
+                    <label htmlFor="">Buscar categoría</label>
+                    <input
+                        type="text"
+                        value={filtroNombre}
+                        onChange={(e) => setFiltroNombre(e.target.value)}
+                        placeholder="Buscar por nombre o código del producto"
+                    />
+                </div>
+            </section>
+
          <section className="containerTabla">
         <section className="table-responsive">
             <table className="table table-bordered table-hover">

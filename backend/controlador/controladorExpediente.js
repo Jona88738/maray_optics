@@ -4,7 +4,7 @@ const getExpedientes = async (req, res) =>{
 
      let datos;
     try {
-        [datos] = await conn.query(`SELECT id, nombre, edad, apellido,DATE_FORMAT(fecha_nacimiento, '%d/%m/%Y') AS fecha_formateada, telefono, correo from expediente where estado = 1`);
+        [datos] = await conn.query(`SELECT id,nombre, CONCAT(nombre,' ',apellido) AS nombre_completo, telefono, edad, apellido,DATE_FORMAT(fecha_nacimiento, '%d/%m/%Y') AS fecha_formateada, telefono, correo from expediente where estado = 1`);
         //console.log(datos)
         //const [datos] = await conn.query("SELECT ")
     } catch (error) {
@@ -20,7 +20,7 @@ const insertExpediente = async (req, res) => {
 
     try {
         const {nombre, apellido, fechaNacimiento, edad, telefono, correo }  = req.body;
-
+    console.log(fechaNacimiento, "FEcha")
         const [datos] = await conn.query("INSERT INTO expediente(nombre, apellido, fecha_nacimiento, edad, telefono, correo) VALUES(?, ?, ?, ?, ?, ?)",[nombre, apellido, fechaNacimiento, edad, telefono, correo])
     } catch (error) {
         console.error("Error: ", error.message);

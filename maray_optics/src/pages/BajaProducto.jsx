@@ -40,7 +40,7 @@ const BajaProducto = ({btnRegresar}) =>{
 
 //  Aplicar filtro por nombre
     const datosFiltrados = productos.filter(item =>
-        item.anotaciones.toLowerCase().includes(filtroNombre.toLowerCase()) 
+        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase()) 
     );
 
      const totalPaginas = Math.ceil(datos.length / elementosPorPagina);
@@ -62,7 +62,7 @@ const BajaProducto = ({btnRegresar}) =>{
     const GuardarDatos = (e) =>{
         e.preventDefault();
         console.log("Mis datos: ", datos )
-
+        if(!datos.anotacion || !datos.cantidad || datos.idProducto === 0 )  return Swal.fire({title:"Error", text: "Todos los campos con * son obligatorios", icon:"error"})
         fetch("/api/producto/bajaProducto", {
             method: 'POST',
             headers: {
@@ -73,7 +73,7 @@ const BajaProducto = ({btnRegresar}) =>{
             .then(res => res.json())
             .then((res) => {
                 if(res.result){
-                    Swal.fire({title: "Exito", text: "Se agrego  correctamente", icon: "success"})
+                    Swal.fire({title: "Exito", text: "Se dio de baja correctamente el producto", icon: "success"})
                     setActualizarDatos(!actualizarDatos)
                     setDatos({idProducto: 0, cantidad: "",stock_actual: 0,  anotacion: ""})
                     setValor('');

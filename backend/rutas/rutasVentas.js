@@ -23,6 +23,6 @@ routes.get("/getResumenVentasHoy", controladorVenta.getResumenVentasHoy);
 
 routes.get("/getResumenVentasweekly", controladorVenta.getResumenVentasSemana);
 
-routes.get("/getResumenVentamonthly", controladorVenta.getResumenVentasSemana);
+routes.get("/getResumenVentasmonthly", controladorVenta.getResumenVentasMes);
 
 export default routes;

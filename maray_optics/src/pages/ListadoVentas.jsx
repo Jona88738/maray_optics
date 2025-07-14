@@ -122,7 +122,7 @@ const ListadoProducto = ({page}) => {
                         <td id="Fecha">{element.fecha_formateada}</td>
                         <td id="Venta">{element.id}</td>
                         <td id="Paciente">{element.paciente_id === null ? "Venta al publico": element.nombre + ' ' +element.apellido}</td>
-                        <td id="Total">{Number(element.total).toLocaleString('es-MX', {
+                        <td id="Total">{"$"+Number(element.total).toLocaleString('es-MX', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })}</td>

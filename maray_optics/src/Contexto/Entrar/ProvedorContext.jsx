@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { EntrarContext } from "./EntrarContext.js";
 import { useNavigate, Outlet } from 'react-router-dom';
+import Navbar from "../../components/navbar.jsx";
 
 export default function  Entrar({children}){
 
-    const [entrar,setEntrar] =useState(false);
+    const [entrar,setEntrar] =useState(null);
+    const [usuario, setUsuario] = useState(0);
 
     const navigate = useNavigate();
 
@@ -16,40 +18,22 @@ export default function  Entrar({children}){
           
           console.log("Valor",res.Valor)
           setEntrar(res.Valor);
-
-          {res.Valor === false ? (navigate("/")):
+          setUsuario(res.usuario);
+          if (!res.Valor) {
+          navigate("/");
+        }
         
-        
-        
-            (
-    
-                <EntrarContext.Provider >
-    
-                    {<Outlet/>}
-    
-    
-                </EntrarContext.Provider>
-            )
-            }
 
         } )
-    },[])
+    },[navigate])
+    // Mientras se carga la sesión, no renderices nada
+  if (entrar === null) return null;
     return(<>
-        {console.log("Entro segundaVez", entrar)}
-        {entrar === false ? (navigate("/")):
+     <EntrarContext.Provider value={{ usuario }}>
+        <Navbar/>
+      <Outlet />
+    </EntrarContext.Provider>
         
-        
-        
-        (
-
-            <EntrarContext.Provider >
-
-                {<Outlet/>}
-
-
-            </EntrarContext.Provider>
-        )
-        }
         
     
     </>)

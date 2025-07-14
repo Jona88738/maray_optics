@@ -73,11 +73,11 @@ const insertVenta = async (req, res) =>{
 
      const ventaId = result.insertId;
 
-    if(dataUsuario.tipo === 1){
+    //if(dataUsuario.tipo === 1){
 
       const sentenciaPagosAdeudos = await connection.query(`INSERT INTO pago_realizado
         (cantidad_pago, metodo_pago, venta_id ) VALUES(?, ?, ?)`,[dataUsuario.pago_venta, dataUsuario.metodo_pago, ventaId]); 
-    }
+    //}
 
     const ids = dato.map(p => p.id).join(','); // "16,18,20"
 
@@ -282,7 +282,7 @@ const detallesVenta = async (req, res) =>{
 
  const [datos] = await conn.query(`
 SELECT JSON_OBJECT(
-    'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d %H:%i:%s'),
+    'fecha', DATE_FORMAT(v.fecha_inicio, '%Y-%m-%d'),
     'id_venta', v.id,
     'tipo', v.tipo,
     'status', v.status,
@@ -454,32 +454,41 @@ const corteCaja = async (req, res) => {
 const getResumenVentasHoy = async (req, res) => {
   const [ventaTotalUnidades] = await conn.query(`
     
-        SELECT 'Ventas Totales' AS titulo, SUM(venta.total) AS total, SUM(detalles_venta.cantidad) AS unidad_vendidas FROM venta 
+        SELECT 'Ventas Totales' AS titulo,  CONCAT("$",FORMAT(SUM(venta.total),2 )) AS total FROM venta 
         INNER JOIN  detalles_venta ON detalles_venta.venta_id = venta.id
         INNER JOIN producto ON producto.id = detalles_venta.producto_id
         INNER JOIN categoria ON categoria.id = producto.categoria
         WHERE DATE(fecha_inicio) = CURDATE()
+UNION ALL
+SELECT 'Unidades Vendidas' AS titulo, SUM(detalles_venta.cantidad) AS total  FROM  venta
+	INNER JOIN detalles_venta ON detalles_venta.venta_id = venta.id
+    WHERE DATE(venta.fecha_inicio) = CURDATE();
   `);
 
   const [detallesHoy] = await conn.query(`
-    SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total FROM venta v
+    SELECT CONCAT( "Ventas de ",c.nombre ) AS tipo_agregacion, CONCAT("$",FORMAT(SUM(dv.subtotal),2)) AS  total FROM venta v
     INNER JOIN detalles_venta dv ON dv.venta_id = v.id
     INNER JOIN producto p ON p.id = dv.producto_id
     INNER JOIN categoria c ON c.id = p.categoria
     WHERE DATE(v.fecha_inicio) = CURDATE()  AND v.status != 3
     GROUP BY c.nombre
     UNION ALL
-    SELECT  'Devoluciones' AS tipo_agregacion, SUM(v.total)  FROM  venta v 
-    WHERE DATE(v.fecha_inicio) = CURDATE() AND v.status = 3;
+    SELECT  'Devoluciones' AS tipo_agregacion, CONCAT("$", FORMAT(SUM(v.total),2))  FROM  venta v 
+    WHERE DATE(v.fecha_inicio) = CURDATE() AND v.status = 3
+    UNION ALL
+    SELECT 'Descuentos Aplicados' AS Tipo_agregacion, CONCAT("$", (SUM(dv.precio_unitario * dv.cantidad)- SUM(dv.subtotal) ) )AS total FROM venta v
+	  INNER JOIN detalles_venta dv ON dv.venta_id = v.id AND dv.descuento > 0
+    WHERE DATE(v.fecha_inicio) = CURDATE()  AND v.status != 3 
   `);
 
   const [metodosPago] = await conn.query(`
-    SELECT v.metodo_pago AS tipo_agregacion, SUM(v.total) AS total FROM venta v
+    SELECT v.metodo_pago AS tipo_agregacion, CONCAT("$",FORMAT(SUM(v.total),2) ) AS total FROM venta v
     WHERE DATE(v.fecha_inicio) = CURDATE()
     GROUP BY v.metodo_pago;
   `);
 
   // Crear el objeto final que enviarás al frontend
+  console.log(ventaTotalUnidades)
 const reporteCompletoDelDia = {
     indicadoresGlobales: ventaTotalUnidades,
     detallePorConcepto: detallesHoy,
@@ -495,27 +504,34 @@ const getResumenVentasSemana = async (req, res) => {
   console.log("Entro")
   const [ventaTotalUnidades] = await conn.query(`
     
-        SELECT SUM(venta.total) AS total, SUM(detalles_venta.cantidad) AS unidad_vendidas FROM venta 
+        SELECT  'Ventas Totales' AS titulo, CONCAT("$",FORMAT(SUM(venta.total), 2) )AS total FROM venta 
           INNER JOIN  detalles_venta ON detalles_venta.venta_id = venta.id
           INNER JOIN producto ON producto.id = detalles_venta.producto_id
           INNER JOIN categoria ON categoria.id = producto.categoria
-          WHERE YEARWEEK(fecha_inicio, 1) = YEARWEEK(CURDATE(), 1); 
+          WHERE YEARWEEK(fecha_inicio, 1) = YEARWEEK(CURDATE(), 1)
+UNION ALL
+SELECT 'Venta Mas Alta' AS titulo, CONCAT("$",FORMAT(MAX(venta.total),2)) AS total  FROM venta
+	INNER JOIN detalles_venta ON detalles_venta.venta_id = venta.id
   `);
 
-//   const [detallesHoy] = await conn.query(`
-//     SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total FROM venta v
-//     INNER JOIN detalles_venta dv ON dv.venta_id = v.id
-//     INNER JOIN producto p ON p.id = dv.producto_id
-//     INNER JOIN categoria c ON c.id = p.categoria
-//     WHERE DATE(v.fecha_inicio) = CURDATE()  AND v.status != 3
-//     GROUP BY c.nombre
-//     UNION ALL
-//     SELECT  'Devoluciones' AS tipo_agregacion, SUM(v.total)  FROM  venta v 
-//     WHERE DATE(v.fecha_inicio) = CURDATE() AND v.status = 3;
-//   `);
+  const [detallesHoy] = await conn.query(`
+    SELECT CONCAT( "Ventas de ",c.nombre ) AS tipo_agregacion, CONCAT("$",FORMAT(SUM(dv.subtotal),2)) AS  total FROM venta v
+    INNER JOIN detalles_venta dv ON dv.venta_id = v.id
+    INNER JOIN producto p ON p.id = dv.producto_id
+    INNER JOIN categoria c ON c.id = p.categoria
+    WHERE DATE(v.fecha_inicio) = CURDATE()  AND v.status != 3
+    GROUP BY c.nombre
+    UNION ALL
+    SELECT  'Devoluciones' AS tipo_agregacion, CONCAT("$", FORMAT(SUM(v.total),2))  FROM  venta v 
+    WHERE DATE(v.fecha_inicio) = CURDATE() AND v.status = 3
+    UNION ALL
+    SELECT 'Descuentos Aplicados' AS Tipo_agregacion, CONCAT("$", (SUM(dv.precio_unitario * dv.cantidad)- SUM(dv.subtotal) ) )AS total FROM venta v
+	  INNER JOIN detalles_venta dv ON dv.venta_id = v.id AND dv.descuento > 0
+    WHERE DATE(v.fecha_inicio) = CURDATE()  AND v.status != 3 
+  `);
 
   const [metodosPago] = await conn.query(`
-    SELECT v.metodo_pago AS tipo_agregacion, SUM(v.total) AS total FROM venta v
+    SELECT v.metodo_pago AS tipo_agregacion, FORMAT(SUM(v.total),2) AS total FROM venta v
       INNER JOIN  detalles_venta ON detalles_venta.venta_id = v.id
       INNER JOIN producto ON producto.id = detalles_venta.producto_id
       INNER JOIN categoria ON categoria.id = producto.categoria
@@ -526,7 +542,7 @@ const getResumenVentasSemana = async (req, res) => {
   // Crear el objeto final que enviarás al frontend
 const reporteCompletoDelDia = {
     indicadoresGlobales: ventaTotalUnidades,
-    detallePorConcepto: null,
+    detallePorConcepto: detallesHoy,
     metodosDePago: metodosPago
 };
   res.json({
@@ -539,29 +555,36 @@ const getResumenVentasMes = async (req, res) => {
   console.log("Entro")
   const [ventaTotalUnidades] = await conn.query(`
     
-        SELECT SUM(venta.total) AS total, SUM(detalles_venta.cantidad) AS unidad_vendidas FROM venta 
+        SELECT 'Ventas Totales' AS titulo,CONCAT("$",FORMAT(SUM(venta.total),2)) AS total FROM venta 
           INNER JOIN  detalles_venta ON detalles_venta.venta_id = venta.id
           INNER JOIN producto ON producto.id = detalles_venta.producto_id
           INNER JOIN categoria ON categoria.id = producto.categoria
-          WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()); 
+          WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE())
   `);
 
   const [detallesHoy] = await conn.query(`
-    SELECT c.nombre AS tipo_agregacion, SUM(dv.subtotal) AS  total_venta FROM venta v
+   SELECT 'Ventas de Producto' AS tipo_agregacion,CONCAT("$",FORMAT(SUM(dv.subtotal),2) )AS  total FROM venta v
       INNER JOIN detalles_venta dv ON dv.venta_id = v.id
       INNER JOIN producto p ON p.id = dv.producto_id
       INNER JOIN categoria c ON c.id = p.categoria
       WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()) AND v.status != 3
-      GROUP BY c.nombre;
+UNION ALL
+    SELECT  'Total Devoluciones' AS tipo_agregacion, CONCAT("$", FORMAT(SUM(v.total),2)) AS  total   FROM  venta v 
+   WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()) AND v.status != 3
+UNION ALL
+    SELECT 'Descuentos Aplicados' AS Tipo_agregacion, CONCAT("$", (SUM(dv.precio_unitario * dv.cantidad)- SUM(dv.subtotal) ) )AS total FROM venta v
+	  INNER JOIN detalles_venta dv ON dv.venta_id = v.id AND dv.descuento > 0
+  WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()) AND v.status != 3
   `);
 
   const [metodosPago] = await conn.query(`
-    SELECT v.metodo_pago AS tipo_agregacion, SUM(v.total) AS total FROM venta v
+    SELECT v.metodo_pago AS tipo_agregacion,CONCAT("$", FORMAT(SUM(v.total),2)) AS total FROM venta v
       INNER JOIN  detalles_venta ON detalles_venta.venta_id = v.id
       INNER JOIN producto ON producto.id = detalles_venta.producto_id
       INNER JOIN categoria ON categoria.id = producto.categoria
       WHERE YEAR(fecha_inicio) = YEAR(CURDATE()) AND MONTH(fecha_inicio) = MONTH(CURDATE()) 
       GROUP BY v.metodo_pago;
+
   `);
 
   // Crear el objeto final que enviarás al frontend

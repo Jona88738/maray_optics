@@ -112,7 +112,8 @@ const bajaProducto = async (req, res) => {
     try {
 
         const [datos] = await conn.query("INSERT INTO baja_producto(cantidad, anotaciones, producto_id, usuario_id) values(?, ?, ?, ?)", [cantidad, anotacion, idProducto,  req.session.idUser]);
-    
+        
+        const [actualizarProducto] = await conn.query("UPDATE producto SET cantidad = cantidad - ? WHERE id = ?",[cantidad, idProducto])
     } catch (error) {
         console.error("Error: ", error.message)
         return res.json({result: false, message: "hay un problema con el servidor, intente mas tarde"})

@@ -17,6 +17,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                 [name]: value
 
             })
+            setEfectivoEntrada(0);
         }else if(value === '2'){
             setMostrar({
                 
@@ -24,6 +25,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
 
                 
             })
+            setPagoDiferido(0.00)
             console.log("Opcion 2")
         }
         
@@ -39,6 +41,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
             dataUsuario.status = 1;
             dataUsuario.tipo = 0;
             dataUsuario.entradaEfectivo = efectivoEntrada;
+            dataUsuario.pago_venta = (calcularTotal() / 100) ;
             dataUsuario.cambio = efectivoEntrada >= totall ? Math.abs(totall - efectivoEntrada).toFixed(2): 0
         } 
         
@@ -133,14 +136,15 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                         <option value="1">Efectivo</option>
                     </select>
                 </div>
+                </section>
                 {mostrar.select === '1' ?(
-                <div className='input' style={{margin: '0 50px 0 50px', width: '100%'}}>
+                <div className='input' style={{margin: '0 50px 0 50px'}}>
                     
-                    <label htmlFor="">*Efectivo</label>
+                    <label htmlFor="">*Efectivo entrada</label>
                     <input type="number"  min={0} onChange={(event) => setEfectivoEntrada(event.target.value)}/>
                 </div>
                 ):("") }
-            </section>
+            
                 
 
             {mostrar.select === '2' ? (
@@ -155,7 +159,7 @@ const OpcionesVenta = ({ModalOpen, dato,dataUsuario, page}) => {
                 </>
                 ): ""}
 
-            <hr />
+            
             
                 
             <section className='containerOVenta'>

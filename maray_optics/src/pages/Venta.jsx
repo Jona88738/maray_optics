@@ -14,6 +14,9 @@ import Ticket from "../components/ImprimirTicket.jsx"; // Asegúrate de que la r
 import Swal from "sweetalert2";
 import DetallesVenta from "./DetallesVenta.jsx";
 import MovimientoEfectivo from "./MovimientosEfectivo.jsx";
+import { useContext } from "react";
+import { EntrarContext } from "../Contexto/Entrar/EntrarContext";
+import { useNavigate } from "react-router-dom";
 
 const Venta = () => {
     const [cambiarPage, setCambiarPage] = useState({ action: 0, data: {} });
@@ -27,6 +30,10 @@ const Venta = () => {
     const limpiarFiltro = (filtro) => {
         filtro('');
     }
+
+    const {usuario} = useContext(EntrarContext);
+        const navigate = useNavigate();
+        if(usuario === 3)  navigate('/Home');
 
     const manejarSeleccion = (usuario) => {
         console.log('Usuario seleccionado:', usuario);
@@ -272,9 +279,10 @@ const Venta = () => {
 
 
     return (<>
-        <Navbar />
+        {/* <Navbar /> */}
         {cambiarPage.action === 0 ? <>
-            <h2 className="tituloVenta">Venta</h2>
+            {/* <h2 className="tituloVenta">Venta</h2> */}
+            <main className="containerProducts">
             <section className="containerTitulo">
                 {/* btnVentaRegistrarP */}
                 <button className="btnAgregar" style={{ fontSize: '13px' }} onClick={btnRegistrarPaciente}>
@@ -285,15 +293,15 @@ const Venta = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M320-280q17 0 28.5-11.5T360-320q0-17-11.5-28.5T320-360q-17 0-28.5 11.5T280-320q0 17 11.5 28.5T320-280Zm0-160q17 0 28.5-11.5T360-480q0-17-11.5-28.5T320-520q-17 0-28.5 11.5T280-480q0 17 11.5 28.5T320-440Zm0-160q17 0 28.5-11.5T360-640q0-17-11.5-28.5T320-680q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Zm120 320h240v-80H440v80Zm0-160h240v-80H440v80Zm0-160h240v-80H440v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" /></svg>
                     Listado de ventas</button>
                 {/* btnVentaBuscarProducto */}
-                <button className="btnEdit" onClick={btnBuscarProducto}>
+                {/* <button className="btnEdit" onClick={btnBuscarProducto}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" /></svg>
-                    Buscar Producto</button>
+                    Buscar Producto</button> */}
             </section>
-            <main className="containerProducts">
+            {/* <main className="containerProducts"> */}
 
                 <section className="inputBusqueda">
                     <form >
-                        <h2>Nueva Venta</h2>
+                        <h2 style={{fontWeight:'800'}}>Nueva Venta</h2>
                         <hr />
                         <label htmlFor="" style={{ marginBottom: '15px' }}>*Elegir cliente o venta al público</label>
 
@@ -347,7 +355,7 @@ const Venta = () => {
                                                 <td>{element.descripcion} </td>
                                                 <td> <input type="number" placeholder="Cantidad" min={1} value={element.cantidad_compra} onChange={(event) => handleChangeCantidad(element, event)} /> </td>
                                                 <td>{element.cantidad}</td>
-                                                <td>{(element.precio_venta / 100).toFixed(2)} </td>
+                                                <td>{"$"+(element.precio_venta / 100).toFixed(2)} </td>
                                                 <td> <input type="number" placeholder="Descuento" min={0} value={element.descuento} onChange={(event) => handleChangeDescuento(element, event)
                                                 }
                                                     onKeyDown={(e) => {
@@ -355,7 +363,7 @@ const Venta = () => {
                                                             e.preventDefault();
                                                         }
                                                     }} /> </td>
-                                                <td>{(element.subtotal / 100).toFixed(2)} </td>
+                                                <td>{"$"+(element.subtotal / 100).toFixed(2)} </td>
 
                                             </tr>
                                         )
@@ -369,7 +377,7 @@ const Venta = () => {
                         <label htmlFor="" style={{ display: 'flex', alignItems: 'center', fontSize: '15px', fontSize: '25px' }}>Total</label>
                         {/* Usa useMemo() */}
                         {console.log("redondeo: ", redondearMX( (totall / 100).toFixed(2) )) }
-                        <input type="text" style={{ padding: '7px' }} value={totall
+                        <input type="text" style={{ padding: '7px' }} value={"$"+totall
                         } disabled />
 
                     </section>

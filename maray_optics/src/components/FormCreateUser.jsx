@@ -19,6 +19,7 @@ const FormCreateUser = ({ModalOpen, dato}) => {
         e.preventDefault();
         const exiteUsuario = dato.some(p => p.usuario === datos.usuario);
         if(exiteUsuario) return  Swal.fire({title: "Alerta", text: "Error, ese usuario ya existe, intenta con otro", icon: "warning"})
+        if(!datos.usuario || !datos.nombre || !datos.apellido || !datos.contraseña  || !datos.correo || !datos.telefono  || datos.nivel === 'default') return Swal.fire({title:"Alerta", text: "Todo los campos con * son obligatorios", icon: "warning"})
         console.log("Existe usuario: ", exiteUsuario)
         console.log(datos)
 
@@ -97,7 +98,7 @@ const FormCreateUser = ({ModalOpen, dato}) => {
                     <option value="default"> Selecciona una opcion</option>
                     <option value="1">Admin</option>
                     <option value="2">Cobrador</option>
-                    
+                    <option value="3">Medico/Optometrista</option>
                     
                 </select>
             </div>
@@ -111,7 +112,7 @@ const FormCreateUser = ({ModalOpen, dato}) => {
                 </div>
                 <div className="input">
                     <label htmlFor="">Titulo profesional</label>
-                    <input type="text" placeholder="Ingresa tu curp"
+                    <input type="text" placeholder="Ingresa los datos.."
                     name="titulo_profesional"
                      value={datos.titulo_profesional} 
                      onChange={onChangeDatos}

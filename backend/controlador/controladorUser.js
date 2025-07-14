@@ -17,6 +17,7 @@ const login = async (req, res) =>{
     
         req.session.idUser = datos[0].id;
         req.session.nombre = datos[0].nombre;
+        req.session.id_rol = datos[0].id_rol;
         // req.session.usuario = {
         //     idUser: datos[0].id,
         //     nombre: datos[0].nombre,
@@ -32,7 +33,7 @@ const login = async (req, res) =>{
 const getUsers = async (req, res) =>{
       let datos;
     try {
-        [datos] = await conn.query(`SELECT usuario.*, DATE_FORMAT(usuario.registro, '%d/%m/%Y %H:%i:%s') AS fecha_formateada,roles.nombre FROM usuario
+        [datos] = await conn.query(`SELECT usuario.*, DATE_FORMAT(usuario.registro, '%d/%m/%Y') AS fecha_formateada, CONCAT(usuario.nombre,' ', usuario.apellidos) AS nombreC, roles.nombre as rol_nombre FROM usuario
             INNER JOIN roles ON roles.id = id_rol
           where estado = 1`); //Agregar  columnas
        
@@ -48,13 +49,13 @@ const getUsers = async (req, res) =>{
 const sesion = (req,res) =>{
 
   const MySesion = req.session.idUser;
-  console.log("Esta es la session",MySesion);
+  console.log("Esta es la session",MySesion,": id_rol",req.session.id_rol );
 
   if(MySesion === undefined){
   return  res.json({"Valor":false})
   }
 
- return  res.json({"Valor":true})
+ return  res.json({"Valor":true, 'usuario': req.session.id_rol})
 }
 
 const Logout = (req,res) => {

@@ -29,10 +29,10 @@
 }
 .containerButtons{
     width: 100%;
-    margin-top: 30px;
+    margin-top: 15px;
     display: flex;
     justify-content: space-evenly;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 .btnAgregar{
     background-color: rgb(9, 94, 9);

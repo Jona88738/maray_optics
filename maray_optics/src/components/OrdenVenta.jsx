@@ -1,8 +1,21 @@
 import { forwardRef } from "react";
 
 // El componente ya no recibe la prop "saleOrder".
-const OrdenVenta = forwardRef((props, ref) => {
+const OrdenVenta = forwardRef(({detalles_venta}, ref) => {
 
+  const calcularTotal = () =>{
+        let total =  detalles_venta.articulos.reduce((acc, actual) =>{
+        return acc + actual.subtotal;
+    },0)
+    console.log("Cantidad total: ", total)
+    return total;
+    }
+    const acumuladoPagoDiferido = (dato) =>{
+    let total =  dato.reduce((acc, actual) =>{
+        return acc + actual.cantidad_pago;
+    },0)
+    return total;
+}
   // DEFINIMOS LOS DATOS ESTÁTICOS DIRECTAMENTE AQUÍ
   const staticSaleOrder = {
     patientCode: 'PACIENTE-007',
@@ -35,18 +48,19 @@ const OrdenVenta = forwardRef((props, ref) => {
       {/* Encabezado */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
         <div style={{ width: "100px", height: "100px", border: "1px solid #ccc", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          Logo Óptica
+          <img src="./logo_maray.jpeg" alt="logo" width="100%" height="auto" />
         </div>
         <div style={{ flexGrow: 1, marginLeft: "40px" }}>
           {/* Usamos los datos estáticos */}
-          <p><strong>CÓDIGO:</strong> {staticSaleOrder.patientCode}</p>
-          <p><strong>PACIENTE:</strong> {staticSaleOrder.patientName}</p>
-          <p><strong>FECHA:</strong> {staticSaleOrder.date}</p>
+          <p><strong>CÓDIGO:</strong> {detalles_venta.id_venta}</p>
+          <p><strong>PACIENTE:</strong> {detalles_venta.nombre}</p>
+           <p><strong>TELEFONO:</strong> {detalles_venta.telefono}</p>
+          <p><strong>FECHA:</strong> {detalles_venta.fecha}</p>
         </div>
       </div>
 
       <h2 style={{ textAlign: "center", margin: "30px 0" }}>
-        VENTA NO. {staticSaleOrder.saleNumber}
+        VENTA NO. {detalles_venta.id_venta}
       </h2>
 
       {/* Tabla de Artículos */}
@@ -54,29 +68,59 @@ const OrdenVenta = forwardRef((props, ref) => {
         <thead>
           <tr style={{ backgroundColor: "#f2f2f2" }}>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>Descripción</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>Cantidad</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>Descuento</th>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>Precio</th>
             <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>Subtotal</th>
           </tr>
         </thead>
         <tbody>
-          {staticSaleOrder.items.map((item, index) => (
+          {detalles_venta.articulos.map((item, index) => (
             <tr key={index}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.description}</td>
-              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{formatCurrency(item.price)}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{item.nombre}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{item.cantidad}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{"%"+item.descuento}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{formatCurrency(item.precio_unitario)}</td>
               <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{formatCurrency(item.subtotal)}</td>
             </tr>
           ))}
           <tr>
             <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold" }}></td>
+            <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold" }}></td>
+            <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold" }}></td>
             <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold" }}>TOTAL</td>
-            <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold" }}>{formatCurrency(staticSaleOrder.total)}</td>
+            <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold" }}>{formatCurrency(calcularTotal())}</td>
           </tr>
+        </tbody>
+      </table>
+      <h2 style={{ textAlign: "center", margin: "30px 0" }}>
+        Pagos Realizados
+      </h2>
+
+      {/* Tabla de Artículos */}
+      <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}>
+        <thead>
+          <tr style={{ backgroundColor: "#f2f2f2" }}>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>#</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>Fecha</th>
+            <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          {detalles_venta.pago_realizados.map((item, index) => (
+            <tr key={index}>
+              <td style={{ border: "1px solid #ddd", padding: "8px" }}>{index+1}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{item.fecha}</td>
+              <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{item.cantidad_pago}</td>
+            </tr>
+          ))}
+         
         </tbody>
       </table>
 
       {/* Pie de página */}
       <p style={{ fontWeight: "bold" }}>
-        Cantidad restante: <span style={{ color: "red" }}>{formatCurrency(staticSaleOrder.remainingAmount)}</span>
+        Cantidad restante: <span style={{ color: "red" }}>{formatCurrency( (calcularTotal()  - acumuladoPagoDiferido(detalles_venta.pago_realizados))  )}</span>
       </p>
     </div>
   );

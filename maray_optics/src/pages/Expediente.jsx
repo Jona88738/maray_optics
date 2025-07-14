@@ -28,9 +28,10 @@ const Expediente = () => {
         })
             .then((res) => res.json())
             .then((res) =>{
-
+                
                 if(res.result){
                     setExpedientes(res.data);
+                    console.log("Entro")
                 }else{
 
                 }
@@ -39,7 +40,7 @@ const Expediente = () => {
 
     //  Aplicar filtro por nombre
     const datosFiltrados = expedientes.filter(item =>
-        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase()) 
+        item.nombre_completo.toLowerCase().includes(filtroNombre.toLowerCase()) 
     );
 
      const totalPaginas = Math.ceil(expedientes.length / elementosPorPagina);
@@ -64,11 +65,12 @@ const Expediente = () => {
         })
     }
      const btnCerrarModal = () =>{
-        setActualizarDatos(!actualizarDatos);
+        
         setmodalOpenAll({
             ...modalOpenAll,
             action: 0
         })
+        setActualizarDatos(!actualizarDatos);
     }
 
     const verPage = (opcion, datos) =>{
@@ -114,9 +116,9 @@ const Expediente = () => {
     }
 
     return(<>
-        <Navbar/>
+        {/* <Navbar/> */}
         {cambiarPage.action === 0 ? <> 
-        <h1  style={{textAlign: 'center', marginBottom: '15px'}}  >Expedientes </h1>
+        {/* <h1  style={{textAlign: 'center', marginBottom: '15px'}}  >Expedientes </h1> */}
          <section className="containerTitulo">
                 
                 <button className="btnAgregar " onClick={registrarExpediente} >
@@ -130,8 +132,10 @@ const Expediente = () => {
                     Nueva consulta</button>
             </section>
          <main className="containerProducts">
-
+            
             <section className="inputBusqueda">
+                <h2 style={{fontWeight:'800'}}>Expedientes</h2>
+                        <hr />
                 <div className="input">
                     <label htmlFor="">Buscar Expediente</label>
                     <input
@@ -153,6 +157,7 @@ const Expediente = () => {
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Edad</th>
+                    <th>Telefono</th>
                     <th>Opciones</th>
                     </tr>
                 </thead>
@@ -164,9 +169,9 @@ const Expediente = () => {
                                         {/* <td>{(paginaActual - 1) * elementosPorPagina + index + 1}</td> */}
                                         
                                         <td id="codigo">{element.id}</td>
-                                        <td id="nombre">{element.nombre}</td>
+                                        <td id="nombre">{element.nombre_completo}</td>
                                         <td id="categoria">{element.edad}</td>
-                                        
+                                        <td id="categoria">{element.telefono}</td>
                                         <td>
                                             <button onClick={() => btnEditar(element)}  className='btnEdit'>
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/></svg>

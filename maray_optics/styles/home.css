@@ -38,7 +38,7 @@
    position: fixed;
    top: 0;
    /* padding-top: 62px; */
-   padding-top: 67px;
+   
    z-index: 1;
     
 }
@@ -50,6 +50,8 @@
     transition: width 1.3x ease-in;
     /* height: 80%; */
   min-height: 100vh;
+  padding-top:20px
+  
 }
 .navbarIzquierda .containerIconosNav:hover{
     align-items: baseline;
@@ -70,7 +72,9 @@
     justify-content: center;
     align-items: center;
 }
-
+.iconosLink:checked{
+    background: blue;
+}
 
 .texto {
   display: none;

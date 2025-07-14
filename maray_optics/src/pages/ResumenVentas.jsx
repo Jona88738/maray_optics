@@ -1,6 +1,8 @@
 import Navbar from "../components/navbar";
 import React, { useState, useEffect } from 'react';
-
+import { useContext } from "react";
+import { EntrarContext } from "../Contexto/Entrar/EntrarContext";
+import { useNavigate } from "react-router-dom";
 // Estilos CSS como una cadena de texto
 const appStyles = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -336,6 +338,10 @@ const ResumenVentas = () => {
     const [selectedPeriod, setSelectedPeriod] = useState('Hoy');
     const  [datos, setDatos] = useState([]);
 
+    const {usuario} = useContext(EntrarContext);
+    const navigate = useNavigate();
+    if(usuario !== 1)  navigate('/Home');
+
     const cambioSelect = (e) => {
 
          fetch(`/api/ventas/getResumenVentas${e.target.value}`,{
@@ -393,7 +399,7 @@ const ResumenVentas = () => {
                     {data.map((item, index) => (
                         <li key={index}>
                             <span>{item.tipo_agregacion}:</span>
-                            <span>{'$'+item.total}</span>
+                            <span>{item.total == null ? '$0':item.total}</span>
                         </li>
                     ))}
                 </ul>
@@ -403,10 +409,10 @@ const ResumenVentas = () => {
 
     return (
         <>
-        <Navbar/> 
+        {/* <Navbar/>  */}
        
         <div className="container">
-            <h1>📈 Reporte de Ventas</h1>
+            <h1>📈 Resumen de Ventas</h1>
 
             <div className="period-selector">
                 {/* Agregamos un div para agrupar label y select y controlarlos mejor con flexbox */}
@@ -425,13 +431,14 @@ const ResumenVentas = () => {
             </div>
 
             {/* Renderiza el contenido del reporte si hay datos, de lo contrario muestra un mensaje */}
-            {datos.length != 0 ? (
+            {datos.length != 0  ? (
                 <div className="report-content">
                     <div className="metrics-grid">
-                        {datos.map((metric, index) => (
+                        {console.log(datos[0].indicadoresGlobales, "VERi")}
+                        {datos[0].indicadoresGlobales.map((metric, index) => (
                             <div className="metric-card" key={index}>
-                                <h3>{metric.indicadoresGlobales[0].titulo}</h3>
-                                <p>{'$'+metric.indicadoresGlobales[0].total}</p>
+                                <h3>{metric.titulo} </h3>
+                                <p>{metric.total == null ? "$0": metric.total}</p>
                                 <small>{""}</small>
                             </div>
                         ))}

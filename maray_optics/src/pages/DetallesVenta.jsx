@@ -108,7 +108,7 @@ const DetallesVenta = ({page, informacion}) => {
         })
             .then((res) => res.json())
             .then((res) =>{
-                console.log(res.data)
+                console.log(res.data,"Detalles Venta")
                 setDatosVenta(res.data)
             })
     },[actualizarDatos])
@@ -354,30 +354,32 @@ const mockVentaData = {
                         <label htmlFor="">Atendido por</label>
                         <input type="text" value={dato.usuario_nombre} disabled/>
                     </div>
-                    <section className="datosVenta">
-                        <div>
-                        <label htmlFor="">Fecha de venta</label>
-                        <input type="text" value={dato.fecha ?? 2} disabled/>
+                    <div className='inputDomici'>
+                        <label htmlFor="">Fecha venta</label>
+                        <input style={{width:'100%'}} type="text" value={dato.fecha ?? 2} disabled/>
                         </div>
-
-                        <div>
+                    <div className='inputDomici'>
                             <label htmlFor="">Nombre de paciente</label>
                             <input type="text" value={dato.nombre ?? 'Venta Publica'} disabled/>
                         </div>
+                    <section className="datosVenta">
+                        
+
+                        
 
                         <div>
                             <label htmlFor="">Telefono</label>
-                            <input type="text" value={dato.telefono !== undefined ? dato.telefono: "ND" } disabled/>
+                            <input  style={{width:'80%'}} type="text" value={dato.telefono !== undefined ? dato.telefono: "ND" } disabled/>
                         </div>
 
                         <div>
                             <label htmlFor="">Tipo</label>
-                            <input type="text" value={verificarTipo(dato.tipo)} disabled/>
+                            <input  style={{width:'90%'}} type="text" value={verificarTipo(dato.tipo)} disabled/>
                         </div>
 
                         <div>
                             <label htmlFor="">Estatus</label>
-                            <input type="text" value={verificarEstatus(dato.status)} disabled/>
+                            <input  style={{width:'100%'}} type="text" value={verificarEstatus(dato.status)} disabled/>
                         </div>
 
                        
@@ -411,9 +413,9 @@ const mockVentaData = {
                                 <td>{element.descripcion} </td>
                                 <td> {element.cantidad} </td>
                                 
-                                <td>{ element.precio_unitario} </td>
+                                <td>{"$" +element.precio_unitario} </td>
                                 <td> {element.descuento}% </td>
-                                <td> { element.subtotal }</td>
+                                <td> {"$" +element.subtotal }</td>
                         
                     </tr>
                             )
@@ -428,12 +430,12 @@ const mockVentaData = {
 
                 <label htmlFor="">Total</label>
                 {/* Usa useMemo() */}
-                <input type="text" value={calcularTotal() } disabled />
+                <input type="text" value={"$"+calcularTotal() } disabled />
                  
             </section>
 
             <hr />
-            {dato.status === 2 ? (
+            {/* //dato.status === 2 ? ( */}
             <>
             <section>
                 <h3>Pagos realizados</h3>
@@ -458,7 +460,7 @@ const mockVentaData = {
                             <tr>
                                 <td>{index+1}</td>
                                 <td>{element.fecha} </td>
-                                <td>{element.cantidad_pago} </td>
+                                <td>{"$"+element.cantidad_pago} </td>
                                 
                                 <td>{element.metodo_pago} </td>
                                 <td> ND </td>
@@ -478,12 +480,12 @@ const mockVentaData = {
             <article className='containerpagoInfo'>
                 <div className='inputDomici'>
                     <label htmlFor="">Acumulado</label>
-                    <input type="text" value={acumuladoPagoDiferido(dato.pago_realizados)} disabled/>
+                    <input type="text" value={"$"+ acumuladoPagoDiferido(dato.pago_realizados)} disabled/>
                 </div>
 
                 <div className='inputDomici'>
                     <label htmlFor="">Cantidad restante</label>
-                    <input type="text"  value={calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) } disabled/>
+                    <input type="text"  value={"$"+(calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados)) } disabled/>
                     
                 </div>
                 {dato.status === 3 || (calcularTotal()  - acumuladoPagoDiferido(dato.pago_realizados) ) === 0 ? (null): (
@@ -495,7 +497,7 @@ const mockVentaData = {
             
                 <hr />
             </> 
-            ):""}
+            {/* //):""} */}
                 <section  className='containerBtnReciTicket'>
                     <button className='btnBaja'  onClick={generarOrdenVenta}>
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
@@ -508,7 +510,7 @@ const mockVentaData = {
         <div style={{display: "none"}}>
         <Ticket ref={contentRef} sale={dato} obtenerTotal={calcularTotal} />
         </div> 
-        <OrdenVenta ref={contentRef2}  />
+        <OrdenVenta ref={contentRef2}  detalles_venta={dato}/>
          {/* Contenedor oculto para la impresión de la Orden de Venta */}
             <div style={{ display: "none" }}>
                 

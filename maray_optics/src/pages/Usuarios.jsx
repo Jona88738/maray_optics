@@ -4,8 +4,16 @@ import Swal from 'sweetalert2';
 import ShowModal from "../components/showModal";
 import FormCreateUser from '../components/FormCreateUser'
 import FormEditarUser from "../components/FormEditUser";
+import { useContext } from "react";
+import { EntrarContext } from "../Contexto/Entrar/EntrarContext";
+import { useNavigate } from "react-router-dom";
 
 const usuarios = () => {
+
+
+    const {usuario} = useContext(EntrarContext);
+    const navigate = useNavigate();
+    if(usuario !== 1)  navigate('/Home');
 
     const [paginaActual, setPaginaActual] = useState(1);
     const elementosPorPagina = 8;
@@ -34,7 +42,7 @@ const usuarios = () => {
 
     //  Aplicar filtro por nombre
     const datosFiltrados = usuarios.filter(item =>
-        item.nombre.toLowerCase().includes(filtroNombre.toLowerCase())  ||
+        item.nombreC.toLowerCase().includes(filtroNombre.toLowerCase())  ||
         item.usuario.toLowerCase().includes(filtroNombre.toLowerCase()) 
     );
 
@@ -106,12 +114,12 @@ const usuarios = () => {
 
     return(
         <>
-        <Navbar/>
-            <h2 style={{textAlign: 'center', marginBottom: '15px'}}>Usuarios</h2>
+        {/* <Navbar/> */}
+            {/* <h2 style={{textAlign: 'center', marginBottom: '15px'}}>Usuarios</h2> */}
             <section className="containerTitulo">
                 
                
-                <button className="btnAgregar"  onClick={registrarUsuario}>
+                <button className="btnAgregar"   onClick={registrarUsuario}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
                  
                     Nuevo Usuario</button>
@@ -120,7 +128,10 @@ const usuarios = () => {
             <main className="containerProducts">
 
             <section className="inputBusqueda">
+                <h2 style={{fontWeight:'800'}}>Usuarios</h2>
+                        <hr />
                 <div className="input">
+                    
                     <label htmlFor="">Buscar categoría</label>
                     <input
                         type="text"
@@ -135,15 +146,15 @@ const usuarios = () => {
              <section className="containerTabla">
         <section className="table-responsive">
             <table className="table table-bordered table-hover">
-                <thead>
+                <thead className="bg-light">
                     <tr>
                     {/* <th>Imagen</th> */}
-                    <th>Usuario</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Nivel</th>
-                    <th>Registro</th>
-                    <th>opciones</th>
+                    <th >Usuario</th>
+                    <th >Nombre</th>
+                    <th >Correo</th>
+                    <th >Nivel</th>
+                    <th >Registro</th>
+                    <th >opciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -156,9 +167,9 @@ const usuarios = () => {
                                         
                                         {/* <td id="codigo">{element.codigo}</td> */}
                                         <td id="nombre">{element.usuario}</td>
-                                        <td id="nombre">{element.nombre}</td>
+                                        <td id="nombre">{element.nombreC}</td>
                                         <td id="categoria">{element.correo}</td>
-                                        <td id="existencia">{element.nombre}</td>
+                                        <td id="existencia">{element.rol_nombre}</td>
                                         <td id="precio">{element.fecha_formateada}</td>
                                         <td>
                                             <button onClick={() => btnEditar(element)}  className='btnEdit'>
