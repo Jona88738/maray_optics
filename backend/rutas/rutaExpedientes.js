@@ -13,5 +13,7 @@ routes.put("/", expediente.updateExpediente)
 
 routes.post("/consulta", expediente.consultaExpediente)
 
+routes.get("/listado",expediente.getListadoExpediente)
 
+routes.get("/getconsultaExpediente", expediente.getconsultaExpediente)
 export default routes
